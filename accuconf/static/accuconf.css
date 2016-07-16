@@ -1,0 +1,23 @@
+body {
+    width: 100%;
+    font-family: "sans-serif";
+}
+
+#menu {
+    height: 2em;
+}
+
+#maincontent {
+    padding: 5px 0 5px 0;
+    font-family: sans-serif;
+    color: grey;
+}
+
+.banner {
+    padding: 2px 0 2px 0;
+}
+
+.footer {
+    font-family: sans-serif;
+    color: grey;
+}
