@@ -4,9 +4,8 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="pure-g" id="frontpage">
-  <div class="pure-u-1" id="maincontent">
+  <div class="pure-u-1 pure-u-md-3-5" id="froncontent">
+    <h1 class="title"> {{ frontpage.title }} </h1>
     {{ frontpage.data }}
   </div>
-</div>
 {% endblock %}

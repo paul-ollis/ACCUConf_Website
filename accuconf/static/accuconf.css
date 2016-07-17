@@ -3,21 +3,62 @@ body {
     font-family: "sans-serif";
 }
 
-#menu {
-    height: 2em;
+.banner {
+    padding: 2px 0 2px 0;
 }
 
-#maincontent {
+#menu {
+    background-color: 6666aa;
+    height: 2em;
+    padding: 2px 0 5px 1px;
+}
+
+.menuitem {
+    color: white;
+}
+
+.maincontent {
     padding: 5px 0 5px 0;
     font-family: sans-serif;
     color: grey;
 }
 
-.banner {
-    padding: 2px 0 2px 0;
+.field {
+    font-weight: bold;
+    color: black;
+    font-size: 0.8em;
+}
+
+.venue {
+    font-weight: bold;
+    color: white;
+    background-color: 6666ff;
+}
+
+.venuetable {
+    padding: 0 5px 0 0;
+    margin: 0 5px 0 0;
+    align: right;
+}
+
+.blurbtable {
+    padding: 0 5px 0 5px;
+    margin: 0 5px 0 5px;
+    float: right;
+    clear: right;
+}
+
+.content {
+    padding: 5px 1px 1px 5px;
+}
+
+.title {
+    font-family: sans-serif;
+    color: 7777ff;
 }
 
 .footer {
     font-family: sans-serif;
     color: grey;
 }
+
