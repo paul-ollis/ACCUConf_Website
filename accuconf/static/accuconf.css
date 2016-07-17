@@ -9,13 +9,18 @@ body {
 
 #menu {
     background-color: 6666aa;
-    height: 2em;
-    padding: 2px 0 5px 1px;
+    height: 1.8em;
+    padding: 2px 0 5px 0px;
 }
 
 .menuitem {
     color: white;
 }
+
+.menuitem:hover {
+    background-color: 6666ff;
+}
+
 
 .maincontent {
     padding: 5px 0 5px 0;
