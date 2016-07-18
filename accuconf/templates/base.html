@@ -5,6 +5,7 @@
       <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
       <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='accuconf.css') }}">
+      <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
       <title>{% block title%} {% endblock %} - ACCUConf</title>
     {% endblock %}
   </head>
@@ -68,13 +69,9 @@
                   <td>
                     <span class="field"> Chair: </span> Dr. Russel Winder <br/> <br/>
                     <div class="field"> Committee: </div>
-                    Jon Jagger <br/>
-                    Francis Glassborow <br/>
-                    Olve Maudal <br/>
-                    Roger Orr <br/>
-                    Ewan Milne <br/>
-                    Charles Bailey <br/>
-                    Dirk Haun <br/>
+                    {% for member in frontpage.committee %}
+                      {{ member }} <br/>
+                    {% endfor %}
                   </td>
                 </tr>
               </tbody>
