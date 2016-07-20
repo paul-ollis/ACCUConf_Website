@@ -4,6 +4,7 @@ from accuconf import app
 import json
 from flask import render_template, flash, redirect, url_for
 
+
 @app.route("/")
 def index():
     when_where = ""
