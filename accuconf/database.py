@@ -1,18 +1,15 @@
 #!/usr/bin/env python
 
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
+from accuconf import app
 
-db = SQLAlchemy()
-
-
-def drop_all():
-    db.drop_all()
+db = SQLAlchemy(app)
 
 
-def create_all():
+def init_db():
     db.create_all()
 
 
-def remove_session():
-    db.session.remove()
+def drop_db():
+    db.drop_all()
 
