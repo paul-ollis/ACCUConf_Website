@@ -7,4 +7,4 @@ the [ACCUConf website](http://conference.accu.org).
 
 # Licence
 
-This code is licenced using the GNU Publiv Licence version 3 (GPLv3).
+This code is licenced using the GNU Public Licence version 3 (GPLv3).
