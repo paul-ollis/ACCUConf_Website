@@ -7,6 +7,8 @@ from flask import render_template, flash, redirect, url_for
 
 @app.route("/")
 def index():
+    if app.config.get("MAINTENANCE"):
+        return redirect(url_for("maintenance"))
     when_where = ""
     committee = ""
     venuefile = app.config.get('VENUE')
@@ -25,3 +27,8 @@ def index():
         "committee": committee.get("members")
     }
     return render_template("index.html", frontpage=frontpage)
+
+
+@app.route("/maintenance")
+def maintenance():
+    return render_template("maintenance.html")
