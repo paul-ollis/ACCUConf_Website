@@ -24,7 +24,7 @@ def index():
         "title": "ACCU Conference 2017",
         "data": "Welcome to ACCU Conf 2017",
         "when_where": when_where,
-        "committee": committee.get("members", None)
+        "committee": committee.get("members", [])
     }
     return render_template("index.html", frontpage=frontpage)
 
