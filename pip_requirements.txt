@@ -3,7 +3,7 @@
 Flask==0.10.1
 SQLAlchemy==0.9.8
 
-#  These packages are for testing: these are not needed on Jessie, so we can use the latest versions.
+#  These packages are for testing: these are not needed on the server, so we can use the latest versions.
 
 pytest
 hypothesis
