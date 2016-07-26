@@ -10,6 +10,7 @@ class Config(object):
     VENUE = DATA_DIR / "venue.json"
     COMMITTEE = DATA_DIR / "committee.json"
     MAINTENANCE = False
+    SECRET_KEY = "TheObviouslyOpenSecret"
 
 
 class ProductionConfig(Config):
@@ -23,7 +24,7 @@ class TestConfig(Config):
     VENUE = DATA_DIR / "venue.json"
     COMMITTEE = DATA_DIR / "committee.json"
     FRONTPAGE = DATA_DIR / "frontpage.adoc"
-
+    SECRET_KEY = "!@#!@#!#!@#!@$SDFQWETR!$#VWERT@#$%123412qwE%$"
 
 class MaintenanceConfig(Config):
     MAINTENANCE = True
