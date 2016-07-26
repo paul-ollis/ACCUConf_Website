@@ -13,14 +13,18 @@ class Proposal(db.Model):
     session_type = db.Column(db.String(20), nullable=False)
     text = db.Column(db.Text, nullable=False)
     lead = db.Column(db.String(100), db.ForeignKey('users.user_id'))
-    presenters = db.relationship('ProposalAuthor',
-                              uselist=True)
+    presenters = db.relationship('ProposalPresenter',
+                                 uselist=True)
     state = db.relationship('ProposalState',
                             uselist=False)
     reviews = db.relationship('ProposalReview',
                               uselist=True)
     categories = db.relationship('ProposalCategory',
                                  uselist=True)
+    session_proposer = db.relationship('User',
+                                       foreign_keys='Proposal.proposer')
+    lead_presenter = db.relationship('User',
+                                     foreign_keys='Proposal.lead')
 
     def __init__(self, proposer, title, session_type, text, lead):
         self.proposer = proposer
