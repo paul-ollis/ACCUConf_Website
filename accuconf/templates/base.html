@@ -14,8 +14,22 @@
     <div  id="main">
       <div class="banner">
         <div class="pure-g">
-          <div class="pure-u-1 pure-u-md-4-5 pure-u-lg-4-5">
+          <div class="pure-u-1 pure-u-md-3-5 pure-u-lg-3-5">
             <img src="static/logo.png" alt="logo"/>
+          </div>
+          <div class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5">
+            {% if session.active %}
+            <div class="userbutton"> {{ session.fullname }}</div>
+            {% else %}
+            <form class="pure-form">
+              <fieldset>
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Password">
+                <button type="submit" class="pure-button pure-button-primary">Sign in</button>
+                <a class="reminder" href="#">Forgot password?</a>
+              </fieldset>
+            </form>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -29,6 +43,9 @@
                 <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Venue</a></li>
                 <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Talks</a></li>
                 <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Contact Us</a></li>
+                {% if not session.active %}
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Register</a></li>
+                {% endif %}
               </ul>
             </div>
           </div>
