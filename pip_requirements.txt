@@ -1,0 +1,9 @@
+# These packages are needed for deployment on the Jessie server, so must use Jessie versions.
+
+Flask==0.10.1
+SQLAlchemy==0.9.8
+
+#  These packages are for testing: these are not needed on the server, so we can use the latest versions.
+
+pytest
+hypothesis
