@@ -10,6 +10,8 @@ class User(db.Model):
     user_info = db.relationship('UserInfo',
                                 uselist=False,
                                 backref=db.backref('user'))
+    proposal = db.relationship('Proposal',
+                               uselist=False)
 
     def __init__(self, userid, userpass):
         self.user_id = userid
