@@ -547,7 +547,8 @@ REDIRECTIONS = []
 # in a `nikola deploy` command as you like.
 DEPLOY_COMMANDS = {
     'default': [
-        'rsync --dry-run -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/',
+        'chmod -R go+rX output',
+        'rsync -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/',
     ]
 }
 
