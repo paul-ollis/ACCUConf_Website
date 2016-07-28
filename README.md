@@ -4,7 +4,7 @@
 
 This repository contains the general framework for the Nikola managed content of the ACCU Conference website
 (http://conference.accu.org). The driver and manager of the dynamic content is the
-[ACCUConfWebsite_Flask](https://github.com/russel/ACCUConfWebsite_Flask) repository, this
+[ACCUConfWebsite_Flask](https://github.com/ACCUConf/ACCUConfWebsite_Flask) repository, this
 ACCUConfWebsite_Static repository is for the static content and the blog.
 
 ## The Branches
