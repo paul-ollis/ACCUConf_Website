@@ -11,6 +11,9 @@ class User(db.Model):
     user_info = db.relationship('UserInfo',
                                 uselist=False,
                                 backref=db.backref('user'))
+    location = db.relationship('UserLocation',
+                               uselist=False,
+                               backref=db.backref('user'))
     proposal = db.relationship('Proposal',
                                uselist=False,
                                backref=db.backref('proposed_by'),
@@ -40,3 +43,18 @@ class UserInfo(db.Model):
         self.first_name = fname
         self.last_name = lname
         self.role = role
+
+
+class UserLocation(db.Model):
+    __tablename__ = 'user_location'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(100), db.ForeignKey('users.user_id'))
+    country = db.Column(db.String(5), nullable=False)
+    state = db.Column(db.String(10), nullable=False)
+    postal_code = db.Column(db.String(40), nullable=False)
+
+    def __init__(self, user_id, country, state, postal_code):
+        self.user_id = user_id
+        self.country = country
+        self.state = state
+        self.postal_code = postal_code

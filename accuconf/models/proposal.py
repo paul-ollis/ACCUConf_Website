@@ -15,7 +15,7 @@ class Proposal(db.Model):
     lead = db.Column(db.String(100), db.ForeignKey('users.user_id'))
     presenters = db.relationship('ProposalPresenter',
                                  uselist=True)
-    state = db.relationship('ProposalState',
+    status = db.relationship('ProposalStatus',
                             uselist=False)
     reviews = db.relationship('ProposalReview',
                               uselist=True)
@@ -29,11 +29,13 @@ class Proposal(db.Model):
     def __init__(self, proposer, title, session_type, text, lead):
         self.proposer = proposer
         self.title = title
-        if type(session_type) == ProposalType:
-            self.session_type = session_type
+        if issubclass(type(session_type), ProposalType):
+            self.session_type = session_type.proposalType()
         else:
             raise TypeError("session_type should be of type "
                             "accuconf.proposals.ProposalType")
+        self.text = text
+        self.lead = lead
 
 
 class ProposalPresenter(db.Model):
@@ -47,7 +49,7 @@ class ProposalPresenter(db.Model):
         self.presenter = presenter
 
 
-class ProposalState(db.Model):
+class ProposalStatus(db.Model):
     __tablename__ = "proposal_states"
     id = db.Column(db.Integer, primary_key=True)
     proposal_id = db.Column(db.Integer, db.ForeignKey('proposals.id'))
@@ -55,8 +57,8 @@ class ProposalState(db.Model):
 
     def __init__(self, proposal_id, state):
         self.proposal_id = proposal_id
-        if type(state) == ProposalState:
-            self.state = state
+        if issubclass(type(state), ProposalState):
+            self.state = state.state()
         else:
             raise TypeError("state should be of type "
                             "accuconf.proposals.ProposalState")
