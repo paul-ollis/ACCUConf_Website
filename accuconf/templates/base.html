@@ -1,109 +1,59 @@
+<!DOCTYPE html>
 <html lang="en">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="copyright" content="2017 Balachandran Sivakumar, Dr Russel Winder">
-  <head>
-    {% block head %}
-      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-      <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='accuconf.css') }}">
-      <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-      <title>{% block title%} {% endblock %} - ACCUConf</title>
-    {% endblock %}
-  </head>
-  <body>
-    <div  id="main">
-      <div class="banner">
-        <div class="pure-g">
-          <div class="pure-u-1 pure-u-md-3-5 pure-u-lg-3-5">
-            <img src="static/logo.png" alt="logo"/>
-          </div>
-          <div class="pure-u-1 pure-u-md-2-5 pure-u-lg-2-5">
-            {% if session.active %}
-            <div class="userbutton"> {{ session.fullname }}</div>
-            {% else %}
-            <form class="pure-form">
-              <fieldset>
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button type="submit" class="pure-button pure-button-primary">Sign in</button>
-                <a class="reminder" href="#">Forgot password?</a>
-              </fieldset>
-            </form>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <div id="menucontent">
-        <div class="pure-g">
-          <div class="pure-u-1">
-            <div class="pure-menu pure-menu-horizontal pure-menu-scrollable" id="menu">
-              <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Home</a></li>
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Schedule</a></li>
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Venue</a></li>
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Talks</a></li>
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Contact Us</a></li>
-                {% if not session.active %}
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link menuitem">Register</a></li>
-                {% endif %}
-              </ul>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="copyright" content="2017 Balachandran Sivakumar, Dr Russel Winder">
+    <head>
+        {% block head %}
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/accuconf.css') }}">
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='js/accuconf.js') }}" type="text/javascript"></script>
+        <title>{% block title%} {% endblock %} - ACCUConf</title>
+        {% endblock %}
+    </head>
+    <body>
+        <div class="row toprow">
+            <div class="banner">
+                <img src="static/images/logo.png" alt="logo"/>
             </div>
-          </div>
+            {% if session.active %}
+            <div class="userbutton pull-right"> {{ session.fullname }}</div>
+            {% else %}
+            <div class="inline pull-right">
+                <form class="form inline pull-right">
+                    <fieldset>
+                        <input type="email" placeholder="Email">
+                        <input type="password" placeholder="Password">
+                    </fieldset>
+                    <fieldset class="buttongroup">
+                        <button type="submit" class="button primary-button">Sign in</button>
+                        <a class="forgotpassword" href="#">Forgot password?</a>
+                    </fieldset>
+                </form>
+            </div>
+            {% endif %}
         </div>
-      </div>
-      <div class="content">
-        <div class="pure-g">
-          <div class="pure-u-1 pure-u-md-1-5">
-            <table class="pure-table venuetable" width="80%">
-              <thead>
-                <tr>
-                  <th class="venue"> Venue and Location </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="field"> Date: </div> {{ frontpage.when_where.when }} <br/> <br/>
-                    <div class="field"> Venue: </div>
-                    {% for addr in frontpage.when_where.where %}
-                    {{ addr }} <br/>
-                    {% endfor %}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {% block content%} {% endblock %}
-          <div class="pure-u-1 pure-u-md-1-5">
-            <table class="pure-table blurbtable" width="80%">
-              <thead>
-                <tr>
-                  <th class="venue"> Organisers </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <span class="field"> Chair: </span> Dr. Russel Winder <br/> <br/>
-                    <div class="field"> Committee: </div>
-                    {% for member in frontpage.committee %}
-                      {{ member }} <br/>
-                    {% endfor %}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          </div>
+        <div class="row">
+            <ul class="menu">
+                <li class="menuitem"><a href="#">Home</a></li>
+                {% if session.active %}
+                <li class="menuitem"><a href="#">My Proposals</a></li>
+                {% else %}
+                <li class="menuitem"><a href="#">Register</a></li>
+                {% endif %}
+                <li class="menuitem"><a href="#">Schedule</a></li>
+                <!-- <li class="menuitem"><a href="#">Venue</a></li>
+                     <li class="menuitem"><a href="#">Talks</a></li>
+                   -->
+                <li class="menuitem"><a href="#">Contact Us</a></li>
+            </ul>
         </div>
-      </div>
-    <div class="footer">
-      <div class="pure-g">
-        <div class="pure-u-1">
-          <footer> &copy; Copyright 2017  Balachandran Sivakumar, Dr. Russel Winder</footer>
+        {% block content%} {% endblock %}
+        <div class="row">
+            <div class="footer">
+                <footer> &copy; Copyright 2017  Balachandran Sivakumar, Dr. Russel Winder</footer>
+            </footer>
         </div>
-      </div>
-    </div>
-  </body>
+    </body>
 </html>

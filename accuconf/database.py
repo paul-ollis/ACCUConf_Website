@@ -1,15 +1,24 @@
 #!/usr/bin/env python
 
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, event
+from random import randint
 from accuconf import app
+
 
 db = SQLAlchemy(app)
 
 
-def init_db():
-    db.create_all()
+@event.listens_for(db.get_engine(app), "connect")
+def enable_fkey(dbcon, con_rec):
+    cursor = dbcon.cursor()
+    cursor.execute('PRAGMA foreign_keys=ON;')
+    cursor.close()
 
 
 def drop_db():
     db.drop_all()
+
+
+def create_db():
+    db.create_all()
 
