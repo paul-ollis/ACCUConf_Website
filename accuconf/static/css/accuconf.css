@@ -1,0 +1,198 @@
+/* Top level body settings */
+body {
+    width: 100%;
+    font-family: sans-serif;
+}
+
+/* Generic/top level div tags */
+.row {
+    width: 100%;
+    overflow: auto;
+}
+
+.row > div {
+    display: inline;
+}
+
+.toprow {
+    height: 90px;
+}
+
+.pull-right {
+    float: right;
+    padding-right: 5px;
+}
+
+.wrapper {
+    display: inline;
+}
+
+.banner {
+    width: 40%;
+    overflow: auto;
+    height: inherit;
+}
+
+.inline {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    border-bottom: 0px;
+    height: inherit;
+}
+
+.messages {
+    width: 70%;
+    padding-left: 10%;
+}
+
+.fixed-20 {
+    hieght: 20px;
+}
+
+
+/* Menu */
+li.menuitem {
+    list-style-type: none;
+    background-color: green;
+    border-style: none;
+    border-radius: 5px;
+    display: inline;
+    height: 30px;
+    padding: 10px 15px 10px 15px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+li.menuitem.active {
+    background-color: blue;
+    color: black;
+}
+
+li.menuitem > a {
+    text-decoration: none;
+    color: white;
+}
+
+ul.menu {
+    height: 30px;
+    height: overflow;
+    padding-top: 10px;
+    padding-left: 30%;
+    border-style: solid;
+    border-width: 0.5px 0 0.5px 0;
+}
+
+footer {
+    font-size: 0.8em;
+}
+
+/* Form elements */
+form.inline {
+    margin-bottom: 0px;
+}
+
+form.general {
+    width: 80%;
+    margin-top: 10px;
+}
+
+fieldset {
+    border: none;
+}
+
+form.inline > fieldset.buttongroup {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+form.general > fieldset.buttongroup {
+    margin-top: 10px;
+    padding-left: 20%;
+}
+
+form.general > fieldset > label {
+    width: 20%;
+    text-align: right;
+    display: inline-block;
+    font-weight: bold;
+    font-family: sans-serif;
+    margin-right: 20px;
+}
+
+form.general > fieldset > label.puzzle {
+    text-align: left;
+    width: 8%;
+}
+
+form.general > fieldset > label.suffix {
+    text-align: left;
+    width: 8%;
+}
+
+form.general > fieldset > input {
+    display: inline-block;
+    width: 25%;
+}
+
+form.general > fieldset > input.puzzle {
+    display: inline-block;
+    width: 15%;
+}
+
+button.button.primary-button {
+    background-color: #7777ff;
+    padding: 10px 10px;
+    border: none;
+    border-radius: 6px;
+}
+
+button.primary-button:hover {
+    background-color: #9999ff;
+}
+
+button.button {
+    background-color: #aaaaff;
+    padding: 8px 8px;
+    border: none;
+    border-radius: 5px;
+}
+
+button.button:hover {
+    background-color: #ddddff;
+}
+
+/* Link tags */
+a.forgotpassword {
+    color: grey;
+}
+
+/* Typography */
+.pagetitle {
+    color: #5555ff;
+    margin-left: 15px;
+    font-size: 2em;
+    font-family: inherit;
+    font-weight: bold;
+}
+
+.blogtitle {
+    color: #5555ff;
+    margin-left: 15px;
+    font-size: 2em;
+    font-family: inherit;
+}
+
+p.first {
+    margin-left: 5%;
+}
+
+p.alert {
+    background-color: #ff7777;
+    color: black;
+    margin-left: 20%;
+}
+    
+.messages > p {
+    display: inline-block;
+}

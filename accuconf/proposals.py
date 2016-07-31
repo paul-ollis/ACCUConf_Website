@@ -17,27 +17,61 @@ class ProposalCategory(object):
 
 
 class ProposalType(object):
+    def __init__(self, proposaltype={}):
+        self.__proposal_type = proposaltype
+
+    def proposalType(self):
+        return self.__proposal_type.get("name", "NoTypeSet")
+
+
+class InteractiveProposalType(ProposalType):
     interactive = {
         "name": "90 minutes, Interactive",
         "hidden": False
     }
+
+    def __init__(self):
+        super().__init__(self.interactive)
+
+
+class MiniWorkshopProposalType(ProposalType):
     mini_workshop = {
         "name": "90 minutes, Mini Workshop",
         "hidden": False
     }
+
+    def __init__(self):
+        super().__init__(self.mini_workshop)
+
+
+class WorkshopProposalType(ProposalType):
     workshop = {
         "name": "180 minutes, Workshop",
         "hidden": False
     }
+
+    def __init__(self):
+        super().__init__(self.workshop)
+
+
+class QuickProposalType(ProposalType):
     quick = {
         "name": "15 minutes",
         "hidden": False
     }
+
+    def __init__(self):
+        super().__init__(self.quick)
+
+
+class KeynoteProposalType(ProposalType):
     keynote = {
         "name": "60 minutes, Keynote",
         "hidden": True
     }
 
+    def __init__(self):
+        super().__init__(self.keynote)
 
 
 class ProposalState(object):

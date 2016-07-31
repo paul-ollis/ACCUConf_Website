@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///tmp/accuconf_test.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///tmp/accuconf.db"
     DEBUG = False
     DATA_DIR = Path("/etc/accuconf/data")
     VENUE = DATA_DIR / "venue.json"
