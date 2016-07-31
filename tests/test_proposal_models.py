@@ -11,7 +11,7 @@ from accuconf.database import db, create_db, drop_db
 class TestProposal:
 
     def setup_method(self, testmethod):
-        init_db()
+        create_db()
 
     def teardown_method(self, testmethod):
         drop_db()
@@ -19,7 +19,13 @@ class TestProposal:
 
     def test_proposal_basic(self):
         u = User("abc@b.c", "password")
-        ui = UserInfo("a@b.c", "User", "Name", "admin")
+        ui = UserInfo("a@b.c",
+                      'Mr.',
+                      'User',
+                      'Name',
+                      '',
+                      '+01234567890',
+                      'admin')
         p = Proposal("a@b.c",
                      "TDD with C++",
                      QuickProposalType(),

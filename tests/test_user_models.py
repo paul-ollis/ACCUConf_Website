@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
 from accuconf.models import User, UserInfo
-from accuconf.database import db, enable_fkey, init_db, drop_db
+from accuconf.database import db, enable_fkey, create_db, drop_db
 
 
 class TestUser:
@@ -47,7 +47,14 @@ class TestUser:
 class TestUserInfo:
 
     def test_userinfo_basic(self):
-        ui = UserInfo('a@b.c', 'user', 'name', 'admin')
+        ui = UserInfo('a@b.c',
+                      'Mr.',
+                      'User',
+                      'Name',
+                      '',
+                      '+01234567890',
+                      'admin')
+
         assert ui is not None
 
 
@@ -58,7 +65,7 @@ class TestUserModel:
         pass
 
     def setup_method(self, testmethod):
-        init_db()
+        create_db()
 
     def teardown_method(self, testmethod):
         db.drop_all()
@@ -66,7 +73,14 @@ class TestUserModel:
 
     def test_basic(self):
         u = User('a@b.c', 'password')
-        ui = UserInfo('a@b.c', 'User', 'Name', 'admin')
+        ui = UserInfo('a@b.c',
+                      'Mr.',
+                      'User',
+                      'Name',
+                      '',
+                      '+01234567890',
+                      'admin'
+                      )
         u.user_info = ui
         db.session.add(u)
         db.session.add(ui)
@@ -76,7 +90,13 @@ class TestUserModel:
 
     def test_userinfo_fkey(self):
         u = User('a@b.cc', 'password')
-        ui = UserInfo('aa@b.c', 'User', 'Name', 'admin')
+        ui = UserInfo('aa@b.c',
+                      'Mr.',
+                      'User',
+                      'Name',
+                      '',
+                      '+01234567890',
+                      'admin')
         u.user_info = ui
         db.session.add(u)
         db.session.add(ui)
