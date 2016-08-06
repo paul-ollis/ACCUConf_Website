@@ -22,15 +22,18 @@
         <form class="form general" id="registrationForm" method="POST">
             <fieldset>
                 <label for="email">Email</label>
-                <input id="email" name="email" placeholder="Email">
+                <input id="email" name="email" placeholder="Email" onkeyup="javascript:checkDuplicate();">
+                <p class="form-alert pull-right" id="emailalert"></p>
             </fieldset>
             <fieldset>
                 <label for="password">Password</label>
                 <input id="password" name="password" type="password" placeholder="Password">
+                <p class="form-alert pull-right" id="passwordalert"></p>
             </fieldset>
             <fieldset>
                 <label for="cpassword">Retype Password</label>
                 <input id="cpassword" name="cpassword" type="password" placeholder="Retype Password">
+                <p class="form-alert pull-right" id="cpasswordalert"></p>
             </fieldset>
             <fieldset>
                 <label for="salutation">Salutation</label>
@@ -39,10 +42,12 @@
                     <option value="Ms.">Ms.</option>
                     <option value="Dr.">Dr.</option>
                 </select>
+                <p class="form-alert pull-right" id="salutationalert"></p>
             </fieldset>
             <fieldset>
                 <label for="firstname">First Name</label>
                 <input id="firstname" name="firstname" type="text" placeholder="First Name">
+                <p class="form-alert pull-right" id="firstnamealert"></p>
             </fieldset>
             <fieldset>
                 <label for="lastname">Last Name</label>
@@ -53,31 +58,37 @@
                     <option value="Jr.">Jr.</option>
                     <option value="Sr.">Sr.</option>
                 </select>                    
+                <p class="form-alert pull-right" id="lastnamealert"></p>
             </fieldset>
             <fieldset>
                 <label for="phone">Contact number with ISD code</label>
                 <input id="phone" name="phone" placeholder="Contact number with ISD code">
+                <p class="form-alert pull-right" id="phonealert"></p>
             </fieldset>
             <fieldset>
                 <label for="country">Country</label>
-                <select id="country" name="country" onchange="javascript:loadState();" onkeyup="this.onchange();" onmouseup="this.onchange();">
+                <select id="country" name="country" onchange="javascript:loadState('country', 'states', 'state');" onkeyup="this.onchange();" onmouseup="this.onchange();">
                 </select>
+                <p class="form-alert pull-right" id="countryalert"></p>
             </fieldset>
             <fieldset>
                 <label for="state">State</label>
                 <input type="text" id="state" name="state" placeholder="State/Province">
-                <select id="states" name="states" style="display:none;" onchange="javascript:updateStaet();" onkeyup="this.onchange();" onmouseup="this.onchange();">
+                <select id="states" name="states" style="display:none;" onchange="javascript:updateState();" onkeyup="this.onchange();" onmouseup="this.onchange();">
                 </select>
+                <p class="form-alert pull-right" id="statealert"></p>
             </fieldset>
             <fieldset>
                 <label for="pincode">Pin/Zip Code</label>
                 <input type="text" id="pincode" name="pincode" placeholder="Pin or Zip code">
+                <p class="form-alert pull-right" id="picodealert"></p>
             </fieldset>
             <fieldset>
                 <label for="captcha">Solve this puzzle</label>
                 <label class="puzzle"> {{ page.puzzle }} </label>
                 <input type="hidden" id="question" name="question" value="{{ page.question }}">
                 <input type="text" id="puzzle" name="puzzle" placeholder="Solve" class="puzzle">
+                <p class="form-alert pull-right" id="captchaalert"></p>
             </fieldset>
             <fieldset class="buttongroup">
                 <button type="submit" id="submit"  class="button primary-button" onsubmit="javascript:registerUser();">Register</button>
@@ -120,25 +131,25 @@
          var matchValid = false;
          if (pass.length) {
              if (!passwordValid(pass)) {
-                 $('#alert').text("Password should have at least 1 lower case, 1 upper case, and 1 digit and should have at least 8 characters");
+                 $('#passwordalert').text("Password should have at least 1 lower case, 1 upper case, and 1 digit and should have at least 8 characters");
                  testValid = false;
                  $('#submit').attr("disabled", true);
              } else {
                  testValid = true;
-                 $('#alert').text("");
+                 $('#passwordalert').text("");
                  $('#submit').removeAttr("disabled");
              }
          }
          if (pass.length && cPass.length && testValid) {
              if (pass !== cPass) {
-                 $('#alert').text("Password and Confirmation do not match");
+                 $('#cpasswordalert').text("Password and Confirmation do not match");
                  $('#alert').fadeIn(1000);
                  $('#submit').attr("disabled", true);
                  matchValid = false;
              }
              if (pass === cPass) {
                  matchValid = true;
-                 $('#alert').text("");
+                 $('#cpasswordalert').text("");
                  $('#submit').removeAttr("disabled");
              }
          }
@@ -146,6 +157,16 @@
              $('#submit').removeAttr("disabled");
          } else {
              $('#submit').attr("disabled", true);
+         }
+     });
+     $('#email').focusout(function() {
+         var email = $('#email').val();
+         if (!isEmail(email)) {
+             $('#emailalert').text(email + " is not a valid email address");
+             $('#submit').attr("disabled", true);
+         } else {
+             $('#emailalert').text("");
+             $('#submit').removeAttr("disabled");
          }
      });
 

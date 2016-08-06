@@ -15,16 +15,22 @@
     <body>
         <div class="row toprow">
             <div class="banner">
-                <img src="static/images/logo.png" alt="logo"/>
+                <img src="{{ url_for('static', filename="images/logo.png") }}" alt="logo"/>
             </div>
-            {% if session.active %}
-            <div class="userbutton pull-right"> {{ session.fullname }}</div>
+            {% if session.user_id %}
+            <div class="userbutton pull-right">
+                <button class="userbutton-button"> {{ page.user_name }} </button>
+                <div class="menu-content">
+                    <a href="{{ url_for('logout') }}">Log out</a>
+                    <a href="#">Profile</a>
+                </div>
+            </div>
             {% else %}
             <div class="inline pull-right">
-                <form class="form inline pull-right">
+                <form class="form inline pull-right" action="{{ url_for('login') }}" method="post">
                     <fieldset>
-                        <input type="email" placeholder="Email">
-                        <input type="password" placeholder="Password">
+                        <input type="email" placeholder="Email" id="usermail" name="usermail">
+                        <input type="password" placeholder="Password" id="password" name="password">
                     </fieldset>
                     <fieldset class="buttongroup">
                         <button type="submit" class="button primary-button">Sign in</button>
@@ -36,11 +42,11 @@
         </div>
         <div class="row">
             <ul class="menu">
-                <li class="menuitem"><a href="#">Home</a></li>
-                {% if session.active %}
-                <li class="menuitem"><a href="#">My Proposals</a></li>
+                <li class="menuitem"><a href="{{ url_for('index') }}">Home</a></li>
+                {% if session.user_id %}
+                <li class="menuitem"><a href="{{ url_for('propose') }}">My Proposals</a></li>
                 {% else %}
-                <li class="menuitem"><a href="#">Register</a></li>
+                <li class="menuitem"><a href="{{ url_for('register') }}">Register</a></li>
                 {% endif %}
                 <li class="menuitem"><a href="#">Schedule</a></li>
                 <!-- <li class="menuitem"><a href="#">Venue</a></li>

@@ -12,8 +12,7 @@ class User(db.Model):
                                 uselist=False,
                                 backref=db.backref('user'))
     location = db.relationship('UserLocation',
-                               uselist=False,
-                               backref=db.backref('user'))
+                               uselist=False)
     proposal = db.relationship('Proposal',
                                uselist=False,
                                backref=db.backref('proposed_by'),
