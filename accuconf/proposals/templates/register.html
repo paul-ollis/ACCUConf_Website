@@ -27,7 +27,8 @@
             </fieldset>
             <fieldset>
                 <label for="password">Password</label>
-                <input id="password" name="password" type="password" placeholder="Password">
+                <input id="user_pass" name="user_pass" type="password"
+                       placeholder="Password">
                 <p class="form-alert pull-right" id="passwordalert"></p>
             </fieldset>
             <fieldset>
@@ -125,7 +126,7 @@
          dataType: "json"
      });
      $("input[type='password']").keyup(function() {
-         var pass = $('#password').val();
+         var pass = $('#user_pass').val();
          var cPass = $('#cpassword').val();
          var testValid = false;
          var matchValid = false;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from accuconf.database import db
+from accuconf import db
 
 
 class MathPuzzle(db.Model):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from accuconf.database import db
+from accuconf import db
 from accuconf.models.user import User
 from accuconf.proposals import *
 
@@ -12,21 +12,20 @@ class Proposal(db.Model):
     title = db.Column(db.String(150), nullable=False)
     session_type = db.Column(db.String(20), nullable=False)
     text = db.Column(db.Text, nullable=False)
-    lead = db.Column(db.String(100), db.ForeignKey('users.user_id'))
     presenters = db.relationship('ProposalPresenter',
                                  uselist=True)
     status = db.relationship('ProposalStatus',
                             uselist=False)
     reviews = db.relationship('ProposalReview',
                               uselist=True)
+    comments = db.relationship('ProposalComment',
+                               uselist=True)
     categories = db.relationship('ProposalCategory',
                                  uselist=True)
     session_proposer = db.relationship('User',
                                        foreign_keys='Proposal.proposer')
-    lead_presenter = db.relationship('User',
-                                     foreign_keys='Proposal.lead')
 
-    def __init__(self, proposer, title, session_type, text, lead):
+    def __init__(self, proposer, title, session_type, text):
         self.proposer = proposer
         self.title = title
         if issubclass(type(session_type), ProposalType):
@@ -35,18 +34,27 @@ class Proposal(db.Model):
             raise TypeError("session_type should be of type "
                             "accuconf.proposals.ProposalType")
         self.text = text
-        self.lead = lead
 
 
 class ProposalPresenter(db.Model):
     __tablename__ = "proposal_presenters"
     id = db.Column(db.Integer, primary_key=True)
     proposal_id = db.Column(db.Integer, db.ForeignKey('proposals.id'))
-    presenter = db.Column(db.String(100), db.ForeignKey('users.user_id'))
+    is_lead = db.Column(db.Boolean, nullable=False)
+    email = db.Column(db.String(100), nullable=True)
+    first_name = db.Column(db.String(100), nullable=True)
+    last_name = db.Column(db.String(100), nullable=True)
+    country = db.Column(db.String(100), nullable=True)
+    state = db.Column(db.String(100), nullable=True)
 
-    def __init__(self, proposal_id, presenter):
+    def __init__(self, proposal_id, email, lead, fname, lname, country, state):
         self.proposal_id = proposal_id
-        self.presenter = presenter
+        self.email = email
+        self.is_lead = lead
+        self.first_name = fname
+        self.last_name = lname
+        self.country = country
+        self.state = state
 
 
 class ProposalStatus(db.Model):
@@ -75,6 +83,19 @@ class ProposalReview(db.Model):
         self.proposal_id = proposal_id
         self.reviewer = reviewer
         self.score = score
+
+
+class ProposalComment(db.Model):
+    __tablename__ = "proposal_comments"
+    id = db.Column(db.Integer, primary_key=True)
+    proposal_id = db.Column(db.Integer, db.ForeignKey('proposals.id'))
+    commenter = db.Column(db.String(100), db.ForeignKey('users.user_id'))
+    comment = db.Column(db.Text)
+
+    def __init__(self, proposal_id, commenter, comment):
+        self.proposal_id = proposal_id
+        self.commenter = commenter
+        self.comment = comment
 
 
 class ProposalCategory(db.Model):

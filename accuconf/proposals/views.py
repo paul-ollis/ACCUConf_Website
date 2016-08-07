@@ -1,24 +1,31 @@
 #!/usr/bin/env python
 
-from accuconf import app
 import json
 from flask import render_template, jsonify, redirect, url_for, session, request
-from accuconf.models import User, UserInfo, UserLocation, MathPuzzle
-from accuconf.roles import Role
-from accuconf.database import db
-from accuconf.validator import *
+from flask import Blueprint
+from accuconf.proposals.roles import Role
+from accuconf.proposals.proposals import *
+from accuconf.proposals.validator import *
 import hashlib
 from random import randint
+from . import proposals
 
 
-@app.route("/")
+@proposals.record
+def init_blueprint(ctxt):
+    app = ctxt.app
+    proposals.config = app.config
+    proposals.logger = app.logger
+
+
+@proposals.route("/")
 def index():
-    if app.config.get("MAINTENANCE"):
+    if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
     when_where = {}
     committee = {}
-    venuefile = app.config.get('VENUE')
-    committeefile = app.config.get('COMMITTEE')
+    venuefile = proposals.config.get('VENUE')
+    committeefile = proposals.config.get('COMMITTEE')
     if venuefile.exists():
         when_where = json.loads(venuefile.open().read())
 
@@ -34,53 +41,55 @@ def index():
     if 'user_id' in session:
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            app.logger.error("user_id key present in session, but no user")
+            proposals.logger.error("user_id key present in session, but no user")
             return redirect(url_for('logout'))
         else:
             frontpage["user_name"] = "%s %s" % (user.user_info.first_name,
                                                 user.user_info.last_name)
-    return render_template("index.html", page=frontpage)
+    return render_template("proposals/index.html", page=frontpage)
 
 
-@app.route("/maintenance")
+@proposals.route("/maintenance")
 def maintenance():
     return render_template("maintenance.html")
 
 
-@app.route("/login", methods = ['GET', 'POST'])
+@proposals.route("/login", methods = ['GET', 'POST'])
 def login():
-    if app.config.get("MAINTENANCE"):
+    if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
     if request.method == "POST":
         userid = request.form['usermail']
         passwd = request.form['password']
         user = User.query.filter_by(user_id=userid).first()
+        if not user:
+            return redirect(url_for('index'))
         password_hash = hashlib.sha256(passwd.encode("utf-8")).hexdigest()
         if user.user_pass == password_hash:
             session['user_id'] = user.user_id
-            app.logger.info("Auth successful")
+            proposals.logger.info("Auth successful")
             return redirect(url_for("index"))
         else:
-            app.logger.info("Auth failed")
+            proposals.logger.info("Auth failed")
             return redirect(url_for("login"))
     else:
         return redirect(url_for("index"))
 
 
-@app.route("/logout")
+@proposals.route("/logout")
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('index'))
 
 
-@app.route("/register", methods=["GET", "POST"])
+@proposals.route("/register", methods=["GET", "POST"])
 def register():
-    if app.config.get("MAINTENANCE"):
+    if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
     if request.method == "POST":
         # Process registration data
         user_email = request.form["email"]
-        user_pass = request.form["password"]
+        user_pass = request.form["user_pass"]
         salutation = request.form["salutation"]
         suffix = request.form["suffix"]
         first_name = request.form["firstname"]
@@ -145,9 +154,9 @@ def register():
         return render_template("register.html", page=register)
 
 
-@app.route("/proposal")
+@proposals.route("/proposal")
 def propose():
-    if app.config.get("MAINTENANCE"):
+    if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
@@ -179,9 +188,9 @@ def propose():
         return redirect(url_for('logout'))
 
 
-@app.route("/proposal/submit", methods=["POST"])
+@proposals.route("/proposal/submit", methods=["POST"])
 def submit_proposal():
-    if app.config.get("MAINTENANCE"):
+    if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
 
     if session.get("user_id", False):
@@ -190,13 +199,16 @@ def submit_proposal():
             return redirect(url_for('logout'))
         else:
             proposalData = request.json
+            proposals.logger.info(proposalData)
             status, message = validateProposalData(proposalData)
             response = {}
             if status:
                 proposal = Proposal(proposalData.get("proposer"),
                                     proposalData.get("title"),
-                                    proposalData.get("proposalType"),
+                                    getProposalType(proposalData.get(
+                                        "proposalType")),
                                     proposalData.get("abstract"))
+                presenters = []
                 response["success"] = True,
                 response["redirect"] = url_for('index')
             else:
@@ -207,9 +219,9 @@ def submit_proposal():
         return redirect(url_for('logout'))
 
 
-@app.route("/check/<user>", methods=["GET"])
+@proposals.route("/check/<user>", methods=["GET"])
 def check_duplicate(user):
-    if app.config.get("MAINTENANCE"):
+    if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
     u = User.query.filter_by(user_id=user).first()
     result = {}

@@ -64,6 +64,8 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# Nikola output
+**/nikola/static/assets/
 # PyBuilder
 target/
 

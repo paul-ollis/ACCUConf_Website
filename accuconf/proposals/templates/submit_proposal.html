@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="pagetitle">
+        {{ page.title }}
+    </div>
+</div>
+<div class="row fixed-20">
+    <div class="messages">
+        <p class="alert" id="alert"></p>
+    </div>
+</div>
+<div class="row">
+    <div class="newproposal">
+        <form class="form general wide" id="proposalform" method=""
+              action=" {{ url_for('submit_proposal') }}"
+              onsubmit="return false;">
+            <fieldset>
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" placeholder="Title">
+            </fieldset>
+
+            <fieldset>
+                <label for="abstract">Abstract</label>
+                <textarea rows="24" cols="80" name="proposal" id="proposal" placeholder="Proposal abstract"></textarea>
+            </fieldset>
+            <fieldset>
+                <label for="proposaltype">Proposal Type</label>
+                <select name="proposaltype" id="proposaltype">
+                    <option value="quick">15 minute sessions</option>
+                    <option value="interactive"> 90 minute Interactive
+                        session</option>
+                    <option value="miniworkshop"> 90 minute workshop</option>
+                    <option value="workshop"> 180 minute workshop</option>
+                </select>
+            </fieldset>
+            <fieldset id="copresenters">
+                <label for="presenters">Co-Presenters</label>
+                <table class="presenterstable" id="presenterstable">
+                    <thead>
+                        <tr>
+                            <th> Lead </th>
+                            <th> Email </th>
+                            <th> Fist Name </th>
+                            <th> Last Name </th>
+                            <th> Country </th>
+                            <th> State </th>
+                            <th>  </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd">
+                            <td class="narrow"> <input type="radio" name="lead" id="lead" value="0"> </td>
+                            <td align="center" id="def_email"> {{ page.proposer.email }} </td>
+                            <td align="center" id="def_fname"> {{ page.proposer.first_name }} </td>
+                            <td align="center" id="def_lname"> {{ page.proposer.last_name }} </td>
+                            <td align="center" id="def_country"> {{ page.proposer.country }} </td>
+                            <td align="center" id="def_state"> {{ page.proposer.state }} </td>
+                        </tr>
+                        <tr class="even">
+                            <td class="narrow"> <input type="radio" name="lead" id="lead" value="1"> </td>
+                            <td> <input type="text" name="p_email_1" id="p_email_1" placeholder="Email Address"> </td>
+                            <td> <input type="text" name="p_fname_1" id="p_fname_1" placeholder="First Name"> </td>
+                            <td> <input type="text" name="p_lname_1" id="p_lname_1" placeholder="Last Name"> </td>
+                            <td> <select class="widetable" name="p_ctry_1" id="p_ctry_1" onchange="javascript:loadState('p_ctry_1', 'p_states_1', 'p_state_1', true);" onkeyup="this.onchange();" onmouseup="this.onchange();"> </td>
+                            <td> <input type="text" name="p_state_1" id="p_state_1" placeholder="State"> </td>
+                            <td style="display: none;"> <select class="widetable" name="p_states_1" id="p_states_1"> </td>
+                            <td> <button class="adder" type="button"
+                                         onclick="javascript:addPresenter('presenterstable');">+</button> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            <fieldset>
+                <label for="tags">Category</label>
+                <input type="text" name="tags" id="tags" placeholder="Category">
+            </fieldset>
+            <fieldset class="buttongroup">
+                <button type="submit" class="button primary-button"
+                        onclick="javascript:uploadProposal();">
+                    Submit</button>
+                <button type="cancel" class="button">Reset</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+ var countryData;
+ $(document).ready(function() {
+     $.ajax({
+         method: 'GET',
+         url: "static/countries.json",
+         success: function(data, textStatus, jqXHR) {
+             var country_sel = $('#country');
+             data.sort(function(a, b) {
+                 var aUpper = a.name.toUpperCase();
+                 var bUpper = b.name.toUpperCase();
+                 if ( aUpper < bUpper ) {
+                     return -1;
+                 }
+                 if (aUpper > bUpper) {
+                     return 1;
+                 }
+                 return 0;
+             });
+             countryData = data;
+             $('#p_ctry_1').html();
+             $.each(data, function(name, data) {
+                 $('#p_ctry_1').append('<option value="' + data.alpha3 + '">'
+                         + data.a_name + '</option>');
+             });
+         },
+         dataType: "json"
+     });
+ });
+</script>
+
+{% endblock %}

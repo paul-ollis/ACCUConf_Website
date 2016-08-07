@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from accuconf.database import db
+from accuconf import db
 
 
 # Represents a user in the system, assumes userid = user.email
@@ -12,8 +12,7 @@ class User(db.Model):
                                 uselist=False,
                                 backref=db.backref('user'))
     location = db.relationship('UserLocation',
-                               uselist=False,
-                               backref=db.backref('user'))
+                               uselist=False)
     proposal = db.relationship('Proposal',
                                uselist=False,
                                backref=db.backref('proposed_by'),
