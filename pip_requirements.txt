@@ -1,10 +1,8 @@
-# These packages are needed for deployment on the Jessie server, so must use Jessie versions.
+# A virtualenv is being used so use the latest versions from PyPI
 
-Flask==0.10.1
-SQLAlchemy==0.9.8
-Flask_SQLAlchemy==1.0
-
-#  These packages are for testing: these are not needed on the server, so we can use the latest versions.
-
+Flask
+Flask-Bootstrap
+SQLAlchemy
+Flask_SQLAlchemy
 pytest
 hypothesis
