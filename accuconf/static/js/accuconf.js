@@ -262,7 +262,11 @@ function uploadProposal() {
        var details = [];
        if (idx === 0) {
            $(this).find('td').each(function (col, td) {
-               details.push($(td).text());
+               if (col == 0) {
+                   details.push($(td).find(':input').val());
+               } else {
+                   details.push($(td).text());
+               }
            })
        } else {
            $(this).find('td').each(function(col, td) {
@@ -270,8 +274,16 @@ function uploadProposal() {
            })
        }
        idx++;
+        var presenter = {
+            "lead": (details[0].length == 0 || details[0] == "0") ? 1 : 0,
+            "email": details[1],
+            "firstName": details[2],
+            "lastName": details[3],
+            "country": details[4],
+            "state": details[5]
+        };
        if(validatePresenter(details)) {
-           presenters.push(details);
+           presenters.push(presenter);
        } else {
            alert ("Incorrect data entered for user in row: " + (idx+1));
            return false;

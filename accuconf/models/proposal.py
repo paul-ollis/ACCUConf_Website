@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from accuconf.database import db
+from accuconf import db
 from accuconf.models.user import User
 from accuconf.proposals import *
 

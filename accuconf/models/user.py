@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from accuconf.database import db
+from accuconf import db
 
 
 # Represents a user in the system, assumes userid = user.email

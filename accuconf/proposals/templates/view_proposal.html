@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="pagetitle">
+        {{ page.title }}
+    </div>
+</div>
+<div class="row fixed-20">
+    <div class="messages">
+        <p class="alert" id="alert"></p>
+    </div>
+</div>
+<div class="row">
+    <div class="viewproposal">
+        <form class="form general wide" id="proposalform" method=""
+              action=""
+              onsubmit="return false;">
+            <fieldset>
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title"
+                       placeholder="Title" disabled="true"
+                       value="{{ page.proposal.title }}">
+            </fieldset>
+
+            <fieldset>
+                <label for="abstract">Abstract</label>
+                <textarea rows="24" cols="80"
+                          name="proposal" id="proposal"
+                          placeholder="Proposal abstract">
+                    {{ page.proposal.abstract}}
+                </textarea>
+            </fieldset>
+            <fieldset>
+                <label for="proposaltype">Proposal Type</label>
+                <select name="proposaltype" id="proposaltype" disabled="disabled">
+                    <option value="quick">15 minute sessions</option>
+                    <option value="interactive"> 90 minute Interactive
+                        session</option>
+                    <option value="miniworkshop"> 90 minute workshop</option>
+                    <option value="workshop"> 180 minute workshop</option>
+                </select>
+            </fieldset>
+            <fieldset id="copresenters">
+                <label for="presenters">Co-Presenters</label>
+                <table class="presenterstable" id="presenterstable">
+                    <thead>
+                        <tr>
+                            <th> Lead </th>
+                            <th> Email </th>
+                            <th> Fist Name </th>
+                            <th> Last Name </th>
+                            <th> Country </th>
+                            <th> State </th>
+                            <th>  </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for presenter in page.proposal.presenters %}
+                        <tr class="odd">
+                            <td class="narrow">
+                                <input type="radio"
+                                       name="lead" id="lead"
+                                       value="{{ presenter.is_lead}}"
+                                       disabled="true">
+                            </td>
+                            <td align="center" id="def_email">
+                                {{ presenter.email }}
+                            </td>
+                            <td align="center" id="def_fname">
+                                {{ presenter.first_name }}
+                            </td>
+                            <td align="center" id="def_lname">
+                                {{ presenter.last_name }}
+                            </td>
+                            <td align="center" id="def_country">
+                                {{ presenter.country }}
+                            </td>
+                            <td align="center" id="def_state">
+                                {{ presenter.state }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% set curr = page.proposal.presenters|length %}
+                        <tr class="even" style="display: none;">
+                            <td class="narrow"> <input type="radio" name="lead" id="lead" value="1"> </td>
+                            <td> <input type="text" name="p_email_{{ curr }}"
+                                        id="p_email_{{ curr }}"
+                                        placeholder="Email Address">
+                            </td>
+                            <td> <input type="text" name="p_fname_{{ curr }}"
+                                        id="p_fname_{{ curr }}"
+                                        placeholder="First Name">
+                            </td>
+                            <td> <input type="text" name="p_lname_{{ curr }}"
+                                        id="p_lname_{{ curr }}"
+                                        placeholder="Last Name">
+                            </td>
+                            <td> <select class="widetable" name="p_ctry_{{ curr}}"
+                                         id="p_ctry_{{ curr }}"
+                                         onchange="javascript:loadState('p_ctry_{{ curr }}', 'p_states_{{ curr }}', 'p_state_{{ curr }}', true);"
+                                         onkeyup="this.onchange();" onmouseup="this.onchange();">
+                            </td>
+                            <td> <input type="text" name="p_state_{{ curr}}"
+                                        id="p_state_{{ state }}"
+                                        placeholder="State">
+                            </td>
+                            <td style="display: none;"> <select
+                                    class="widetable"
+                                    name="p_states_{{ curr }}"
+                                    id="p_states_{{ curr }}">
+                            </td>
+                            <td> <button class="adder" type="button"
+                                         onclick="javascript:addPresenter('presenterstable');">+</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            <fieldset>
+                <label for="tags">Category</label>
+                <input type="text" name="tags" id="tags" placeholder="Category">
+            </fieldset>
+            <fieldset class="buttongroup">
+                <button type="submit" class="button primary-button"
+                        onclick="javascript:uploadProposal();">
+                    Submit</button>
+                <button type="cancel" class="button">Reset</button>
+            </fieldset>
+        </form>
+
+    </div>
+</div>
+
