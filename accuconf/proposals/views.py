@@ -2,10 +2,11 @@
 
 import json
 from flask import render_template, jsonify, redirect, url_for, session, request
-from flask import Blueprint
-from accuconf.proposals.roles import Role
-from accuconf.proposals.proposals import *
-from accuconf.proposals.validator import *
+# from flask import Blueprint
+from accuconf.models import *
+from accuconf.proposals.utils.roles import Role
+from accuconf.proposals.utils.proposals import *
+from accuconf.proposals.utils.validator import *
 import hashlib
 from random import randint
 from . import proposals
@@ -42,7 +43,7 @@ def index():
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
             proposals.logger.error("user_id key present in session, but no user")
-            return redirect(url_for('logout'))
+            return redirect(url_for('proposals.logout'))
         else:
             frontpage["user_name"] = "%s %s" % (user.user_info.first_name,
                                                 user.user_info.last_name)
@@ -71,7 +72,7 @@ def login():
             return redirect(url_for("index"))
         else:
             proposals.logger.info("Auth failed")
-            return redirect(url_for("login"))
+            return redirect(url_for("proposals.login"))
     else:
         return redirect(url_for("index"))
 
@@ -143,13 +144,17 @@ def register():
             page["data"] += "start preparing your proposal for the conference."
             return render_template("registration_success.html", page=page)
     elif request.method == "GET":
-        question_id = randint(1, 1000)
-        question = MathPuzzle.query.filter_by(id=question_id).first()
+        num_a = randint(10, 99)
+        num_b = randint(10, 99)
+        sum =  num_a + num_b
+        question = MathPuzzle(sum)
+        db.session.add(question)
+        db.session.commit()
         register = {
             "title": "Register",
             "data": "Register here for submitting proposals to ACCU Conference",
             "question": question.id,
-            "puzzle": question.question
+            "puzzle": "%d + %d" % (num_a, num_b)
         }
         return render_template("register.html", page=register)
 
@@ -161,7 +166,7 @@ def propose():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return redirect(url_for('logout'))
+            return redirect(url_for('proposals.logout'))
         page = {
             "title": "Submit a proposal for ACCU Conference",
             "user_name": "%s %s" % (user.user_info.first_name,
@@ -185,7 +190,7 @@ def propose():
             }
             return render_template("submit_proposal.html", page=page)
     else:
-        return redirect(url_for('logout'))
+        return redirect(url_for('proposals.logout'))
 
 
 @proposals.route("/proposal/submit", methods=["POST"])
@@ -196,7 +201,7 @@ def submit_proposal():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return redirect(url_for('logout'))
+            return redirect(url_for('proposals.logout'))
         else:
             proposalData = request.json
             proposals.logger.info(proposalData)
@@ -216,7 +221,7 @@ def submit_proposal():
                 response["message"] = message
             return jsonify(**response)
     else:
-        return redirect(url_for('logout'))
+        return redirect(url_for('proposals.logout'))
 
 
 @proposals.route("/check/<user>", methods=["GET"])
@@ -229,4 +234,41 @@ def check_duplicate(user):
         result["duplicate"] = True
     else:
         result["duplicate"] = False
+    return jsonify(**result)
+
+
+@proposals.route("/captcha/validate", methods=["POST"])
+def validate_captcha():
+    captchaInfo = request.json
+    qid= captchaInfo.get("question_id")
+    ans = captchaInfo.get("answer")
+    q = MathPuzzle.query.filter_by(id=qid).first()
+    result = {"valid": False}
+    if q:
+        if q.answer == ans:
+            result["valid"] = True
+
+    return jsonify(**result)
+
+
+@proposals.route("/captcha/new", methods=["POST"])
+def generate_captcha():
+    captchaInfo = request.json
+    result = {"valid": True}
+    qid = captchaInfo.get("question_id")
+    if not qid:
+        result["valid"] = False
+    else:
+        question = MathPuzzle.query.filter_by(id=qid).first()
+        if question:
+            num_a = randint(10, 99)
+            num_b = randint(10, 99)
+            sum = num_a + num_b
+            question.answer = sum
+            db.session.commit()
+            result["valid"] = True
+            result["question"] = "%d + %d" % (num_a, num_b)
+        else:
+            result["valid"] = False
+
     return jsonify(**result)
