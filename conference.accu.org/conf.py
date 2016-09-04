@@ -227,9 +227,9 @@ FORCE_ISO8601 = True
 # LOCALE_DEFAULT = locale to use for languages not mentioned in LOCALES; if
 # not set the default Nikola mapping is used.
 
-# LOCALES = {}
-# LOCALE_FALLBACK = None
-# LOCALE_DEFAULT = None
+LOCALES = {"en": "en_gb.utf8"}
+LOCALE_FALLBACK = "en_gb.utf8"
+LOCALE_DEFAULT = "en_gb.utf8"
 
 # One or more folders containing files to be copied as-is into the output.
 # The format is a dictionary of {source: relative destination}.
