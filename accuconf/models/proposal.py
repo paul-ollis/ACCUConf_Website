@@ -2,7 +2,7 @@
 
 from accuconf import db
 from accuconf.models.user import User
-from accuconf.proposals import *
+from accuconf.proposals.utils.proposals import *
 
 
 class Proposal(db.Model):

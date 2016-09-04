@@ -3,14 +3,16 @@
 from flask import Flask, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy, event
-import accuconf_config
-from .nikola import nikola, views
-from .proposals import proposals
-
 
 app = Flask(__name__)
 Bootstrap(app)
 db = SQLAlchemy(app)
+
+import accuconf_config
+from .nikola import nikola, views
+from .proposals import proposals, views
+
+
 app.config.from_object(accuconf_config.TestConfig)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/accuconf_test.db"
 app.secret_key = app.config['SECRET_KEY']

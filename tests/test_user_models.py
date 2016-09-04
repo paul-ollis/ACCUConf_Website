@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
 from accuconf.models import User, UserInfo
-from accuconf.database import db, enable_fkey, create_db, drop_db
+from accuconf import db, create_db, drop_db
 
 
 class TestUser:

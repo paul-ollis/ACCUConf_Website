@@ -11,6 +11,7 @@ class Config(object):
     COMMITTEE = DATA_DIR / "committee.json"
     MAINTENANCE = False
     SECRET_KEY = "TheObviouslyOpenSecret"
+    MODULE_PATH = "/tmp/accuconfweb/accuconf"
 
 
 class ProductionConfig(Config):
@@ -25,6 +26,7 @@ class TestConfig(Config):
     COMMITTEE = DATA_DIR / "committee.json"
     FRONTPAGE = DATA_DIR / "frontpage.adoc"
     SECRET_KEY = "!@#!@#!#!@#!@$SDFQWETR!$#VWERT@#$%123412qwE%$"
+
 
 class MaintenanceConfig(Config):
     MAINTENANCE = True

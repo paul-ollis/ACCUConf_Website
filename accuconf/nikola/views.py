@@ -2,6 +2,7 @@
 
 from flask import send_from_directory
 from pathlib import Path, PurePosixPath
+import os.path
 from . import nikola
 
 
@@ -16,6 +17,9 @@ def init_blueprint(ctxt):
 def index():
     nikola.logger.info("Index accessed")
     basedir = Path.cwd()
+    module_path = nikola.config.get("MODULE_PATH", None)
+    if module_path is not None and os.path.exists(module_path):
+        basedir = module_path
     return send_from_directory(PurePosixPath(basedir,
                                              'accuconf',
                                              'nikola',
@@ -27,6 +31,9 @@ def index():
 def asset(path):
     nikola.logger.info("assets accessed")
     basedir = Path.cwd()
+    module_path = nikola.config.get("MODULE_PATH", None)
+    if module_path is not None and os.path.exists(module_path):
+        basedir = module_path
     nikola.logger.info("Requested for %s" % (path))
     nikola.logger.info("Sending from: %s" % (PurePosixPath(basedir,
                                                            'accuconf',
