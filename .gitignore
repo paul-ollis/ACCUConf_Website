@@ -1,3 +1,4 @@
+
 # Emacs swap/backup files
 **/*~
 
@@ -95,3 +96,7 @@ ENV/
 
 # PyCharm project directory
 /.idea/
+
+
+# Ignore the directory for the Nikola static site to avoid committing it by accident.
+/accuconf/nikola/static

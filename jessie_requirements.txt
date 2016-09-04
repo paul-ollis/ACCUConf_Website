@@ -1,4 +1,5 @@
 python3-virtualenv
+libapache2-mod-wsgi-py3
 
 # All other dependencies should then be checked or installed, including:
 
