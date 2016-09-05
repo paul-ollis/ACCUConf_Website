@@ -61,7 +61,7 @@ class TestUserAuthentication:
                                      password="Password1"),
                            follow_redirects=True)
         assert rv is not None
-        assert "Welcome" in rv.data.decode("utf-8")
+        assert "ACCU Conference" in rv.data.decode("utf-8")
 
     def test_user_auth_fail(self):
         rv = self.app.post('/proposals/register', data=registrationData())
@@ -71,5 +71,4 @@ class TestUserAuthentication:
                                      password="Password2"),
                            follow_redirects=True)
         assert rv is not None
-        assert "Welcome" in rv.data.decode("utf-8")
-
+        assert "ACCU Conference" in rv.data.decode("utf-8")
