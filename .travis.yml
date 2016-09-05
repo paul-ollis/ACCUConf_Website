@@ -2,7 +2,6 @@ language: python
 python:
   - "3.4"
   - "3.5"
-install:
-  - "pip install -r pip_requirements.txt"
-  - "cp tests/nikola_test_index.html accuconf/nikola/static/index.html"
+install: pip install -r pip_requirements.txt
+before_script: cp tests/nikola_test_index.html accuconf/nikola/static/index.html
 script: python -m pytest
