@@ -2,8 +2,7 @@ language: python
 python:
   - "3.4"
   - "3.5"
-  - "nightly"
 install:
   - "pip install -r pip_requirements.txt"
-  - "cp tests/nikola_test_index.html accuconf/nikola/static/"
+  - "cp tests/nikola_test_index.html accuconf/nikola/static/index.html"
 script: python -m pytest
