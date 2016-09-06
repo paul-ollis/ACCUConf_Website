@@ -1,4 +1,3 @@
-#!/usr/bin/env
 
 from pathlib import Path
 
@@ -11,7 +10,7 @@ class Config(object):
     COMMITTEE = DATA_DIR / "committee.json"
     MAINTENANCE = False
     SECRET_KEY = "TheObviouslyOpenSecret"
-    MODULE_PATH = "/tmp/accuconfweb/accuconf"
+    NIKOLA_STATIC_PATH = Path(__file__).resolve().parent / 'accuconf' / 'nikola' / 'static'
 
 
 class ProductionConfig(Config):
@@ -32,5 +31,5 @@ class MaintenanceConfig(Config):
     MAINTENANCE = True
 
 
-class MaintenanceTest(TestConfig):
+class MaintenanceTestConfig(TestConfig):
     MAINTENANCE = True
