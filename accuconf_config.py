@@ -3,7 +3,8 @@ from pathlib import Path
 
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///tmp/accuconf.db"
+    ACCUCONF_DB_FILE = Path(__file__).resolve().parent / 'accuconf.db'
+    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % (ACCUCONF_DB_FILE)
     DEBUG = False
     DATA_DIR = Path("/etc/accuconf/data")
     VENUE = DATA_DIR / "venue.json"
