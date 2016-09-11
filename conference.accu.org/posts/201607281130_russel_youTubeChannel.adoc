@@ -1,0 +1,30 @@
+////
+.. title: The ACCU Conference YouTube Channel
+.. date: 2016-07-28T11:32+01:00
+.. type: text
+////
+
+Session proposal submission for ACCU 2017 will likely start in the middle of October and last for one month
+to the middle of November. The system of email used last year didn't really work, was a lot of effort, and
+there are better ways of doing things. So we are busily creating a Web-based system for proposal
+management, and scheduling of accepted sessions. In the meantime we have this blog and static material, the
+styling of which will almost certainly change over the next few weeks.
+
+If you are wondering what sort of sessions will happen at ACCU 2017, then the sessions at ACCU 2016 will
+give a flavour. Go take a look at the https://www.youtube.com/channel/UCJhay24LTpO1s4bIZxuIqKw[ACCU YouTube
+Channel]. Obviously the actual material in ACCU 2017 will be a year on from that of ACCU 2016, but the
+videos will give you the idea of the sort of thing that goes on. Of course we are always open to new ideas,
+do not feel constrained by what you see there.
+
+ACCU conference sessions are 90 mins or 15 mins – and we also have lightning talks of 5 mins. 90 mins
+sessions can be presentations, mini-workshops, panel sessions, anything with "meaty" content that attendees
+will be interested in. Presentations here doesn't mean just talk. One of the reasons for the 90 min session
+is to get interaction and discussion. 45 min and 50 min sessions with maybe a minute for questions doesn't
+work in really informing, it is the 50 mins of content and 40 mins of questions and debate that really
+works. Some people intermix so it is 90 mins of presentation, question , debate. The important thing is that
+90 min sessions at ACCU conferences are interactive. 15 mins sessions are generally presentations, but
+these "quickies" allow people to get some ideas over without the need for a full 90 mins. Lightning talks
+are, well lightning.
+
+Check out the videos on https://www.youtube.com/channel/UCJhay24LTpO1s4bIZxuIqKw[ACCU YouTube
+Channel] Let us know what you think.

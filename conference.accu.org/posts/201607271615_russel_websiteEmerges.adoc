@@ -1,0 +1,23 @@
+////
+.. title: The ACCU Conference Website Emerges
+.. date: 2016-07-27T16:15+01:00
+.. type: text
+////
+
+In previous years the ACCU Conference website was just a part of the ACCU website using the same content
+management system. This year we are branching out and creating a website for the conference that is separate
+from the main ACCU website. As many of you will know the ACCU website has moved and completed changed
+infrastructure, it is this revolution that has enabled separation of the technologies for the main website
+and the conference website.
+
+The conference website will principally be a Flask/Python3/SQLAlchemy/SQLite3 system but with the blog and
+static pages being Nikola managed. Clearly this is an experiment. But we are going with "release early,
+release often" so we are putting the Nikola blog and static pages up now so as to get assistance designing
+and styling the pages and preparing the ground for the dynamic section which will handle session proposal
+submission, proposal review, accepted session scheduling and rendering of the programme, speakers, and
+session blurbs.
+
+This website is almost certainly going to change style and structure as well as content on a fairly regular basis.
+
+If anyone wants to get involved in helping bring this infrastructure to fruition in the few weeks we have,
+all help gratefully accepted, email conference@accu.org.
