@@ -11,7 +11,7 @@ class Config(object):
     COMMITTEE = DATA_DIR / "committee.json"
     MAINTENANCE = False
     SECRET_KEY = "TheObviouslyOpenSecret"
-    NIKOLA_STATIC_PATH = Path(__file__).resolve().parent / 'accuconf' / 'nikola' / 'static'
+    NIKOLA_STATIC_PATH = Path(__file__).resolve().parent / 'accuconf' / 'static'
 
 
 class ProductionConfig(Config):

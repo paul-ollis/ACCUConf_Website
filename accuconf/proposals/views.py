@@ -69,7 +69,7 @@ def login():
         if user.user_pass == password_hash:
             session['user_id'] = user.user_id
             proposals.logger.info("Auth successful")
-            return redirect(url_for("index"))
+            return redirect(url_for("nikola.index"))
         else:
             proposals.logger.info("Auth failed")
             return redirect(url_for("proposals.login"))
