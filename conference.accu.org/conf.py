@@ -133,12 +133,14 @@ NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         #("/archive.html", "Archive"),
         #("/categories/", "Tags"),
+        (SITE_URL + "proposals/register", "Register"),
+        (SITE_URL + "proposals/proposal", "Submit proposal"),
         ("/rss.xml", "RSS feed"),
     ),
 }
 
 # Name of the theme to use.
-THEME = "bootstrap3"
+THEME = "accuconf"
 
 # Primary color of your theme. This will be used to customize your theme and
 # auto-generate related colors in POSTS_SECTION_COLORS. Must be a HEX value.
