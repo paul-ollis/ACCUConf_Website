@@ -1,0 +1,9 @@
+body {
+  width: 100%;
+  background-color: black;
+}
+.banner {
+  background-color: #112328;
+  height: 124px;
+  width: 100%;
+}
