@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/ACCUConf/ACCUConfWebsite_Static.svg?branch=master)](https://travis-ci.org/ACCUConf/ACCUConfWebsite_Static)
+![Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png)
+
 # ACCU Conference Website
 
 ## Introduction
@@ -23,8 +26,6 @@ not a suitable package then creating a virtualenv and installing Nikola from PyP
 Python 3 being the most senble choice of Python obviously.
 
 ## The Licence
-
-![Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png)
 
 All material in this repository is licenced under
 [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](http://creativecommons.org/licenses/by-nd-nc/4.0/)
