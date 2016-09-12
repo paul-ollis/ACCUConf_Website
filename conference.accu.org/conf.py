@@ -550,8 +550,8 @@ REDIRECTIONS = []
 DEPLOY_COMMANDS = {
     'default': [
         'chmod -R go+rX output',
-        'rsync -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/',
-        'rsync -rav --delete output/ conference@dennis.accu.org:/srv/testconference.accu.org/public/htdocs/accuconf/nikola/static/',
+        #'rsync -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/',
+        'rsync -rav --delete output/ conference@dennis.accu.org:/srv/testconference.accu.org/public/htdocs/accuconf/static/',
         'rsync -rav --delete output/ /home/users/russel/Repositories/Git/ACCUConfWebsite_Flask/accuconf/nikola/static/',
     ]
 }
@@ -831,7 +831,7 @@ FEED_LINKS_APPEND_QUERY = False
 
 # A HTML fragment describing the license, for the sidebar.
 # (translatable)
-LICENSE = ""
+#LICENSE = ""
 # I recommend using the Creative Commons' wizard:
 # https://creativecommons.org/choose/
 # LICENSE = """
@@ -839,10 +839,14 @@ LICENSE = ""
 # <img alt="Creative Commons License BY-NC-SA"
 # style="border-width:0; margin-bottom:12px;"
 # src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>"""
+LICENSE = """<a rel="license" href="https://creativecommons.org/licenses/by-nd-nc/1.0/">
+<img alt="Creative Commons License BY-ND-NC"
+style="border-width:0; margin-bottom:12px;"
+src="https://i.creativecommons.org/l/by-nd-nc/1.0/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
-CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         {license}'
+CONTENT_FOOTER = 'Contents &copy; {date} <a href="mailto:{email}">{author}</a>  {license} – Report problems with this site on <a href="https://github.com/ACCUConf/ACCUConfWebsite_Static/issues">GitHub</a> – Powered by <a href="https://getnikola.com" rel="nofollow">Nikola</a>'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
 # for translatability, as dicts are not formattable.  Nikola will
