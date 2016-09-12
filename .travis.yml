@@ -1,4 +1,4 @@
 language: python
 python: "3.5"
-install: pip install nikola
+install: pip install -r requirements.txt
 script: cd conference.accu.org && nikola build
