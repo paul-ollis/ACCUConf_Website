@@ -1,2 +1,4 @@
 nikola
 jinja2
+webassets
+lesscpy
