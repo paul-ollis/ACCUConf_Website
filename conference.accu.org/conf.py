@@ -551,6 +551,8 @@ DEPLOY_COMMANDS = {
     'default': [
         'chmod -R go+rX output',
         'rsync -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/',
+        'rsync -rav --delete output/ conference@dennis.accu.org:/srv/testconference.accu.org/public/htdocs/accuconf/nikola/static/',
+        'rsync -rav --delete output/ /home/users/russel/Repositories/Git/ACCUConfWebsite_Flask/accuconf/nikola/static/',
     ]
 }
 
@@ -623,6 +625,7 @@ GITHUB_COMMIT_SOURCE = True
 
 # Compiler to process LESS files.
 # LESS_COMPILER = 'lessc'
+LESS_COMPILER = 'lesscpy'
 
 # A list of options to pass to the LESS compiler.
 # Final command is: LESS_COMPILER LESS_OPTIONS file.less
