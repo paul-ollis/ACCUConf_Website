@@ -133,8 +133,8 @@ NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         #("/archive.html", "Archive"),
         #("/categories/", "Tags"),
-        (SITE_URL + "proposals/register", "Register"),
-        (SITE_URL + "proposals/proposal", "Submit proposal"),
+        #(SITE_URL + "proposals/register", "Register"),
+        #(SITE_URL + "proposals/proposal", "Submit proposal"),
         ("/rss.xml", "RSS feed"),
     ),
 }
@@ -550,7 +550,7 @@ REDIRECTIONS = []
 DEPLOY_COMMANDS = {
     'default': [
         'chmod -R go+rX output',
-        #'rsync -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/',
+        'rsync -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/accuconf/static',
         'rsync -rav --delete output/ conference@dennis.accu.org:/srv/testconference.accu.org/public/htdocs/accuconf/static/',
         'rsync -rav --delete output/ /home/users/russel/Repositories/Git/ACCUConfWebsite_Flask/accuconf/nikola/static/',
     ]
