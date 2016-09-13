@@ -21,9 +21,16 @@ def init_blueprint(ctxt):
 
 
 @nikola.route('/')
+@nikola.route('/index.html')
 def index():
     nikola.logger.info("Index accessed")
     return send_from_directory(_nikola_static_path.as_posix(), 'index.html')
+
+
+@nikola.route('/rss.xml')
+def rss():
+    nikola.logger.info("Index accessed")
+    return send_from_directory(_nikola_static_path.as_posix(), 'rss.xml')
 
 
 @nikola.route('/posts/<path:path>')
