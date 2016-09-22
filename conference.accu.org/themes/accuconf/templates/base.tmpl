@@ -12,32 +12,30 @@
 <a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
 
 <!--  Banner -->
-<div class="container-fluid banner-container">
-    <div class="banner">
-        <a href="{{ abs_link(_link("root", None, lang)) }}"> <img src="/assets/accuconf.png" alt="ACCUConf 2017 Logo"/> </a>
-    </div>
+<div class="container-fluid banner">
+    <a href="/index.html"><img src="/assets/accuconf.png" alt="ACCUConf Logo"/></a>
 </div>
 <!-- End of banner -->
 
 <div class="row">
     <!-- Menubar -->
     <div class="col-sm-3">
-            <nav class="navbar navbar-default accuconf-menu" role="navigation">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <span> <a class="navbar-brand" href="{{ abs_link(_link("root", None, lang)) }}"> {{ blog_title|e }} </a> </span>
-                </div>
-                <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
-                    <ul class="nav navbar-nav">
-                        {{ base.html_navigation_links() }}
-                    </ul>
-                </div>
-            </nav>
+        <nav class="navbar navbar-default accuconf-menu" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span> <a class="navbar-brand" href="{{ abs_link(_link("root", None, lang)) }}"> {{ blog_title|e }} </a> </span>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+                <ul class="nav navbar-nav">
+                    {{ base.html_navigation_links() }}
+                </ul>
+            </div>
+        </nav>
         <!-- End of Menubar -->
     </div> <!-- End of div.col-sm-3 -->
 
@@ -51,7 +49,7 @@
                     {% block content %}{% endblock %}
                 </div>
                 <!--End of body content-->
-                
+
                 <footer id="footer">
                     {{ content_footer }}
                     {{ template_hooks['page_footer']() }}
@@ -59,7 +57,7 @@
             </div>
         </div>
     </div> <!--  End of col-sm-6 -->
-<!-- End of main content -->
+    <!-- End of main content -->
 
     <div class="col-sm-3">
         <div class="container sponsor">

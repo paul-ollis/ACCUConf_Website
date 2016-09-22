@@ -548,12 +548,18 @@ REDIRECTIONS = []
 # named `default` will be executed.  You can use as many presets
 # in a `nikola deploy` command as you like.
 DEPLOY_COMMANDS = {
-    'default': [
+    'conference': [
         'chmod -R go+rX output',
         'rsync -rav --delete --exclude stats --exclude .well-known output/ conference@dennis.accu.org:/srv/conference.accu.org/public/htdocs/accuconf/static',
+    ],
+    'testconference': [
+        'chmod -R go+rX output',
         'rsync -rav --delete output/ conference@dennis.accu.org:/srv/testconference.accu.org/public/htdocs/accuconf/static/',
-        'rsync -rav --delete output/ /home/users/russel/Repositories/Git/ACCUConfWebsite_Flask/accuconf/nikola/static/',
-    ]
+    ],
+    'russellocal': [
+        'chmod -R go+rX output',
+        'rsync -rav --delete output/ /home/users/russel/Repositories/Git/ACCUConfWebsite_Flask/accuconf/static/',
+    ],
 }
 
 # github_deploy configuration
