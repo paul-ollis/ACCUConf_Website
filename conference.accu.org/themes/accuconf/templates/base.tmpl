@@ -13,13 +13,13 @@
 
 <!--  Banner -->
 <div class="container-fluid banner">
-    <a href="/index.html"><img src="/assets/accuconf.png" alt="ACCUConf Logo"/></a>
+    <a href="/index.html"><img class="img-responsive" src="/assets/accuconf.png" alt="ACCUConf Logo"/></a>
 </div>
 <!-- End of banner -->
 
 <div class="row">
     <!-- Menubar -->
-    <div class="col-sm-3">
+    <div class="col-sm-3 col-md-3 col-lg-3 ">
         <nav class="navbar navbar-default accuconf-menu" role="navigation">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
@@ -40,8 +40,8 @@
     </div> <!-- End of div.col-sm-3 -->
 
     <!-- Main Content -->
-    <div class="col-sm-6">
-        <div class="container" id="content" role="main">
+    <div class="col-sm-6 col-md-6 col-lg-6">
+        <div id="content" role="main">
             <div class="body-content">
                 <!--Body content-->
                 <div class="row">
@@ -59,8 +59,37 @@
     </div> <!--  End of col-sm-6 -->
     <!-- End of main content -->
 
-    <div class="col-sm-3">
-        <div class="container sponsor">
+    <div class="col-sm-3 col-md-3 col-lg-3">
+        <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Sponsors</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="carousel" id="sponsors-carousel">
+                        <div class="carousel-inner" role="listbox">
+                            <div class="item active">
+                                <img src="" alt="sponsor1" class="img-responsive img-rounded center-block"/>
+                            </div>
+                            <div class="item">
+                                <img src="" alt="sponsor2" class="img-responsive img-rounded center-block"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Committee</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="nolist">
+                        <li> Dr. Russel Winder </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div> <!--  End of div.row -->
@@ -71,6 +100,7 @@
     <script>
     moment.locale("{{ momentjs_locales[lang] }}");
     fancydates({{ date_fanciness }}, {{ js_date_format }});
+    $('.carousel').carousel()
     </script>
     <!-- end fancy dates -->
     {% block extra_js %}{% endblock %}
