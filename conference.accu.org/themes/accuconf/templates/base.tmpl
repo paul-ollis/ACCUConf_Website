@@ -1,6 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 {% import 'base_helper.tmpl' as base with context %}
 {% import 'annotation_helper.tmpl' as notes with context %}
+{% import 'accuconf.tmpl' as accuconf with context %}
 {{ set_locale(lang) }}
 {{ base.html_headstart() }}
 {% block extra_head %}
@@ -50,7 +51,7 @@
         <div class="hidden-xs">
             <div class="row hide">
                 <div class="container-fluid">
-                    {{ base.accuconf_sponsors() }}
+                    {{ accuconf.sponsors() }}
                 </div>
             </div>
         </div>
@@ -66,7 +67,7 @@
                 </a>
                 <div class="collapse" id="keydates">
                     <ul class="nolist">
-                        {{ base.accuconf_dates() }}
+                        {{ accuconf.dates() }}
                     </ul>
                 </div>
             </div>
@@ -103,14 +104,14 @@
                 </div>
                 <div class="panel-body">
                   <ul class="nolist list-group">
-                      {{ base.accuconf_dates() }}
+                      {{ accuconf.dates() }}
                   </ul>
                 </div>
             </div>
         </div>
         </div>
         <div class="row hide">
-            {{ base.accuconf_sponsors() }}
+            {{ accuconf.sponsors() }}
         </div>
         <div class="row">
             <div class="panel panel-default">
@@ -119,7 +120,7 @@
                 </div>
                 <div class="panel-body">
                     <ul class="nolist">
-                        {{ base.accuconf_committee() }}
+                        {{ accuconf.committee() }}
                     </ul>
                 </div>
             </div>
