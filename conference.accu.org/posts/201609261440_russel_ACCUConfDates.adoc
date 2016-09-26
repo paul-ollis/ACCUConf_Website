@@ -1,0 +1,28 @@
+////
+.. title: ACCUConf Dates
+.. date: 2016-09-26T14:40+01:00
+.. type: text
+////
+
+The dates of ACCUConf 2017 have been known for a while but we delayed announcing them formally for reasons
+which are unlikely to come to light – mostly because we have no idea what they were. However,
+
+- Full-day Workshops and Tutorials: 2017-04-25
+- Conference: 2017-04-26 to 2017-04-29
+
+are the dates in my diary and the diary of the http://www.archer-yates.co.uk/[Archer Yates] people who are
+organising the conference for http://www.accu.org/[ACCU]. Obviously at this stage we have no idea what the
+conference content will be as we haven't had the call for session proposals as yet. I have been waffling
+about "mid-October to mid-November" to various people, but it seems reasonable to be a bit more specific. We
+seem to be iterating on:
+
+- Call for Proposals: 2016-10-17 to 2016-11-18.
+
+We are busy making a website entry form for submitting the proposals. We will be trying it our ourselves in
+the next few days to ensure it works. Members of the Programme Committee will review the proposals as they
+come in. A short while after the end of the call for proposals, the Programme Committee will meet, sift the
+sessions to put into the schedule and make the first cut at the schedule. This is not usually an easy
+process, so we are likely to leave notification until 2017-01-13. We will of course though inform as soon as
+we can, preferably well before that date.
+
+So put the dates in your diaries, and prepare you proposals awaiting the opening of the call.
