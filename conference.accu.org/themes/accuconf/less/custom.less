@@ -1,29 +1,30 @@
-@basecolour: #ff5e00;
+
+@orangecolour: #ff5e00; // rgba(255, 94, 0, 1)
 @padding: 3px;
-@menucolor: rgba(17, 35, 40, 1);
+@greybackgroundcolour: #eeeeee; // rgba(238, 238, 238, 1);
 
 body {
     width: 100%;
 }
 
 a {
-    color: @basecolour;
+    color: @orangecolour;
 }
 
 a:hover {
-    color: @basecolour;
+    color: @orangecolour;
 }
 
 a:visited {
-    color: @basecolour;
+    color: @orangecolour;
 }
 
 .dt-published {
-    color: @basecolour;
+    color: @orangecolour;
 }
 
 .u-url {
-    color: @basecolour;
+    color: @orangecolour;
 }
 
 .row {
@@ -31,7 +32,7 @@ a:visited {
 }
 
 .banner {
-  background-color: rgba(17, 35, 40, 1);
+  background-color: @greybackgroundcolour;
   height: image-height("assets/accuconf.png");
   width: 100%;
   padding-top: 15px;
@@ -60,24 +61,20 @@ a:visited {
     float: none;
 }
 
-.accuconf-menu {
-    background-color: @menucolor;
+.panel {
+    background-color: @greybackgroundcolour;
 }
 
 .sponsor {
-    background-color: @menucolor;
+    background-color: @greybackgroundcolour;
 }
 
 .nolist {
     list-style: none;
 }
 
-#sponsors-carousel {
-    height: 160px;
-}
-
 .accuconf-menu {
-    background-color: #eeeeee;
+    background-color: @greybackgroundcolour;
 }
 
 .accuconf-toggle-link {
