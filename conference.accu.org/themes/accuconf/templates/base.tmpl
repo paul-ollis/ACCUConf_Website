@@ -29,22 +29,31 @@
 <div class="row">
     <!-- Menubar -->
     <div class="col-sm-3 col-md-3 col-lg-3 ">
-        <nav class="navbar navbar-default accuconf-menu" role="navigation">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span> <a class="navbar-brand" href="{{ abs_link(_link("root", None, lang)) }}"> {{ blog_title|e }} </a> </span>
+        <div class="row">
+            <nav class="navbar navbar-default accuconf-menu" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <span> <a class="navbar-brand" href="{{ abs_link(_link("root", None, lang)) }}"> {{ blog_title|e }} </a> </span>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+                    <ul class="nav navbar-nav">
+                        {{ base.html_navigation_links() }}
+                    </ul>
+                </div>
+            </nav>
+        </div> <!-- End div.row for nav -->
+        <div class="hidden-xs">
+            <div class="row hide">
+                <div class="container-fluid">
+                    {{ base.accuconf_sponsors() }}
+                </div>
             </div>
-            <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
-                <ul class="nav navbar-nav">
-                    {{ base.html_navigation_links() }}
-                </ul>
-            </div>
-        </nav>
+        </div>
         <!-- End of Menubar -->
     </div> <!-- End of div.col-sm-3 -->
 
@@ -57,10 +66,7 @@
                 </a>
                 <div class="collapse" id="keydates">
                     <ul class="nolist">
-                        <li> Call for Proposals: 2016-10-17 to 2016-11-11 </li>
-                        <li> Notification Date: 2017-01-13 </li>
-                        <li> Workshops Day: 2017-04-25 </li>
-                        <li> Conference: 2017-04-26 to 2017-04-29 </li>
+                        {{ base.accuconf_dates() }}
                     </ul>
                 </div>
             </div>
@@ -97,30 +103,15 @@
                 </div>
                 <div class="panel-body">
                   <ul class="nolist list-group">
-                    <li> Call for Proposals: 2016-10-17 to 2016-11-11 </li>
-                    <li> Notification Date: 2017-01-13 </li>
-                    <li> Workshops Day: 2017-04-25 </li>
-                    <li> Conference: 2017-04-26 to 2017-04-29 </li>
+                      {{ base.accuconf_dates() }}
                   </ul>
                 </div>
             </div>
         </div>
         </div>
-        <!--
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Sponsors</h3>
-                </div>
-                <div class="panel-body">
-                  <ul class="nolist">
-                    <li> <img src="" alt="sponsor1" class="img-responsive img-rounded center-block"/> </li>
-                    <li> <img src="" alt="sponsor2" class="img-responsive img-rounded center-block"/> </li>
-                  </ul>
-                </div>
-            </div>
+        <div class="row hide">
+            {{ base.accuconf_sponsors() }}
         </div>
-        -->
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -128,15 +119,7 @@
                 </div>
                 <div class="panel-body">
                     <ul class="nolist">
-                      <li> Russel Winder (Chair) </li>
-                      <li> Gail Ollis </li>
-                      <li> Jon Jagger </li>
-                      <li> Francis Glassborow </li>
-                      <li> Olve Maudal </li>
-                      <li> Roger Orr </li>
-                      <li> Felix Petriconi </li>
-                      <li> Charles Bailey </li>
-                      <li> Dirk Haun </li>
+                        {{ base.accuconf_committee() }}
                     </ul>
                 </div>
             </div>
