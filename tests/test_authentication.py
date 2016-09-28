@@ -18,7 +18,6 @@ def registrationData(key = "valid"):
                       lastname="Name",
                       phone="+011234567890",
                       pincode="123456",
-                      salutation="Mr.",
                       suffix="",
                       country="India",
                       state="TamilNadu",
@@ -31,7 +30,6 @@ def registrationData(key = "valid"):
                        lastname="Name2",
                        phone="+011234567890",
                        pincode="123456",
-                       salutation="Dr.",
                        suffix="Jr.",
                        country="India",
                        state="TamilNadu",
@@ -71,4 +69,4 @@ class TestUserAuthentication:
                                      password="Password2"),
                            follow_redirects=True)
         assert rv is not None
-        assert "ACCU Conference" in rv.data.decode("utf-8")
+        assert "Login" in rv.data.decode("utf-8")

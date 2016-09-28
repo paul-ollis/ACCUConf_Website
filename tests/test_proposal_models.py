@@ -22,7 +22,6 @@ class TestProposal:
     def test_proposal_basic(self):
         u = User("abc@b.c", "password")
         ui = UserInfo("a@b.c",
-                      'Mr.',
                       'User',
                       'Name',
                       '',
