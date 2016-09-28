@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "proposals_base.html" %}
 {% block title %}Home{% endblock %}
 {% block head %}
   {{ super() }}
@@ -10,91 +10,98 @@
     </div>
 </div>
 <div class="row">
-    <p class="first"> {{ page.data }} </p>
-</div>
-<div class="row fixed-20">
-    <div class="messages">
+    <div class="container-fluid">
         <p class="alert" id="alert"></p>
     </div>
 </div>
 <div class="row">
-    <div class="registrationtable">
-        <form class="form general" id="registrationForm" method="POST">
-            <fieldset>
-                <label for="email">Email</label>
-                <input id="email" name="email" placeholder="Email" onkeyup="javascript:checkDuplicate();">
-                <p class="form-alert pull-right" id="emailalert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="password">Password</label>
-                <input id="user_pass" name="user_pass" type="password"
-                       placeholder="Password">
-                <p class="form-alert pull-right" id="passwordalert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="cpassword">Retype Password</label>
-                <input id="cpassword" name="cpassword" type="password" placeholder="Retype Password">
-                <p class="form-alert pull-right" id="cpasswordalert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="salutation">Salutation</label>
-                <select id="salutation" name="salutation">
-                    <option value="Mr.">Mr.</option>
-                    <option value="Ms.">Ms.</option>
-                    <option value="Dr.">Dr.</option>
-                </select>
-                <p class="form-alert pull-right" id="salutationalert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="firstname">First Name</label>
-                <input id="firstname" name="firstname" type="text" placeholder="First Name">
-                <p class="form-alert pull-right" id="firstnamealert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="lastname">Last Name</label>
-                <input id="lastname" name="lastname" type="text" placeholder="Last Name">
-                <label for="suffix" class="suffix">Suffix</label>
-                <select id="suffix" name="suffix">
-                    <option value="none"></option>
-                    <option value="Jr.">Jr.</option>
-                    <option value="Sr.">Sr.</option>
-                </select>                    
-                <p class="form-alert pull-right" id="lastnamealert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="phone">Contact number with ISD code</label>
-                <input id="phone" name="phone" placeholder="Contact number with ISD code">
-                <p class="form-alert pull-right" id="phonealert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="country">Country</label>
-                <select id="country" name="country" onchange="javascript:loadState('country', 'states', 'state');" onkeyup="this.onchange();" onmouseup="this.onchange();">
-                </select>
-                <p class="form-alert pull-right" id="countryalert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="state">State</label>
-                <input type="text" id="state" name="state" placeholder="State/Province">
-                <select id="states" name="states" style="display:none;" onchange="javascript:updateState();" onkeyup="this.onchange();" onmouseup="this.onchange();">
-                </select>
-                <p class="form-alert pull-right" id="statealert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="pincode">Pin/Zip Code</label>
-                <input type="text" id="pincode" name="pincode" placeholder="Pin or Zip code">
-                <p class="form-alert pull-right" id="picodealert"></p>
-            </fieldset>
-            <fieldset>
-                <label for="captcha">Solve this puzzle</label>
-                <label class="puzzle"> {{ page.puzzle }} </label>
-                <input type="hidden" id="question" name="question" value="{{ page.question }}">
-                <input type="text" id="puzzle" name="puzzle" placeholder="Solve" class="puzzle">
-                <p class="form-alert pull-right" id="captchaalert"></p>
-            </fieldset>
-            <fieldset class="buttongroup">
-                <button type="submit" id="submit"  class="button primary-button" onsubmit="javascript:registerUser();">Register</button>
-                <button type="cancel" class="button">Cancel</button>
-            </fieldset>
+    <div class="container-fluid">
+        <form class="form-horizontal" id="registrationForm" method="POST" action="{{ url_for('proposals.register')}}">
+            <div class="form-group">
+                <label for="email" class="control-label col-sm-3">Email</label>
+                <div class="col-sm-offset-1">
+                    <input id="email" name="email" placeholder="Email" onkeyup="javascript:checkDuplicate();" aria-describedby="emailhelp">
+                    <span class="help-block" id="emailhelp"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="control-label col-sm-3">Password</label>
+                <div class="col-sm-offset-1">
+                    <input id="user_pass" name="user_pass" type="password" placeholder="Password" aria-describedby="passwordalert">
+                    <span class="help-block" id="passwordalert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cpassword" class="control-label col-sm-3">Retype Password</label>
+                <div class="col-sm-offset-1">
+                    <input id="cpassword" name="cpassword" type="password" placeholder="Retype Password" aria-describedby="cpasswordalert">
+                    <span class="help-block" id="cpasswordalert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="control-label col-sm-3">First Name</label>
+                <div class="col-sm-offset-1">
+                    <input id="firstname" name="firstname" type="text" placeholder="First Name" aria-describedby="firstnamealert">
+                    <span class="help-block" id="firstnamealert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastname" class="control-label col-sm-3">Last Name</label>
+                <div class="col-sm-offset-1">
+                    <input id="lastname" name="lastname" type="text" placeholder="Last Name" aria-describedby="lastnamealert">
+                    <label for="suffix" class="suffix" class="control-label col-sm-3">Suffix</label>
+                    <select id="suffix" name="suffix">
+                        <option value="none"></option>
+                        <option value="Jr.">Jr.</option>
+                        <option value="Sr.">Sr.</option>
+                    </select>                    
+                    <span class="help-block" id="lastnamealert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="control-label col-sm-3">Contact number with ISD code</label>
+                <div class="col-sm-offset-1">
+                    <input id="phone" name="phone" placeholder="Contact number with ISD code" aria-describedby="phonealert">
+                    <span class="help-block" id="phonealert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="country" class="control-label col-sm-3">Country</label>
+                <div class="col-sm-offset-1">
+                    <select id="country" name="country" onchange="javascript:loadState('country', 'states', 'state');" onkeyup="this.onchange();" onmouseup="this.onchange();" aria-describedby="countryalert">
+                    </select>
+                    <span class="help-block" id="countryalert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="state" class="control-label col-sm-3">State</label>
+                <div class="col-sm-offset-1">
+                    <input type="text" id="state" name="state" placeholder="State/Province">
+                    <select id="states" name="states" style="display:none;" onchange="javascript:updateState();" onkeyup="this.onchange();" onmouseup="this.onchange();" aria-describedby="statealert">
+                    </select>
+                    <span class="help-block" id="statealert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="pincode" class="control-label col-sm-3">Pin/Zip Code</label>
+                <div class="col-sm-offset-1">
+                    <input type="text" id="pincode" name="pincode" placeholder="Pin or Zip code">
+                    <span class="help-block" id="picodealert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="captcha" class="control-label col-sm-3">Solve this puzzle</label>
+                <label for="captcha" class="puzzle" class="col-sm-3"> {{ page.puzzle }} </label>
+                <div class="col-sm-offset-1">
+                    <input type="hidden" id="captcha" name="captcha" value="{{ page.question }}">
+                    <input type="text" id="puzzle" name="puzzle" placeholder="Solve" class="puzzle">
+                    <span class="form-alert pull-right" id="captchaalert"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" id="submit"  class="btn btn-primary" onsubmit="javascript:registerUser();">Register</button>
+                <button type="cancel" class="btn btn-default">Cancel</button>
+            </div>
         </form>
     </div>
 </div>
@@ -163,10 +170,10 @@
      $('#email').focusout(function() {
          var email = $('#email').val();
          if (!isEmail(email)) {
-             $('#emailalert').text(email + " is not a valid email address");
+             $('#emailhelp').text(email + " is not a valid email address");
              $('#submit').attr("disabled", true);
          } else {
-             $('#emailalert').text("");
+             $('#emailhelp').text("");
              $('#submit').removeAttr("disabled");
          }
      });

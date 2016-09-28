@@ -1,0 +1,163 @@
+{% import 'links.html' as links with context %}
+{% import 'accuconf.html' as accuconf with context %}
+<!DOCTYPE html>
+<html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="copyright" content="2017 Balachandran Sivakumar, Dr Russel Winder">
+    <head>
+        {% block head %}
+        <link rel="stylesheet" type="text/css"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/proposals/assets/css/custom.css">
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+                integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+                crossorigin="anonymous"></script>
+        <script src="{{ url_for('proposals.static', filename='js/accuconf.js') }}" type="text/javascript"></script>
+        <title>{% block title%} {% endblock %} - ACCUConf</title>
+        {% endblock %}
+    </head>
+    <body>
+        <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+        <!--  Banner -->
+        <div class="container-fluid banner">
+            <a href="/index.html"><img class="img-responsive"
+                                       src="/proposals/assets/accuconf.png" align="left" alt="ACCUConf Logo"/></a>
+            <a href="http://www.accu.org"><img class="img-responsive"
+                                               src="/proposals/assets/accu_logo.png" align="right" alt="ACCU Logo"/></a>
+        </div>
+
+        <!-- Banner logo -->
+        <div class="row">
+            <!-- Menubar -->
+            <div class="col-sm-3 col-md-3 col-lg-3 ">
+                <div class="row">
+                    <nav class="navbar navbar-default accuconf-menu" role="navigation">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <span>
+                                <a class="navbar-brand"
+                                   href="{{ url_for('nikola.index')}}"> {{ links.menu_title() }}
+                                </a>
+                            </span>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+                            <ul class="nav navbar-nav">
+                                {{ links.sitelinks() }}
+                            </ul>
+                        </div>
+                    </nav>
+                </div> <!-- End div.row for nav -->
+                <div class="hidden-xs">
+                    <div class="row hide">
+                        <div class="container-fluid">
+                            {{ accuconf.sponsors() }}
+                        </div>
+                    </div>
+                </div>
+                <!-- End of Menubar -->
+            </div> <!-- End of div.col-sm-3 -->
+
+            <!-- For single column rendering - In mobiles and tablets -->
+            <div class="visible-xs-block">
+                <div class="container-fluid">
+                    <div class="accuconf-menu">
+                        <a type="button" class="accuconf-toggle-link btn" data-toggle="collapse" href="#keydates">
+                            <span class="accuconf-toggle glyphicon glyphicon-menu-hamburger"> Dates </span>
+                        </a>
+                        <div class="collapse" id="keydates">
+                            <ul class="nolist">
+                                {{ accuconf.dates() }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End For single column rendering  -->
+
+            <!-- Main Content -->
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div id="content" role="main">
+                    <div class="body-content">
+                        <!--Body content-->
+                        <div class="row">
+                            {% block content %}{% endblock %}
+                        </div>
+                        <!--End of body content-->
+
+                        {# <footer id="footer"> #}
+                            {#    {{ content_footer }} #}
+                            {#    {{ template_hooks['page_footer']() }} #}
+                            {# </footer> #}
+                    </div>
+                </div>
+            </div> <!--  End of col-sm-6 -->
+            <!-- End of main content -->
+
+            <div class="col-sm-3 col-md-3 col-lg-3">
+                <div class="hidden-xs">
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Dates</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="nolist list-group">
+                                    {{ accuconf.dates() }}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row hide">
+                    {{ accuconf.sponsors() }}
+                </div>
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Programme Committee</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="nolist">
+                                {{ accuconf.committee() }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Organisation</h3>
+                        </div>
+                        <div class="panel-body">
+                            <a href="http://www.archer-yates.co.uk/"><h4> Archer Yates Ltd </h4></a>
+                            <img src="/proposals/assets/AYA_holding.png" width="50" align="right" alt="AYALogo"/>
+                            <ul class="nolist">
+                                <li> 7 Threshers Yard </li>
+                                <li> West Street </li>
+                                <li> Kingham </li>
+                                <li> Oxfordshire OX7 6YF  </li>
+                                <li> </li>
+                                <li> Telephone: +44 1608 659900  </li>
+                                <li> Fax: +44 1608 659911  </li>
+                                <li> Email: julie@archer-yates.co.uk </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!--  End of div.row -->
+
+    </body>
+</html>

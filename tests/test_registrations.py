@@ -9,7 +9,7 @@ from accuconf import app, db, create_db, drop_db
 
 
 @pytest.fixture
-def registrationData(key = "valid"):
+def registrationData(key="valid"):
     data = {
 
         "valid": dict(email="a@b.c",
@@ -18,7 +18,6 @@ def registrationData(key = "valid"):
                       lastname="Name",
                       phone="+011234567890",
                       pincode="123456",
-                      salutation="Mr.",
                       suffix="",
                       country="India",
                       state="TamilNadu",
@@ -31,7 +30,6 @@ def registrationData(key = "valid"):
                        lastname="Name2",
                        phone="+011234567890",
                        pincode="123456",
-                       salutation="Dr.",
                        suffix="Jr.",
                        country="India",
                        state="TamilNadu",
@@ -44,7 +42,6 @@ def registrationData(key = "valid"):
                           lastname="Name2",
                           phone="+011234567890",
                           pincode="123456",
-                          salutation="Dr.",
                           suffix="Jr.",
                           country="India",
                           state="TamilNadu",
@@ -57,7 +54,6 @@ def registrationData(key = "valid"):
                             lastname="Name2",
                             phone="+011234567890",
                             pincode="123456",
-                            salutation="Dr.",
                             suffix="Jr.",
                             country="India",
                             state="TamilNadu",
@@ -70,7 +66,6 @@ def registrationData(key = "valid"):
                             lastname="Name2",
                             phone="+011234567890",
                             pincode="123456",
-                            salutation="Dr.",
                             suffix="Jr.",
                             country="India",
                             state="TamilNadu",

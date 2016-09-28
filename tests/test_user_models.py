@@ -48,7 +48,6 @@ class TestUserInfo:
 
     def test_userinfo_basic(self):
         ui = UserInfo('a@b.c',
-                      'Mr.',
                       'User',
                       'Name',
                       '',
@@ -74,7 +73,6 @@ class TestUserModel:
     def test_basic(self):
         u = User('a@b.c', 'password')
         ui = UserInfo('a@b.c',
-                      'Mr.',
                       'User',
                       'Name',
                       '',
@@ -91,7 +89,6 @@ class TestUserModel:
     def test_userinfo_fkey(self):
         u = User('a@b.cc', 'password')
         ui = UserInfo('aa@b.c',
-                      'Mr.',
                       'User',
                       'Name',
                       '',
