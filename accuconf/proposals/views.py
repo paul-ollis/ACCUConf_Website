@@ -2,7 +2,7 @@
 
 import json
 from flask import render_template, jsonify, redirect, url_for, session, request
-# from flask import Blueprint
+from flask import send_from_directory
 from accuconf.models import *
 from accuconf.proposals.utils.roles import Role
 from accuconf.proposals.utils.proposals import *
@@ -11,43 +11,53 @@ import hashlib
 from random import randint
 from . import proposals
 
+_proposal_static_path = None
 
 @proposals.record
 def init_blueprint(ctxt):
     app = ctxt.app
     proposals.config = app.config
     proposals.logger = app.logger
+    global _proposal_static_path
+    _proposal_static_path = proposals.config.get("NIKOLA_STATIC_PATH", None)
+    if _proposal_static_path is None:
+        message = 'NIKOLA_STATIC_PATH not set properly.'
+        proposals.logger.info(message)
+        raise ValueError(message)
+    assert _proposal_static_path.is_dir()
 
 
 @proposals.route("/")
 def index():
     if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
-    when_where = {}
-    committee = {}
-    venuefile = proposals.config.get('VENUE')
-    committeefile = proposals.config.get('COMMITTEE')
-    if venuefile.exists():
-        when_where = json.loads(venuefile.open().read())
 
-    if committeefile.exists():
-        committee = json.loads(committeefile.open().read())
-
-    frontpage = {
-        "title": "ACCU Conference 2017",
-        "data": "Welcome to ACCU Conf 2017",
-        "when_where": when_where,
-        "committee": committee.get("members", [])
-    }
-    if 'user_id' in session:
-        user = User.query.filter_by(user_id=session["user_id"]).first()
-        if not user:
-            proposals.logger.error("user_id key present in session, but no user")
-            return redirect(url_for('proposals.logout'))
-        else:
-            frontpage["user_name"] = "%s %s" % (user.user_info.first_name,
-                                                user.user_info.last_name)
-    return render_template("proposals/index.html", page=frontpage)
+    # when_where = {}
+    # committee = {}
+    # venuefile = proposals.config.get('VENUE')
+    # committeefile = proposals.config.get('COMMITTEE')
+    # if venuefile.exists():
+    #     when_where = json.loads(venuefile.open().read())
+    #
+    # if committeefile.exists():
+    #     committee = json.loads(committeefile.open().read())
+    #
+    # frontpage = {
+    #     "title": "ACCU Conference 2017",
+    #     "data": "Welcome to ACCU Conf 2017",
+    #     "when_where": when_where,
+    #     "committee": committee.get("members", [])
+    # }
+    # if 'user_id' in session:
+    #     user = User.query.filter_by(user_id=session["user_id"]).first()
+    #     if not user:
+    #         proposals.logger.error("user_id key present in session, but no user")
+    #         return redirect(url_for('proposals.logout'))
+    #     else:
+    #         frontpage["user_name"] = "%s %s" % (user.user_info.first_name,
+    #                                             user.user_info.last_name)
+    # return render_template("proposals/index.html", page=frontpage)
+    return redirect(url_for('nikola.index'))
 
 
 @proposals.route("/maintenance")
@@ -73,8 +83,9 @@ def login():
         else:
             proposals.logger.info("Auth failed")
             return redirect(url_for("proposals.login"))
-    else:
-        return redirect(url_for("index"))
+    elif request.method == "GET":
+        page = {"title": "Login Page"}
+        return render_template("login.html", page=page)
 
 
 @proposals.route("/logout")
@@ -91,7 +102,7 @@ def register():
         # Process registration data
         user_email = request.form["email"]
         user_pass = request.form["user_pass"]
-        salutation = request.form["salutation"]
+        # salutation = request.form["salutation"]
         suffix = request.form["suffix"]
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
@@ -120,7 +131,7 @@ def register():
         else:
             newuser = User(user_email, encoded_pass)
             userinfo = UserInfo(newuser.user_id,
-                                salutation,
+                                # salutation,
                                 first_name,
                                 last_name,
                                 suffix,
@@ -146,7 +157,7 @@ def register():
     elif request.method == "GET":
         num_a = randint(10, 99)
         num_b = randint(10, 99)
-        sum =  num_a + num_b
+        sum = num_a + num_b
         question = MathPuzzle(sum)
         db.session.add(question)
         db.session.commit()
@@ -213,9 +224,22 @@ def submit_proposal():
                                     getProposalType(proposalData.get(
                                         "proposalType")),
                                     proposalData.get("abstract"))
-                presenters = []
+                user.proposal = proposal
+                db.session.add(proposal)
+                presenters = proposalData.get("presenters")
+                for presenter in presenters:
+                    proposalPresenter = ProposalPresenter(proposal.id,
+                                                          presenter["email"],
+                                                          presenter["lead"],
+                                                          presenter["fname"],
+                                                          presenter["lname"],
+                                                          presenter["country"],
+                                                          presenter["state"])
+                    proposal.presenters.append(proposalPresenter)
+                    db.session.add(proposalPresenter)
+                db.session.commit()
                 response["success"] = True,
-                response["redirect"] = url_for('index')
+                response["redirect"] = url_for('proposals.index')
             else:
                 response["success"] = False
                 response["message"] = message
@@ -272,3 +296,12 @@ def generate_captcha():
             result["valid"] = False
 
     return jsonify(**result)
+
+
+@proposals.route('/assets/<path:path>')
+def asset(path):
+    proposals.logger.info("assets accessed")
+    proposals.logger.info("Requested for {}".format(path))
+    source_path = _proposal_static_path / 'assets'
+    proposals.logger.info("Sending from: {}".format(source_path))
+    return send_from_directory(source_path.as_posix(), path)

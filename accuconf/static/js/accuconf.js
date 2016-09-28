@@ -4,10 +4,22 @@ function registerUser() {
         //$('#registrationForm').submit();
         /* $.ajax({
          *     method: "POST",
-         *     url: "/register",
+         *     url: "/proposals/register",
          *     data: $('#registrationForm').serialize(),
          *     contentType: "application/json"
          * });*/
+        var captcha = $("#captcha").val();
+        var solved = $("#puzzle").val();
+        $.ajax({
+            method: "POST",
+            url: "/proposals/captcha/validate",
+            data: {"question_id": captcha, "answer": solved},
+            contentType: "application/json",
+            success: function(data) {
+                alert(data.valid);
+            }
+        });
+        
         return true;
     } else {
         alert ("Invalid");
@@ -61,6 +73,7 @@ function validateRegistrationData() {
 
 function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-_])+\.)+([a-zA-Z0-9])+$/;
+  console.log("Email is: " + email);  
   return regex.test(email);
 }
 
@@ -123,7 +136,7 @@ function checkDuplicate() {
         $('#emailalert').text();
         $('#submit').removeAttr("disabled");
     }
-    var url = "/check/" + email;
+    var url = "/proposals/check/" + email;
     $.ajax({
         type: "GET",
         url: url,
@@ -253,6 +266,58 @@ function addPresenter(tableId) {
 
 function uploadProposal() {
     var proposalTitle = $('#title').val();
+    var proposal = $('#proposal').val();
+    var proposalType = $('#proposaltype').val();
+    var presenterRows = $("#presenters-body tr");
+    var proposer = $("#def_email").text();
+    var presenters = [];
+    var leadId = $('input[name=lead]:checked', '#proposalform').val();
+    if (leadId === undefined) {
+        leadId = 1;
+    }
+    $("#presenters-body > tr").each(function(idx) {
+        var cells = $(this).find('td');
+        var presenter = {
+            "lead": (leadId == (idx + 1)) ? 1 : 0,
+            "email" : cells[2].innerText,
+            "fname" : cells[3].innerText,
+            "lname" : cells[4].innerText,
+            "country" : cells[5].innerText,
+            "state" : cells[6].innerText,
+        };
+        presenters.push(presenter);
+    });
+    var proposalData = {
+        "title": proposalTitle,
+        "abstract": proposal,
+        "proposer": proposer,
+        "proposalType": proposalType,
+        "presenters": presenters
+    };
+    $.ajax({
+        url: "/proposals/proposal/submit",
+        data: JSON.stringify(proposalData),
+        type: "POST",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        success: function(data) {
+            console.log(data);
+            if (data.success) {
+                window.location = data.redirect;
+            } else {
+                $('#alert').text(data.message);
+            }
+        },
+        error: function(data) {
+            console.log("Error in proposal submission: " + data);
+        }
+    });
+    return true;
+}
+
+function uploadProposalOld() {
+    var proposalTitle = $('#title').val();
     var abstract = $('#proposal').val();
     var proposalType = $('#proposaltype').val();
     var presentersTableBody = $('#presenterstable > tbody > tr');
@@ -298,7 +363,7 @@ function uploadProposal() {
         "presenters": presenters
     };
     $.ajax({
-        url: "/proposal/submit",
+        url: "/proposals/proposal/submit",
         data: JSON.stringify(proposalData),
         type: "POST",
         method: "POST",
@@ -321,4 +386,48 @@ function uploadProposal() {
 
 function validatePresenter(details) {
     return true;
+}
+
+function addNewPresenter() {
+    var email = $("#add-presenter-email").val();
+    var fname = $("#add-presenter-fname").val();
+    var lname = $("#add-presenter-lname").val();
+    var ctry = $("#add-presenter-country").val();
+    var state_sel = $("#add-presenter-states").val();
+    var state_txt = $("#add-presenter-state").val();
+    var state;
+    if (state_txt.length) {
+        state = state_txt;
+    } else {
+        state = state_sel;
+    }
+
+    var presenters = $("#presenters-body");
+    var trCnt = $("#presenters-body tr").length;
+    var sno = trCnt + 1;
+    var presenterRow = _.template($("#presenters-row-template").html());
+    presenters.append(presenterRow({"sno": sno, "email": email, "fname": fname, "lname": lname, "ctry": ctry, "state": state}));
+    resetModal();
+    $("#add-presenter-modal").modal('hide');
+    return true;
+}
+
+function resetModal() {
+    $('.modal').on('hidden.bs.modal', function(){
+        $("#add-presenter-modal").find('form')[0].reset();
+    });
+}
+
+function deleteRow(rowIdx) {
+    var presenters = $("#presenters-body");
+    var msg = $("#presenters-body tr:eq(1)").text();
+    alert(msg);
+}
+
+function showPointer(element) {
+    element.css("cursor", "pointer");
+}
+
+function showDefaultPointer(element) {
+    element.css("cursor", "default");
 }
