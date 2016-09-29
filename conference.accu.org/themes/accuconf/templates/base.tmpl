@@ -98,18 +98,25 @@
 
     <div class="col-sm-3 col-md-3 col-lg-3">
         <div class="hidden-xs">
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Dates</h3>
-                </div>
-                <div class="panel-body">
-                  <ul class="nolist list-group">
-                      {{ accuconf.dates() }}
-                  </ul>
+            <div class="row" id="greeter-row">
+                <div class="panel panel-default" id="greeter-panel">
+                    <h4 id="greeter"></h4>
                 </div>
             </div>
         </div>
+        <div class="hidden-xs">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Dates</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="nolist list-group">
+                            {{ accuconf.dates() }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row hide">
             {{ accuconf.sponsors() }}
@@ -153,24 +160,7 @@
 {{ base.late_load_js() }}
     <script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
     <script type="text/template" id="navlinks-template">
-        <li> <a href="<%= href %>">{{ title }}</a> </li>
-    </script>
-    <script type="text/javascript">
-     $(document).ready(function() {
-         var navlinksTemplate = _.template($("#navlinks-template").html());
-         $.ajax({
-             url: "/proposals/navlinks",
-             method: "GET",
-             contentType: "application/json",
-             success: function(data) {
-                 data.each(function(idx) {
-                     if (data[idx][2]) {
-                         $("#navigation-links").append(navlinksTemplate({href: data[idx][0], title: data[idx][1]}));
-                     }
-                 });
-             }
-         });
-     });
+        <li> <a href="<%= href %>"><%= title %></a> </li>
     </script>
     <!-- fancy dates -->
     <script>
@@ -187,5 +177,37 @@
     {% endif %}
 {{ body_end }}
 {{ template_hooks['body_end']() }}
+    <script type="text/javascript">
+     $(document).ready(function() {
+         $("#greeter-row").hide();
+         var navlinksTemplate = _.template($("#navlinks-template").html());
+         $.ajax({
+             url: "/proposals/navlinks",
+             method: "GET",
+             contentType: "application/json",
+             success: function(jsonData) {
+                 var order = Object.keys(jsonData);
+                 order.sort()
+                 $.each(order, function(idx, orderidx) {
+                     if (jsonData[orderidx][2]) {
+                         $("#navigation-links").append(navlinksTemplate({"href": jsonData[orderidx][1], "title": jsonData[orderidx][0]}));
+                     }
+                 });
+             }
+         });
+         $.ajax({
+             url: "/proposals/currentuser",
+             method: "GET",
+             contentType: "application/json",
+             success: function(data) {
+                 if (data.user_id.length) {
+                     $("#greeter").text("Hello " + data.first_name + " " + data.last_name);
+                     // Uncomment this when needed.
+                     // $("#greeter-row").show();
+                 }
+             }
+         });
+     });
+    </script>
 </body>
 </html>

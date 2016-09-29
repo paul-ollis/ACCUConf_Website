@@ -135,7 +135,7 @@ NAVIGATION_LINKS = {
         #("/categories/", "Tags"),
         #(SITE_URL + "proposals/register", "Register"),
         #(SITE_URL + "proposals/proposal", "Submit proposal"),
-        ("/rss.xml", "RSS feed"),
+        #("/rss.xml", "RSS feed"),
     ),
 }
 
