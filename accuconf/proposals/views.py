@@ -2,7 +2,7 @@
 
 import json
 from flask import render_template, jsonify, redirect, url_for, session, request
-from flask import send_from_directory
+from flask import send_from_directory, g
 from accuconf.models import *
 from accuconf.proposals.utils.roles import Role
 from accuconf.proposals.utils.proposals import *
@@ -79,6 +79,7 @@ def login():
         if user.user_pass == password_hash:
             session['user_id'] = user.user_id
             proposals.logger.info("Auth successful")
+            g.user = userid
             return redirect(url_for("nikola.index"))
         else:
             proposals.logger.info("Auth failed")
@@ -177,7 +178,11 @@ def propose():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return redirect(url_for('proposals.logout'))
+            page = {
+                "name": "Submit proposal"
+            }
+            return render_template("not_loggedin.html", page=page)
+
         page = {
             "title": "Submit a proposal for ACCU Conference",
             "user_name": "%s %s" % (user.user_info.first_name,
@@ -201,7 +206,10 @@ def propose():
             }
             return render_template("submit_proposal.html", page=page)
     else:
-        return redirect(url_for('proposals.logout'))
+        page = {
+            "name": "Submit proposal"
+        }
+        return render_template("not_loggedin.html", page=page)
 
 
 @proposals.route("/proposal/submit", methods=["POST"])
@@ -212,7 +220,10 @@ def submit_proposal():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return redirect(url_for('proposals.logout'))
+            page = {
+                "name": "Proposal Submission"
+            }
+            return render_template("not_logged.html", page=page)
         else:
             proposalData = request.json
             proposals.logger.info(proposalData)
@@ -245,7 +256,10 @@ def submit_proposal():
                 response["message"] = message
             return jsonify(**response)
     else:
-        return redirect(url_for('proposals.logout'))
+        page = {
+            "name": "Submit proposal"
+        }
+        return render_template("not_loggedin.html", page=page)
 
 
 @proposals.route("/check/<user>", methods=["GET"])
@@ -305,3 +319,37 @@ def asset(path):
     source_path = _proposal_static_path / 'assets'
     proposals.logger.info("Sending from: {}".format(source_path))
     return send_from_directory(source_path.as_posix(), path)
+
+
+@proposals.route('/navlinks', methods=["GET"])
+def navlinks():
+    loggedIn = False
+    loggedOut = True
+    if session.get("user_id", False):
+        loggedIn = True
+        loggedOut = False
+    links = {
+        "0": ("Home", url_for("nikola.index"), True),
+        "1": ("Login", url_for("proposals.login"), loggedOut),
+        "2": ("Register", url_for("proposals.register"), loggedOut),
+        "3": ("My Proposal", url_for("proposals.propose"), loggedIn),
+        "4": ("Review Proposals", url_for("proposals.login"), loggedIn),
+        "5": ("RSS", "/site/rss.xml", True),
+        "6": ("Log out", url_for("proposals.logout"), loggedIn)
+    }
+
+    return jsonify(**links)
+
+
+@proposals.route('/currentuser', methods=["GET"])
+def currentuser():
+    userinfo = {}
+    userinfo["user_id"] = ""
+    if session.get("user_id", False):
+        user = User.query.filter_by(user_id=session["user_id"]).first()
+        userinfo["user_id"] = user.user_id
+        userinfo["first_name"] = user.user_info.first_name
+        userinfo["last_name"] = user.user_info.last_name
+    return jsonify(**userinfo)
+
+
