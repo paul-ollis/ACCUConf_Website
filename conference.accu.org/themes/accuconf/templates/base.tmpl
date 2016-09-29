@@ -42,7 +42,7 @@
                     <span> <a class="navbar-brand" href="{{ abs_link(_link("root", None, lang)) }}"> {{ blog_title|e }} </a> </span>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav" id="navigation-links">
                         {{ base.html_navigation_links() }}
                     </ul>
                 </div>
@@ -151,6 +151,26 @@
 
 {{ base.late_load_js() }}
     <script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    <script type="text/template" id="navlinks-template">
+        <li> <a href="<%= href %>">{{ title }}</a> </li>
+    </script>
+    <script type="text/javascript">
+     $(document).ready(function() {
+         var navlinksTemplate = _.template($("#navlinks-template").html());
+         $.ajax({
+             url: "/proposals/navlinks",
+             method: "GET",
+             contentType: "application/json",
+             success: function(data) {
+                 data.each(function(idx) {
+                     if (data[idx][2]) {
+                         $("#navigation-links").append(navlinksTemplate({href: data[idx][0], title: data[idx][1]}));
+                     }
+                 });
+             }
+         });
+     });
+    </script>
     <!-- fancy dates -->
     <script>
     moment.locale("{{ momentjs_locales[lang] }}");
