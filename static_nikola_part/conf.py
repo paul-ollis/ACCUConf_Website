@@ -556,10 +556,6 @@ DEPLOY_COMMANDS = {
         'chmod -R go+rX output',
         'rsync -rav --delete output/ conference@dennis.accu.org:/srv/testconference.accu.org/public/htdocs/accuconf/static/',
     ],
-    'russellocal': [
-        'chmod -R go+rX output',
-        'rsync -rav --delete output/ /home/users/russel/Repositories/Git/ACCUConfWebsite_Flask/accuconf/static/',
-    ],
 }
 
 # github_deploy configuration
