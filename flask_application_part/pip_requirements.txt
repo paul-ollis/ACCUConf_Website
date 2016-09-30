@@ -1,0 +1,8 @@
+# A virtualenv is being used so use the latest versions from PyPI
+
+Flask
+Flask-Bootstrap
+SQLAlchemy
+Flask_SQLAlchemy
+pytest
+hypothesis
