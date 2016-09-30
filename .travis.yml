@@ -7,6 +7,6 @@ install:
   - pip install -r static_nikola_part/requirements.txt
   - pip install -r flask_application_part/pip_requirements.txt
 script:
-  - cd static_nikola_part && nikola build && nikola build
-  - cd flask_application_part/accuconf && ln -s ../../static_nikola_part/output static
+  - pushd . && cd static_nikola_part && nikola build && nikola build && popd
+  - pushd . && cd flask_application_part/accuconf && ln -s ../../static_nikola_part/output static && popd
   - python -m pytest flask_application_part
