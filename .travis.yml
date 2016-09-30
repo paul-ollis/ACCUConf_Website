@@ -1,6 +1,12 @@
 language: python
-python: "3.5"
+python:
+  - "3.4"
+  - "3.5"
 install:
   - gem install asciidoctor
-  - pip install -r requirements.txt
-script: cd conference.accu.org && nikola build && nikola build
+  - pip install -r static_nikola_part/requirements.txt
+  - pip install -r flask_application_part/pip_requirements.txt
+script:
+  - cd static_nikola_part && nikola build && nikola build
+  - cd flask_application_part/accuconf && ln -s ../../static_nikola_part/output static
+  - python -m pytest flask_application_part

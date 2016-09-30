@@ -1,0 +1,12 @@
+python3-virtualenv
+libapache2-mod-wsgi-py3
+
+# All other dependencies should then be checked or installed, including:
+
+# python3
+
+# All the Flask and SQLAlchemy dependencies will come in through the virtualenv not Jessie packages.
+
+# python3-flask
+# python3-sqlalchemy
+# python3-flask-sqlalchemy
