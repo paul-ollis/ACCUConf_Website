@@ -98,5 +98,5 @@ ENV/
 /.idea/
 
 
-# Ignore the directory for the Nikola static site to avoid committing it by accident.
-/accuconf/nikola/static
+# Ignore the directory for the Nikola static stuff to avoid committing it by accident.
+/accuconf/static
