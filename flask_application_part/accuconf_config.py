@@ -2,35 +2,34 @@
 from pathlib import Path
 
 
-class Config(object):
-    ACCUCONF_DB_FILE = Path(__file__).resolve().parent / 'accuconf.db'
-    SQLALCHEMY_DATABASE_URI = "sqlite:///%s" % (ACCUCONF_DB_FILE)
+class ConfigBase:
+    _here = Path(__file__).resolve().parent
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + str(_here / 'accuconf.db')
     DEBUG = False
-    DATA_DIR = Path("/etc/accuconf/data")
+    DATA_DIR = _here / 'etc' / 'data'
     VENUE = DATA_DIR / "venue.json"
     COMMITTEE = DATA_DIR / "committee.json"
     MAINTENANCE = False
     SECRET_KEY = "TheObviouslyOpenSecret"
-    NIKOLA_STATIC_PATH = Path(__file__).resolve().parent / 'accuconf' / 'static'
+    NIKOLA_STATIC_PATH = _here / 'accuconf' / 'static'
 
 
-class ProductionConfig(Config):
+class ProductionConfig(ConfigBase):
     pass
 
 
-class TestConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///tmp/accuconf_test.db"
+class TestConfig(ConfigBase):
+    SQLALCHEMY_DATABASE_URI = "sqlite:///"+ str(ConfigBase._here / 'accuconf_test.db')
     DEBUG = True
-    DATA_DIR = Path("/tmp/data")
-    VENUE = DATA_DIR / "venue.json"
-    COMMITTEE = DATA_DIR / "committee.json"
-    FRONTPAGE = DATA_DIR / "frontpage.adoc"
-    SECRET_KEY = "!@#!@#!#!@#!@$SDFQWETR!$#VWERT@#$%123412qwE%$"
 
 
-class MaintenanceConfig(Config):
+class MaintenanceConfig(ConfigBase):
     MAINTENANCE = True
 
 
 class MaintenanceTestConfig(TestConfig):
     MAINTENANCE = True
+
+
+#Config = ConfigBase
+Config = TestConfig

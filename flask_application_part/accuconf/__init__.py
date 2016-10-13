@@ -11,8 +11,7 @@ from .nikola import nikola, views
 from .proposals import proposals, views
 
 
-app.config.from_object(accuconf_config.TestConfig)
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/accuconf_test.db"
+app.config.from_object(accuconf_config.Config)
 app.secret_key = app.config['SECRET_KEY']
 app.register_blueprint(nikola, url_prefix='/site')
 app.register_blueprint(proposals, url_prefix='/proposals')
