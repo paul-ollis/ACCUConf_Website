@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import json
 from flask import render_template, jsonify, redirect, url_for, session, request
 from flask import send_from_directory, g
@@ -12,6 +10,7 @@ from random import randint
 from . import proposals
 
 _proposal_static_path = None
+
 
 @proposals.record
 def init_blueprint(ctxt):
@@ -351,5 +350,3 @@ def currentuser():
         userinfo["first_name"] = user.user_info.first_name
         userinfo["last_name"] = user.user_info.last_name
     return jsonify(**userinfo)
-
-

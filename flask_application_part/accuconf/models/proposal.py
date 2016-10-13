@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from accuconf import db
 from accuconf.models.user import User
 from accuconf.proposals.utils.proposals import *

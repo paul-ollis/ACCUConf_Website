@@ -1,9 +1,6 @@
-#!/usr/bin/env python
-
 from flask_sqlalchemy import SQLAlchemy, event
 from random import randint
 from accuconf import app
-
 
 db = SQLAlchemy(app)
 
@@ -21,4 +18,3 @@ def drop_db():
 
 def create_db():
     db.create_all()
-

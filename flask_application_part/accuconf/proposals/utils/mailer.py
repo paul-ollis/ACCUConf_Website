@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-
 from email.message import Message
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
+
 
 class MailTemplates(object):
     registration_pending = """

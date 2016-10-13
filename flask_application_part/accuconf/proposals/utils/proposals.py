@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 def getProposalType(info):
     typeMap = {
         "quick": QuickProposalType,

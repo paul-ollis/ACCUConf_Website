@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import pytest
 from os.path import abspath, dirname, join
 import sys

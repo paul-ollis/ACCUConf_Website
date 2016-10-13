@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from flask import Flask, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy, event
@@ -39,4 +37,3 @@ def create_db():
 @app.route('/')
 def index():
     return redirect(url_for('nikola.index'))
-
