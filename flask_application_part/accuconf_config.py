@@ -31,5 +31,5 @@ class MaintenanceTestConfig(TestConfig):
     MAINTENANCE = True
 
 
-#Config = ConfigBase
-Config = TestConfig
+Config = ConfigBase
+#Config = TestConfig
