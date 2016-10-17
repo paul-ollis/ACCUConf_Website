@@ -42,6 +42,15 @@ def post(path):
     return send_from_directory(source_path.as_posix(), path)
 
 
+@nikola.route('/stories/<path:path>')
+def stories(path):
+    nikola.logger.info("stories accessed")
+    nikola.logger.info("Requested for {}".format(path))
+    source_path = _nikola_static_path / 'stories'
+    nikola.logger.info("Sending from: {}".format(source_path))
+    return send_from_directory(source_path.as_posix(), path)
+
+
 @nikola.route('/assets/<path:path>')
 def asset(path):
     nikola.logger.info("assets accessed")
