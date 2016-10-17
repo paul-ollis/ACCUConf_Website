@@ -50,7 +50,6 @@ class TestUserInfo:
         ui = UserInfo('a@b.c',
                       'User',
                       'Name',
-                      '',
                       '+01234567890',
                       'admin')
 
@@ -75,7 +74,6 @@ class TestUserModel:
         ui = UserInfo('a@b.c',
                       'User',
                       'Name',
-                      '',
                       '+01234567890',
                       'admin'
                       )
@@ -91,7 +89,6 @@ class TestUserModel:
         ui = UserInfo('aa@b.c',
                       'User',
                       'Name',
-                      '',
                       '+01234567890',
                       'admin')
         u.user_info = ui

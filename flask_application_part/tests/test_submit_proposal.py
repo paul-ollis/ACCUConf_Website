@@ -18,7 +18,6 @@ def testData(key="registration", subkey=None):
                              lastname="Name",
                              phone="+011234567890",
                              pincode="123456",
-                             suffix="",
                              country="India",
                              state="TamilNadu",
                              captcha="1",

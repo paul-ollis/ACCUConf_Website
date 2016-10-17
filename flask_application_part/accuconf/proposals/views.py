@@ -102,13 +102,10 @@ def register():
         # Process registration data
         user_email = request.form["email"]
         user_pass = request.form["user_pass"]
-        # salutation = request.form["salutation"]
-        suffix = request.form["suffix"]
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
         country = request.form["country"]
         state = request.form["state"]
-        #states = request.form["states"]
         phone = request.form["phone"]
         postal_code = request.form["pincode"]
 
@@ -131,10 +128,8 @@ def register():
         else:
             newuser = User(user_email, encoded_pass)
             userinfo = UserInfo(newuser.user_id,
-                                # salutation,
                                 first_name,
                                 last_name,
-                                suffix,
                                 phone,
                                 Role.user.get("name", "user")
                                 )

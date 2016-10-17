@@ -23,7 +23,6 @@ class TestProposal:
         ui = UserInfo("a@b.c",
                       'User',
                       'Name',
-                      '',
                       '+01234567890',
                       'admin')
         location = UserLocation(u.user_id, "IND", "KARNATAKA", "560093")
@@ -52,4 +51,3 @@ class TestProposal:
 
         p = User.query.filter_by(user_id="abc@b.c").first().proposal
         assert p.status.state == NewProposal().state()
-
