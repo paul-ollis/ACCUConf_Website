@@ -1,0 +1,49 @@
+////
+.. title: Call for Sessions
+.. date: 2016-10-20T21:30+01:00
+.. type: text
+////
+
+We invite you to propose a session for this leading software development conference.
+
+We have a long tradition of high quality sessions covering many aspects of software development, from programming languages (e.g., C, C++, C#, Go, Rust, Clojure, Erlang, Groovy, Haskell, Java, Javascript, Python, Ruby, Scala, etc.), and technologies (libraries, frameworks, databases, etc.) to subjects about the wider development environment such as testing, architecture and design, development process, analysis, patterns, project management, and softer aspects such as team building, communication and leadership. See the https://accu.org/index.php/conferences/accu_conference_2016/accu2016_sessions[2016 schedule] for examples.
+
+Pre-conference tutorials and workshops are all day. Five or six of these will be selected and advertised. However, the conference organizers reserve the right to cancel a session if insufficient people sign up for it. A fee is paid to the presenter of a session that runs.
+
+
+Main conference sessions are one of:
+
+15 minute session: This is ideal for presenting a small piece of technical material without the pressure of creating a complete 90 minute session around it. As well it is ideal for less experienced speakers.
+
+90 minute interactive session: Typically this session is with a presentation and a lot's of audience interaction either during the session or as a 30+ minute question/answer/discussion period after the presentation. 
+
+90 minute workshop: This offers the opportunity for a mini-workshop. A highly interactive session with often collaborative work in small groups.
+
+180 minute workshop: For those who find 90 minutes too short for their subject this format offers a "double session".
+
+Pre-Conference tutorial: A full day that gives the possibility to introduce into a new area, go deep into a certain topic, or to cover a broader range of information.
+
+
+The conference will have lightning talks, which are 5 minutes in length, these are organized on-the-fly at the conference. Please think about creating and presenting a lightning talk, but these do not need a submission as part of this call for papers.
+
+Proposals about specific products and technologies will only be considered if they are open source and available for free (at least for non-commercial use) and there is some non-trivial technical content. If you are interested in talking about a proprietary technology, there is the possibility of "sponsored sessions" which are presented outside the standard conference schedule. Please, email conference@accu.org for more information.
+
+Presenters of 90 minute sessions will be offered free conference attendance and financial assistance in the form of contribution to travel and accommodation costs. Details are available on request.
+
+To propose a session please https://conference.accu.org/proposals/register[register], then follow the https://conference.accu.org/proposals/proposal[My Proposal] and fill in the porposal page. In case that you want to do a shared presentation, please add the Presenters/Co-Presenters.
+
+The Abstract should contain a short description of about 250 words and the expected level of participants/audience: beginner, intermediate, expert.
+
+Each person should only put forward two proposals.
+
+All submissions will be acknowledged by email within 24 hours.???
+
+The Call for Papers lasts 5 weeks and will close at midnight Friday 2016-11-11.
+
+Acceptance/rejection emails will go out on Friday 2017-01-13.
+
+The full conference schedule will be announced Friday 2016-01-15.???
+
+The conference has always benefited from the strength of its programme. Please help us make 2017 another successful event.
+
+Thank you!
