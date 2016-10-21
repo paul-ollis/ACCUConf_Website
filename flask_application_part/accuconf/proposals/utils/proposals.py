@@ -4,7 +4,8 @@ def getProposalType(info):
         "interactive": InteractiveProposalType,
         "miniworkshop": MiniWorkshopProposalType,
         "workshop": WorkshopProposalType,
-        "keynote": KeynoteProposalType
+        "fulldayworkshop": FullDayWorkshopType,
+        "keynote": KeynoteProposalType,
     }
     return typeMap.get(info, ProposalType)()
 
@@ -74,6 +75,17 @@ class QuickProposalType(ProposalType):
 
     def __init__(self):
         super().__init__(self.quick)
+
+
+class FullDayWorkshopType(ProposalType):
+    keynote = {
+        "id": "fulldayworkshop",
+        "name": "6 hour workshop",
+        "hidden": False
+    }
+
+    def __init__(self):
+        super().__init__(self.keynote)
 
 
 class KeynoteProposalType(ProposalType):

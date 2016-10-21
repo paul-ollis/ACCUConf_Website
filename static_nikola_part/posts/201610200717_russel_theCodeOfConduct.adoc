@@ -1,0 +1,23 @@
+////
+.. title: The Code of Conduct
+.. date: 2016-10-20T07:17+01:00
+.. type: text:
+////
+
+One hopes, indeed often assumes, that there will never be any misconduct at a conference. Most conferences,
+and all the ACCU ones to date as far as we know, have had no problems. If there has been some small offence
+given, it has been handled between the parties to the satisfaction of everyone concerned. Nonetheless it is
+incumbent on conference organisers to have in place a process for handling situations that cannot be dealt
+with directly by the parties involved. To this end, ACCU 2017 has adopted an adaptation of the
+http://2016.pyconuk.org[PyCon UK 2016] Code of Conduct, and processes for dealing with infractions. Many
+people sensitive to the issues have commented that this is a good Code of Conduct and process, so it seems
+better to adapt something seen as good rather than attempt to start from scratch.
+
+There should be a link on every page on this site in the top right under the ACCU organisation logo that
+leads to the ACCU 2017  link:/stories/coc_code_of_conduct.html[Code of Conduct].  Such document should never
+be cast in stone, they should be allowed to evolve to become better and to stay relevant to the moment. If you
+find any errors or text you feel should be amended please contact the mailto:conference@accu.org[Conference Chair].
+
+We hope the process outlined never has to be invoked, that everyone coming to ACCU 2017 speaks and behaves
+appropriately for the context. We hope the document just lies there in the background gathering dust, but it
+is there, just in case.

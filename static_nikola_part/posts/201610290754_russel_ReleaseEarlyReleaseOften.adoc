@@ -1,0 +1,21 @@
+////
+.. title: Release Early, Release Often
+.. date: 2016-10-20T07:54+01:00
+.. type: text
+////
+As two observant people have observed, and reported, the ACCU 2017 call for session proposals is open, but
+there appeared to be no statement of how to submit a submission. In the past, submissions had been by
+email. This though caused a lot of work that should be replaceable by using better tooling, i.e. a website
+of some sort. Whilst there are many "off the shelf" conference management systems, and they have all the
+features needed to deal with submissions, none of them seemed to fit the constraints of lightweight, able to
+generate webpages for the ACCU website, and free. We therefore (maybe wrongly in later hindsight, but we are
+committed for now) wrote our own little Flask/SQLAlchemy/SQLite application. For various reasons, it is not
+entirely production ready, but the data model should not need any adjustment from now. After taking a poll
+amongst various people, the Conference Chair has decided to go with the "release early, release often"
+concept which is clearly about putting alpha grade software out into the field and then debugging it whilst
+in production. The Conference Chair is claiming this is beta software not alpha software, so call is a
+release candidate and get it out there. Momentarily after this post goes live the application will go live,
+so as to allow people to submit session proposals. If you find any glitches, errors, or just things you feel
+should be improved https://github.com/ACCUConf/ACCUConf_Website/issues[here] is the place to submit
+issues. All the software is FOSS, so if you also submit pull requests, that would be even better. (Pull
+requests to make changes to posts already posted on the blog will, obviously, be ignored, for obvious reasons.)
