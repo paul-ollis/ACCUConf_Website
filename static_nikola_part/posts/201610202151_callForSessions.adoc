@@ -7,7 +7,7 @@
 We invite you to propose a session for this leading software development conference.
 
 We have a long tradition of high quality sessions covering many aspects of software development, from
-programming languages (e.g. C, C++, C#, Go, Rust, Clojure, Erlang, Groovy, Haskell, Java, JavaScript,
+programming languages (e.g. C, C++, D, C#, Go, Rust, Clojure, Erlang, Groovy, Haskell, Java, JavaScript,
 ECMAScript, Python, Ruby, Scala, etc.), and technologies (libraries, frameworks, databases, etc.) to
 subjects about the wider development environment such as testing, architecture and design, development
 process, analysis, patterns, project management, and softer aspects such as team building, communication and
