@@ -1,3 +1,6 @@
+# These are the dependencies needed to build the static part of the website. These applications are not
+# deployed.
+
 nikola
 jinja2
 webassets
