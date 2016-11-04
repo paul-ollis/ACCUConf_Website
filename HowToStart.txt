@@ -1,0 +1,39 @@
+How to setup accu conference website development environment
+============================================================
+
+This instruction assumes that you have an Ubuntu 16.04 with a configured Git environment and Python 3.5 available. 
+Other environments may be used as well, but are not tested.
+
+* Fork the https://github.com/ACCUConf/ACCUConf_Website.git into your own account
+* Make a folder for the work, e.g. mkdir accu from your home
+* Clone you fork via git clone git@github.com:<Your Account>/ACCUConf_Website.git
+* cd ACCUConf_Website/
+* Add the upstream repo: git remote add upstream https://github.com/ACCUConf/ACCUConf_Website.git
+* Fetch the latest changes from upstream: git fetch upstream
+* Update the local repo with the upstream chnages: git merge upstream/master
+
+Install the accu conf dependencies:
+* Install Ruby: sudo apt install ruby
+* Install necessary packages: sudo gem install asciidoctor
+* Install Nikola and its dependencies: sudo pip3.5 install -r static_nikola_part/requirements.txt
+* Install Flask and its dependencies: sudo pip3.5 install -r flask_application_part/pip_requirements.txt
+* Build the static part:
+    cd static_nikola_part/
+    nikola build
+    cd ..
+* Build the Flask part:   
+    cd flask_application_part/accuconf/
+    ln -s ../../static_nikola_part/output static
+    cd ..
+Run all tests:
+   python3.5 -m pytest flask_application_part
+   
+Creat the startup database
+   cd flask_application_part/
+   ./create_db.py 
+   
+Start the application:
+   ./runapp.py 
+   
+Now the point a browser that you trust to http://localhost:8000
+
