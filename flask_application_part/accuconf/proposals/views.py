@@ -1,4 +1,3 @@
-import json
 from flask import render_template, jsonify, redirect, url_for, session, request
 from flask import send_from_directory, g
 from accuconf.models import *
