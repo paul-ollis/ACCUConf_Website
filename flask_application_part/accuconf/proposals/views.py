@@ -185,7 +185,7 @@ def propose():
             page["proposal"] = {
                 "title": user.proposal.title,
                 "abstract": user.proposal.text,
-                "type": "Quick",
+                "proposaltype": getProposalType(user.proposal.session_type).proposalType(),
                 "presenters": user.proposal.presenters
             }
             return render_template("view_proposal.html", page=page)

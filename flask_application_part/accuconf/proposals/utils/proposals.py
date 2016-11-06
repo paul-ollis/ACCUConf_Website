@@ -7,7 +7,22 @@ def getProposalType(info):
         "fulldayworkshop": FullDayWorkshopType,
         "keynote": KeynoteProposalType,
     }
-    return typeMap.get(info, ProposalType)()
+    result = typeMap.get(info, ProposalType)();
+    if isinstance(result, ProposalType): # we have to handle the case that in the database are partly the wrong encoded values stored
+        if info == "15 minutes":
+            result = QuickProposalType()
+        elif info[:20] == "90 minutes, Interact":
+            result = InteractiveProposalType()
+        elif info[:20] == "90 minutes, Mini Wor":
+            result = MiniWorkshopProposalType()
+        elif info[:20] == "180 minutes, Worksho":
+            result = WorkshopProposalType()
+        elif info[:20] == "6 hour workshop":
+            result = FullDayWorkshopType()
+        elif info[:20] == "60 minutes, Keynote":
+            result = KeynoteProposalType()
+
+    return result
 
 
 class ProposalCategory(object):
@@ -30,7 +45,7 @@ class ProposalType(object):
         self.__proposal_type = proposaltype
 
     def proposalType(self):
-        return self.__proposal_type.get("name", "NoTypeSet")
+        return self.__proposal_type.get("id", "NoTypeSet")
 
 
 class InteractiveProposalType(ProposalType):

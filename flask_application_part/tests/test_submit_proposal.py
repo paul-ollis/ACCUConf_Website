@@ -58,7 +58,7 @@ def proposal_multiple_presenters_single_lead():
     return {
         'proposer': 'a@b.c',
         'title': 'ACCU Proposal',
-        'proposalType': 'quick',
+        'proposalType': 'miniworkshop',
         'abstract': ''' This is a test proposal that will have
 dummy data. Also this is not a very
 lengthy proposal''',
@@ -88,7 +88,7 @@ def proposal_multiple_presenters_and_leads():
     return {
         'proposer': 'a@b.c',
         'title': 'ACCU Proposal',
-        'proposalType': 'quick',
+        'proposalType': 'workshop',
         'abstract': ''' This is a test proposal that will have
 dummy data. Also this is not a very
 lengthy proposal''',
@@ -149,6 +149,7 @@ def test_logged_in_user_can_submit_a_single_presenter_proposal(client, registrat
     p = user.proposal
     assert p.proposer == user.user_id
     assert len(p.presenters) == 1
+    assert proposal.session_type == 'quick'
 
 
 def test_logged_in_user_can_submit_multipresenter_single_lead_proposal(client, registration_data, proposal_multiple_presenters_single_lead):
@@ -166,6 +167,7 @@ def test_logged_in_user_can_submit_multipresenter_single_lead_proposal(client, r
     p = user.proposal
     assert p.proposer == user.user_id
     assert len(p.presenters) == 2
+    assert proposal.session_type == 'miniworkshop'
 
 
 def test_logged_in_user_user_can_submit_multipresenter_multilead_proposal(client, registration_data, proposal_multiple_presenters_and_leads):
@@ -176,7 +178,7 @@ def test_logged_in_user_user_can_submit_multipresenter_multilead_proposal(client
     assert response["success"] is False
     assert "message" in response
     assert "both marked as lead presenters" in response["message"]
-    #proposal = Proposal.query.filter_by(proposer="a@b.c").first()
+    #proposal = Proposal.query.filter_by(proposer="p2@b.c").first()
     #assert proposal is not None
     # TODO test stuff.
     user = User.query.filter_by(user_id="a@b.c").first()
