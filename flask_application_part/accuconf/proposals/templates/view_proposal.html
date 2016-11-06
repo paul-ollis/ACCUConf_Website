@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "proposals_base.html" %}
 {% block title %}Home{% endblock %}
 {% block head %}
   {{ super() }}
@@ -9,10 +9,12 @@
         {{ page.title }}
     </div>
 </div>
-<div class="row fixed-20">
+<div class="row">
+  <div class="container-fluid">
     <div class="messages">
-        <p class="alert" id="alert"></p>
+      <p class="alert" id="alert"></p>
     </div>
+  </div>
 </div>
 <div class="row">
     <div class="viewproposal">
@@ -134,3 +136,4 @@
 
     </div>
 </div>
+{% endblock %}
