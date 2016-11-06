@@ -10,7 +10,7 @@ path_to_add = str(PurePath(__file__).parent.parent)
 if path_to_add not in sys.path:
     sys.path.insert(0, path_to_add)
 
-from accuconf import app, db, create_db, drop_db
+from accuconf import app, create_db, drop_db
 
 __author__ = 'Russel Winder'
 __copyright__ = '© 2016  Russel Winder'

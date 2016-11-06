@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy, event
-from random import randint
+
 from accuconf import app
 
 db = SQLAlchemy(app)

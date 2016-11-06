@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 class ConfigBase:
-    _here = Path(__file__).resolve().parent
+    _here = Path(__file__).parent
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + str(_here / 'accuconf.db')
     DEBUG = False
     DATA_DIR = _here / 'etc' / 'data'

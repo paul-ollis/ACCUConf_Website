@@ -20,7 +20,7 @@ def registrant():
 
 
 def test_user_reg_basic(client, registrant):
-    post_and_check_content(client, '/proposals/register', registrant, values=('You have successfully registered',))
+    post_and_check_content(client, '/proposals/register', registrant, values=('You have successfully registered', 'Please login'))
 
 
 def test_user_reg_dup(client, registrant):
