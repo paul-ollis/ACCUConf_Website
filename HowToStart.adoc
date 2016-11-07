@@ -44,7 +44,7 @@ directory hierarchy to other specific places in the hierarchy. So from the worki
 * `cd ../../`
 
 * `cd flask_application_part/accuconf/proposals/templates`
-* `ln -s ../../../../static_nicola_part/themes/accuconf/templates/accuconf.tmpl accuconf.html`
+* `ln -s ../../../../static_nikola_part/themes/accuconf/templates/accuconf.tmpl accuconf.html`
 * `cd ../../../../`
 
 This is a "do once for each new clone". The link is not present in the repository since it is not needed for
