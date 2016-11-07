@@ -242,7 +242,8 @@ def submit_proposal():
                     proposal.presenters.append(proposalPresenter)
                     db.session.add(proposalPresenter)
                 db.session.commit()
-                response["success"] = True,
+                response["success"] = True
+                response["message"] = "Thank you very much!\nYou have successfully submitted a proposal for the next ACCU conference!\nYou can see it now under \"My Proposal\"."
                 response["redirect"] = url_for('proposals.index')
             else:
                 response["success"] = False

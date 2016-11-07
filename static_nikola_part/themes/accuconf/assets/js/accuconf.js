@@ -304,6 +304,7 @@ function uploadProposal() {
         success: function(data) {
             console.log(data);
             if (data.success) {
+                alert(data.message);
                 window.location = data.redirect;
             } else {
                 $('#alert').text(data.message);
