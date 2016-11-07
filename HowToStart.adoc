@@ -36,12 +36,16 @@ mainline:
 
 == A crucial local amendment
 
-Because of the way the build works, it is important to add a symbolic link from a specific place in the
-directory hierarchy to another specific place in the hierarchy. So from the working directory you should:
+Because of the way the build works, it is important to add a symbolic links from specific places in the
+directory hierarchy to other specific places in the hierarchy. So from the working directory you should:
 
 * `cd flask_application_part/accuconf`
 * `ln -s ../../static_nikola_part/output static`
-* `cd ..`
+* `cd ../../`
+
+* `cd flask_application_part/accuconf/proposals/templates`
+* `ln -s ../../../../static_nicola_part/themes/accuconf/templates/accuconf.tmpl accuconf.html`
+* `cd ../../../../`
 
 This is a "do once for each new clone". The link is not present in the repository since it is not needed for
 the deployed website, it is only needed for running the test server in your local clone.
