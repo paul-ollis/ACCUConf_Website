@@ -295,7 +295,7 @@ function uploadProposal() {
         "presenters": presenters
     };
     $.ajax({
-        url: "/proposals/proposal/submit",
+        url: "/proposals/proposal/upload_proposal",
         data: JSON.stringify(proposalData),
         type: "POST",
         method: "POST",

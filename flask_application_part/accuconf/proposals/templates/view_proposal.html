@@ -18,14 +18,15 @@
 </div>
 <div class="row">
     <div class="viewproposal">
-        <form class="form general wide" id="proposalform" method=""
+        {% for subpage in page.subpages %}
+            <form class="form general wide" id="proposalform" method=""
               action=""
               onsubmit="return false;">
             <fieldset>
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title"
                        placeholder="Title" disabled="true"
-                       value="{{ page.proposal.title }}">
+                       value="{{ subpage.proposal.title }}">
             </fieldset>
 
             <fieldset>
@@ -33,7 +34,7 @@
                 <textarea rows="24" cols="80"
                           name="proposal" id="proposal"
                           placeholder="Proposal abstract">
-                    {{ page.proposal.abstract}}
+                    {{ subpage.proposal.abstract}}
                 </textarea>
             </fieldset>
             <fieldset>
@@ -61,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for presenter in page.proposal.presenters %}
+                        {% for presenter in subpage.proposal.presenters %}
                         <tr class="odd">
                             <td class="narrow">
                                 <input type="radio"
@@ -86,7 +87,7 @@
                             </td>
                         </tr>
                         {% endfor %}
-                        {% set curr = page.proposal.presenters|length %}
+                        {% set curr = subpage.proposal.presenters|length %}
                         <tr class="even" style="display: none;">
                             <td class="narrow"> <input type="radio" name="lead" id="lead" value="1"> </td>
                             <td> <input type="text" name="p_email_{{ curr }}"
@@ -126,14 +127,16 @@
                 <label for="tags">Category</label>
                 <input type="text" name="tags" id="tags" placeholder="Category">
             </fieldset>
+            <!--
             <fieldset class="buttongroup">
                 <button type="submit" class="button primary-button"
                         onclick="javascript:uploadProposal();">
                     Submit</button>
                 <button type="cancel" class="button">Reset</button>
             </fieldset>
-        </form>
-
+            -->
+        </form> <hr/>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
