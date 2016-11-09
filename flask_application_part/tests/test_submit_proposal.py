@@ -131,13 +131,13 @@ def test_registered_user_can_login(client, registration_data):
 
 def test_logged_in_user_can_get_submission_page(client, registration_data):
     test_registered_user_can_login(client, registration_data)
-    get_and_check_content(client, '/proposals/proposal', values=('Submit a proposal',))
+    get_and_check_content(client, '/proposals/submit_proposal', values=('Submit a proposal',))
 
 
 def test_logged_in_user_can_submit_a_single_presenter_proposal(client, registration_data, proposal_single_presenter):
     test_registered_user_can_login(client, registration_data)
     # TODO Why do we have to send JSON here but just used dictionaries previously?
-    rvd = post_and_check_content(client, '/proposals/proposal/submit', json.dumps(proposal_single_presenter), 'application/json', values=('success',))
+    rvd = post_and_check_content(client, '/proposals/proposal/upload_proposal', json.dumps(proposal_single_presenter), 'application/json', values=('success',))
     response = json.loads(rvd)
     assert response['success']
     proposal = Proposal.query.filter_by(proposer='a@b.c').first()
@@ -145,8 +145,8 @@ def test_logged_in_user_can_submit_a_single_presenter_proposal(client, registrat
     # TODO test stuff.
     user = User.query.filter_by(user_id='a@b.c').first()
     assert user is not None
-    assert user.proposal is not None
-    p = user.proposal
+    assert user.proposals is not None
+    p = user.proposals[0]
     assert p.proposer == user.user_id
     assert len(p.presenters) == 1
 
@@ -154,7 +154,7 @@ def test_logged_in_user_can_submit_a_single_presenter_proposal(client, registrat
 def test_logged_in_user_can_submit_multipresenter_single_lead_proposal(client, registration_data, proposal_multiple_presenters_single_lead):
     test_registered_user_can_login(client, registration_data)
     # TODO Why do we have to send JSON here but just used dictionaries previously?
-    rvd = post_and_check_content(client, '/proposals/proposal/submit', json.dumps(proposal_multiple_presenters_single_lead), 'application/json', values=('success',))
+    rvd = post_and_check_content(client, '/proposals/proposal/upload_proposal', json.dumps(proposal_multiple_presenters_single_lead), 'application/json', values=('success',))
     response = json.loads(rvd)
     assert response['success']
     proposal = Proposal.query.filter_by(proposer='a@b.c').first()
@@ -162,8 +162,8 @@ def test_logged_in_user_can_submit_multipresenter_single_lead_proposal(client, r
     # TODO test stuff.
     user = User.query.filter_by(user_id='a@b.c').first()
     assert user is not None
-    assert user.proposal is not None
-    p = user.proposal
+    assert user.proposals is not None
+    p = user.proposals[0]
     assert p.proposer == user.user_id
     assert len(p.presenters) == 2
 
@@ -171,7 +171,7 @@ def test_logged_in_user_can_submit_multipresenter_single_lead_proposal(client, r
 def test_logged_in_user_user_can_submit_multipresenter_multilead_proposal(client, registration_data, proposal_multiple_presenters_and_leads):
     test_registered_user_can_login(client, registration_data)
     # TODO Why do we have to send JSON here but just used dictionaries previously?
-    rvd = post_and_check_content(client, '/proposals/proposal/submit', json.dumps(proposal_multiple_presenters_and_leads), 'application/json', values=('success',))
+    rvd = post_and_check_content(client, '/proposals/proposal/upload_proposal', json.dumps(proposal_multiple_presenters_and_leads), 'application/json', values=('success',))
     response = json.loads(rvd)
     assert response["success"] is False
     assert "message" in response
@@ -181,7 +181,7 @@ def test_logged_in_user_user_can_submit_multipresenter_multilead_proposal(client
     # TODO test stuff.
     user = User.query.filter_by(user_id="a@b.c").first()
     assert user is not None
-    assert user.proposal is None
+    assert len(user.proposals) == 0
     #p = user.proposal
     #assert p.proposer == user.user_id
     #assert len(p.presenters) == 2

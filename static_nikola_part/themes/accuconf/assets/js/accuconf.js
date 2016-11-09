@@ -295,7 +295,7 @@ function uploadProposal() {
         "presenters": presenters
     };
     $.ajax({
-        url: "/proposals/proposal/submit",
+        url: "/proposals/proposal/upload_proposal",
         data: JSON.stringify(proposalData),
         type: "POST",
         method: "POST",
@@ -304,6 +304,7 @@ function uploadProposal() {
         success: function(data) {
             console.log(data);
             if (data.success) {
+                alert(data.message);
                 window.location = data.redirect;
             } else {
                 $('#alert').text(data.message);

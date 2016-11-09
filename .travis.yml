@@ -9,5 +9,5 @@ install:
   - pip install --upgrade -r flask_application_part/pip_test_requirements.txt
 script:
   - pushd . && cd static_nikola_part && nikola build && nikola build && popd
-  - pushd . && cd flask_application_part/accuconf && ln -s ../../static_nikola_part/output static && popd
+  - ./create_links.sh
   - python -m pytest flask_application_part

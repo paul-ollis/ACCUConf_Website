@@ -164,8 +164,41 @@ def register():
         return render_template("register.html", page=register)
 
 
-@proposals.route("/proposal")
-def propose():
+@proposals.route("/show_proposals", methods=["GET"])
+def show_proposals():
+    if proposals.config.get("MAINTENANCE"):
+        return redirect(url_for("maintenance"))
+    if session.get("user_id", False):
+        user = User.query.filter_by(user_id=session["user_id"]).first()
+        if not user:
+            page = {
+                "name": "Submit proposal"
+            }
+            return render_template("not_loggedin.html", page=page)
+
+        page = {
+            "subpages": [],
+        }
+
+        for proposal in user.proposals:
+            subpage = {}
+            subpage["proposal"] = {
+               "title": proposal.title,
+                "abstract": proposal.text,
+                "type": "Quick",
+                "presenters": proposal.presenters
+            }
+            page["subpages"].append(subpage)
+        return render_template("view_proposal.html", page=page)
+    else:
+        page = {
+            "name": "Submit proposal"
+        }
+        return render_template("not_loggedin.html", page=page)
+
+
+@proposals.route("/submit_proposal")
+def submit_proposal():
     if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
     if session.get("user_id", False):
@@ -181,23 +214,14 @@ def propose():
             "user_name": "%s %s" % (user.user_info.first_name,
                                     user.user_info.last_name),
         }
-        if user.proposal:
-            page["proposal"] = {
-                "title": user.proposal.title,
-                "abstract": user.proposal.text,
-                "type": "Quick",
-                "presenters": user.proposal.presenters
-            }
-            return render_template("view_proposal.html", page=page)
-        else:
-            page["proposer"] = {
-                "email": user.user_id,
-                "first_name": user.user_info.first_name,
-                "last_name": user.user_info.last_name,
-                "country": user.location.country,
-                "state": user.location.state
-            }
-            return render_template("submit_proposal.html", page=page)
+        page["proposer"] = {
+            "email": user.user_id,
+            "first_name": user.user_info.first_name,
+            "last_name": user.user_info.last_name,
+            "country": user.location.country,
+            "state": user.location.state
+        }
+        return render_template("submit_proposal.html", page=page)
     else:
         page = {
             "name": "Submit proposal"
@@ -205,8 +229,8 @@ def propose():
         return render_template("not_loggedin.html", page=page)
 
 
-@proposals.route("/proposal/submit", methods=["POST"])
-def submit_proposal():
+@proposals.route("/proposal/upload_proposal", methods=["POST"])
+def upload_proposal():
     if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
 
@@ -228,7 +252,7 @@ def submit_proposal():
                                     getProposalType(proposalData.get(
                                         "proposalType")),
                                     proposalData.get("abstract"))
-                user.proposal = proposal
+                user.proposals.append(proposal)
                 db.session.add(proposal)
                 presenters = proposalData.get("presenters")
                 for presenter in presenters:
@@ -242,7 +266,8 @@ def submit_proposal():
                     proposal.presenters.append(proposalPresenter)
                     db.session.add(proposalPresenter)
                 db.session.commit()
-                response["success"] = True,
+                response["success"] = True
+                response["message"] = "Thank you very much!\nYou have successfully submitted a proposal for the next ACCU conference!\nYou can see it now under \"My Proposal\"."
                 response["redirect"] = url_for('proposals.index')
             else:
                 response["success"] = False
@@ -318,17 +343,26 @@ def asset(path):
 def navlinks():
     loggedIn = False
     loggedOut = True
+    numberOfProposals = 0
+    myProposalsText = ""
     if session.get("user_id", False):
         loggedIn = True
         loggedOut = False
+        user = User.query.filter_by(user_id=session["user_id"]).first()
+        numberOfProposals = len(user.proposals)
+        if numberOfProposals==1:
+            myProposalsText = "My Proposal"
+        else:
+            myProposalsText = "My Proposals"
     links = {
         "0": ("Home", url_for("nikola.index"), True),
         "1": ("Login", url_for("proposals.login"), loggedOut),
         "2": ("Register", url_for("proposals.register"), loggedOut),
-        "3": ("My Proposal", url_for("proposals.propose"), loggedIn),
-        "4": ("Review Proposals", url_for("proposals.login"), loggedIn),
-        "5": ("RSS", "/site/rss.xml", True),
-        "6": ("Log out", url_for("proposals.logout"), loggedIn)
+        "3": (myProposalsText, url_for("proposals.show_proposals"), loggedIn and numberOfProposals>0),
+        "4": ("Submit Proposal", url_for("proposals.submit_proposal"), loggedIn),
+        "5": ("Review Proposals", url_for("proposals.login"), loggedIn),
+        "6": ("RSS", "/site/rss.xml", True),
+        "7": ("Log out", url_for("proposals.logout"), loggedIn)
     }
 
     return jsonify(**links)
