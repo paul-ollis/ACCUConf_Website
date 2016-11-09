@@ -179,13 +179,12 @@ def show_proposals():
         page = {
             "subpages": [],
         }
-
         for proposal in user.proposals:
             subpage = {}
             subpage["proposal"] = {
-               "title": proposal.title,
+                "title": proposal.title,
                 "abstract": proposal.text,
-                "type": "Quick",
+                "proposaltype": getProposalType(user.proposal.session_type).proposalType(),
                 "presenters": proposal.presenters
             }
             page["subpages"].append(subpage)
