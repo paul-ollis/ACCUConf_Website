@@ -1,0 +1,28 @@
+////
+.. title: Website Problems
+.. date: 2016-11-06T08:16+00:00
+.. type: text
+////
+
+As anyone who has tried to submit a proposal for ACCU 2017 has discovered, there are some serious problems
+with the Flask application. Failure to acknowledge a submission is one, not being able to submit more
+than one is another. Plus a whole collection of the buttons do the wrong thing. Sadly, for various reasons,
+the people who were developing the website have not been able to contribute for a while. Clearly this is
+ending up in a minor crisis. I guess this being a volunteer software development with a deadline, serious
+problems were inevitable. The issue is avoiding a major crisis.
+
+We are going to try and get the website working so as to put website submission back on track. Failing this
+we will have to revert to Plan B. Yes there is a Plan B, no worries there. The question is only when, if we
+have to call time on website submission, we call time on website submission.
+
+In any event we are going to extend the submission deadline as the current one is unreasonable in the
+circumstances. We are trying to decide what is the fairest date to set. Current thinking is people should be
+given at least three weeks of reasonable submission time. Let's see if we can fix the website…
+
+PS If you know anyone who wants a speaker deal ACCU 2017 ticket, and can be a major contributor to fixing
+this Flask/Jinja2/SQLAlchemy point them to the https://github.com/ACCUConf/ACCUConf_Website[GitHub
+repository] and get them to start getting the pull requests that add tests and fix the bugs rolling in.
+
+PPS There is the possibility of some budget to hire a person for a short time to work on this if they can
+show they are capable and able to fix the Flask application very quickly. Anyone in this category should
+contact mailto:conference@accu.org[the conference chair].

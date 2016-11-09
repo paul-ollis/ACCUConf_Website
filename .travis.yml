@@ -8,6 +8,6 @@ install:
   - pip install --upgrade -r flask_application_part/pip_requirements.txt
   - pip install --upgrade -r flask_application_part/pip_test_requirements.txt
 script:
-  - pushd . && cd static_nikola_part && nikola build && nikola build && popd
   - ./create_links.sh
+  - pushd . && cd static_nikola_part && nikola build && nikola build && popd
   - python -m pytest flask_application_part

@@ -82,6 +82,16 @@ If you find that the asciidoctor package is not working or is not available then
 * Install Asciidoctor: `sudo gem install asciidoctor`
 * You may also want to install the PDF generator:  `sudo gem install asciidoctor-pdf`
 
+== Updating the toolchain
+
+As well as regularly updating the platform packages to ensure being as up to date as possible, it is
+important to keep the package installed with pip as up to date as possible. So every so often, perhaps at
+the beginning of each session, you might want to:
+
+* Upgrade Nikola: `pip3 install --upgrade --user -r static_nikola_part/requirements.txt`
+* Upgrade Flask: `pip3 install --upgrade --user -r flask_application_part/pip_requirements.txt`
+
+
 == Building the website
 
 It is always important to have the static material up to date and built. The reason for this is that the
