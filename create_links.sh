@@ -1,4 +1,3 @@
 #!/bin/bash
-pushd . && cd flask_application_part/accuconf && ln -s ../../static_nikola_part/output static && popd
-pushd . && cd flask_application_part/accuconf/proposals/templates && ln -s ../../../../static_nikola_part/themes/accuconf/templates/accuconf.tmpl accuconf.html && popd
-
+(cd flask_application_part/accuconf && ln -s -f ../../static_nikola_part/output static)
+(cd static_nikola_part/themes/accuconf/templates && ln -s -f ../../../../flask_application_part/accuconf/proposals/templates/accuconf.html accuconf.tmpl)
