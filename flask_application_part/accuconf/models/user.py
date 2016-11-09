@@ -11,10 +11,10 @@ class User(db.Model):
                                 backref=db.backref('user'))
     location = db.relationship('UserLocation',
                                uselist=False)
-    proposal = db.relationship('Proposal',
-                               uselist=False,
-                               backref=db.backref('proposed_by'),
-                               foreign_keys="Proposal.proposer")
+    proposals = db.relationship('Proposal',
+                                uselist=True,
+                                backref=db.backref('proposed_by'),
+                                foreign_keys="Proposal.proposer")
 
     def __init__(self, userid, userpass):
         if userid is None or len(userid.strip()) == 0:
