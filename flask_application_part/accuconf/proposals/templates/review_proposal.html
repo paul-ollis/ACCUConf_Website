@@ -17,16 +17,15 @@
   </div>
 </div>
 <div class="row">
-    <div class="viewproposal">
-        {% for subpage in page.subpages %}
-            <form class="form general wide" id="proposalform" method=""
-              action=""
-              onsubmit="return false;">
+    <div class="reviewproposal">
+        <form class="form general wide" id="proposalform" method=""
+               action=" {{ url_for('proposals.review_proposal') }}"
+               onsubmit="return false;">
             <fieldset>
                 <label for="title">Title</label>
-                <input type="text" name="title" id="title"
+                <input type="text" name="title" id="title" size = "50"
                        placeholder="Title" disabled="true"
-                       value="{{ subpage.proposal.title }}">
+                       value="{{ page.proposal.title }}">
             </fieldset>
 
             <fieldset>
@@ -34,17 +33,17 @@
                 <textarea rows="24" cols="80"
                           name="proposal" id="proposal"
                           placeholder="Proposal abstract" disabled="true">
-                    {{ subpage.proposal.abstract}}
+                    {{ page.proposal.abstract}}
                 </textarea>
             </fieldset>
             <fieldset>
                 <label for="proposaltype">Proposal Type</label>
                 <select name="proposaltype" id="proposaltype" disabled="disabled">
-                    <option value="quick"{% if subpage.proposal.proposaltype=='quick' %} selected="selected"{% endif %}>15 minute sessions</option>
-                    <option value="interactive"{% if subpage.proposal.proposaltype=='interactive' %} selected="selected"{% endif %}> 90 minute Interactive session</option>
-                    <option value="miniworkshop"{% if subpage.proposal.proposaltype=='miniworkshop' %} selected="selected"{% endif %}> 90 minute workshop</option>
-                    <option value="workshop"{% if subpage.proposal.proposaltype=='workshop' %} selected="selected"{% endif %}> 180 minute workshop</option>
-                    <option value="fulldayworkshop"{% if subpage.proposal.proposaltype=='fulldayworkshop' %} selected="selected"{% endif %}> 6 hour pre-conference workshop</option>
+                    <option value="quick"{% if page.proposal.proposaltype=='quick' %} selected="selected"{% endif %}>15 minute sessions</option>
+                    <option value="interactive"{% if page.proposal.proposaltype=='interactive' %} selected="selected"{% endif %}> 90 minute Interactive session</option>
+                    <option value="miniworkshop"{% if page.proposal.proposaltype=='miniworkshop' %} selected="selected"{% endif %}> 90 minute workshop</option>
+                    <option value="workshop"{% if page.proposal.proposaltype=='workshop' %} selected="selected"{% endif %}> 180 minute workshop</option>
+                    <option value="fulldayworkshop"{% if page.proposal.proposaltype=='fulldayworkshop' %} selected="selected"{% endif %}> 6 hour pre-conference workshop</option>
                 </select>
             </fieldset>
             <fieldset id="copresenters">
@@ -62,7 +61,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for presenter in subpage.proposal.presenters %}
+                        {% for presenter in page.proposal.presenters %}
                         <tr class="odd">
                             <td class="narrow">
                                 <input type="radio"
@@ -87,7 +86,7 @@
                             </td>
                         </tr>
                         {% endfor %}
-                        {% set curr = subpage.proposal.presenters|length %}
+                        {% set curr = page.proposal.presenters|length %}
                         <tr class="even" style="display: none;">
                             <td class="narrow"> <input type="radio" name="lead" id="lead" value="1"> </td>
                             <td> <input type="text" name="p_email_{{ curr }}"
@@ -127,16 +126,37 @@
                 <label for="tags">Category</label>
                 <input type="text" name="tags" id="tags" placeholder="Category">
             </fieldset>
-            <!--
-            <fieldset class="buttongroup">
-                <button type="submit" class="button primary-button"
-                        onclick="javascript:uploadProposal();">
-                    Submit</button>
-                <button type="cancel" class="button">Reset</button>
+
+            <hr/>
+
+            <fieldset class="form-group">
+                <label for="score" >Score</label>
+                <input type="text" name="score" id="score" size="5"
+                    value="{{ page.proposal.score }}">
             </fieldset>
-            -->
-        </form> <hr/>
-        {% endfor %}
+
+            <fieldset class="form-group">
+                <label for="comment">Comment</label>
+                <textarea rows="5" cols="60" name="comment" id="comment">
+                    {{ page.proposal.comment }}
+                </textarea>
+
+            </fieldset>
+
+            <fieldset class="formgroup">
+                <button type="submit" class="button" value="previous_proposal"
+                        onclick="javascript:uploadReview(this);">Submit and Jump to<br/>Previous Proposal</button>
+                <button type="submit" class="button" value="previous_nr_proposal"
+                        onclick="javascript:uploadReview(this);">Submit and Jump to <br/>Previous not read Proposal</button>
+                <button type="submit" class="button" value="save"
+                        onclick="javascript:uploadReview(this);">Submit<br/>Review</button>
+                <button type="submit" class="button primary-button" value="next_nr_proposal"
+                        onclick="javascript:uploadReview(this);">Submit and Jump to<br/>Next not read Proposal</button>
+                <button type="submit" class="button" value="next_proposal"
+                        onclick="javascript:uploadReview(this);">Next<br/>Proposal</button>
+            </fieldset>
+
+        </form>
     </div>
 </div>
 {% endblock %}

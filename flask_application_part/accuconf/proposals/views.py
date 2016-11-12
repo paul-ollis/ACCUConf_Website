@@ -196,7 +196,7 @@ def show_proposals():
         return render_template("not_loggedin.html", page=page)
 
 
-@proposals.route("/submit_proposal")
+@proposals.route("/submit_proposal", methods=["POST"])
 def submit_proposal():
     if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
@@ -228,7 +228,7 @@ def submit_proposal():
         return render_template("not_loggedin.html", page=page)
 
 
-@proposals.route("/proposal/upload_proposal", methods=["POST"])
+@proposals.route("/upload_proposal", methods=["POST"])
 def upload_proposal():
     if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
@@ -277,6 +277,194 @@ def upload_proposal():
             "name": "Submit proposal"
         }
         return render_template("not_loggedin.html", page=page)
+
+
+@proposals.route("/review_proposal", methods=["GET"])
+def review_proposal():
+    if proposals.config.get("MAINTENANCE"):
+        return redirect(url_for("maintenance"))
+    if session.get("user_id", False):
+        user = User.query.filter_by(user_id=session["user_id"]).first()
+        if not user:
+            page = {
+                "name": "Submit proposal"
+            }
+            return render_template("not_loggedin.html", page=page)
+
+        page = {
+            "Title": "Review Proposal",
+        }
+
+        # TODO Not the review from the other users!
+        allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
+
+        proposalToShowNext = None
+
+        if session.get("review_button_pressed", False):
+            if session["review_button_pressed"] == "next_proposal":
+                proposalToShowNext = findNextElement(allProposals, session["review_id"])
+            elif session["review_button_pressed"] == "previous_proposal":
+                proposalToShowNext = findPreviousElement(allProposals, session["review_id"])
+        else:
+            proposalToShowNext = allProposals.first()
+
+        if not proposalToShowNext:
+            page = {
+                "Title": "All reviews done",
+                "Data": "You have finished reviewing all proposals!",
+            }
+            return render_template("review_success.html", page=page)
+
+        proposalReview = ProposalReview.query.filter_by(proposal_id=proposalToShowNext.id,
+                                                        reviewer=user.user_id).first()
+        proposalComment = ProposalComment.query.filter_by(proposal_id=proposalToShowNext.id,
+                                                          commenter=user.user_id).first()
+
+        page["proposal"] = {
+            "title": proposalToShowNext.title,
+            "abstract": proposalToShowNext.text,
+            "proposaltype": getProposalType(proposalToShowNext.session_type).proposalType(),
+            "presenters": proposalToShowNext.presenters,
+            "score": 0,
+            "comment": ""
+        }
+        if proposalReview:
+            page["proposal"]["score"] = proposalReview.score
+        if proposalComment:
+            page["proposal"]["comment"] = proposalComment.comment
+
+        session['review_id'] = proposalToShowNext.id
+
+        return render_template("review_proposal.html", page=page)
+    else:
+        page = {
+            "name": "Submit proposal"
+        }
+        return render_template("not_loggedin.html", page=page)
+
+
+@proposals.route("/upload_review", methods=["POST"])
+def upload_review():
+    if proposals.config.get("MAINTENANCE"):
+        return redirect(url_for("maintenance"))
+    if session.get("user_id", False):
+        user = User.query.filter_by(user_id=session["user_id"]).first()
+        if not user:
+            page = {
+                "name": "Submit proposal"
+            }
+            return render_template("not_loggedin.html", page=page)
+
+        if session.get("review_id", False):
+            proposal = Proposal.query.filter_by(id=session["review_id"]).first()
+            if proposal != None:
+                reviewData = request.json
+                proposals.logger.info(reviewData)
+
+                proposalReview = ProposalReview.query.filter_by(proposal_id=proposal.id,
+                                                                reviewer=user.user_id).first()
+
+                if proposalReview:
+                    proposalReview.score = reviewData["score"]
+                    ProposalReview.query.filter_by(proposal_id=proposal.id,
+                                                   reviewer=user.user_id).update({'score': proposalReview.score})
+                else:
+                    proposalReview = ProposalReview(proposal.id,
+                                                    user.user_id,
+                                                    reviewData["score"])
+                    proposal.reviews.append(proposalReview)
+                    db.session.add(proposalReview)
+
+                proposalComment = ProposalComment.query.filter_by(proposal_id=proposal.id,
+                                                                  commenter=user.user_id).first()
+                if proposalComment:
+                    proposalComment.comment = reviewData["comment"]
+                    ProposalComment.query.filter_by(proposal_id=proposal.id,
+                                                    commenter=user.user_id).update(
+                                                        {'comment': proposalComment.comment})
+                else:
+                    proposalComment = ProposalComment(proposal.id,
+                                                      user.user_id,
+                                                      reviewData["comment"])
+                    proposal.comments.append(proposalComment)
+                    db.session.add(proposalComment)
+
+                db.session.commit()
+                session['review_button_pressed'] = reviewData["button"]
+
+                response = {}
+                response["success"] = True
+                response["redirect"] = url_for('proposals.review_proposal')
+                return jsonify(**response)
+    else:
+        page = {
+            "name": "Submit proposal"
+        }
+        return render_template("not_loggedin.html", page=page)
+#
+#
+#
+# @proposals.route("/upload_review", methods=["POST"])
+# def upload_review():
+#     if proposals.config.get("MAINTENANCE"):
+#         return redirect(url_for("maintenance"))
+#
+#     if session.get("user_id", False):
+#         user = User.query.filter_by(user_id=session["user_id"]).first()
+#         if not user:
+#             page = {
+#                 "name": "Proposal Submission"
+#             }
+#             return render_template("not_logged.html", page=page)
+#         else:
+#             if session.get("review_id", False):
+#                 proposal = Proposal.query.filter_by(id = session["review_id"]).first()
+#                 # TODO handle proposal not found
+#                 reviewData = request.json
+#                 proposals.logger.info(reviewData)
+#
+#                 proposalReview = ProposalReview.query.filter_by(proposal_id=proposal.id,
+#                                                                 reviewer=user.user_id).first()
+#
+#                 if proposalReview:
+#                     proposalReview.score = reviewData["score"]
+#                     ProposalReview.query.filter_by(proposal_id=proposal.id,
+#                                                 reviewer=user.user_id).update({'score': proposalReview.score})
+#                 else:
+#                     proposalReview = ProposalReview(proposal.id,
+#                                                     user.user_id,
+#                                                     reviewData["score"])
+#                     proposal.reviews.append(proposalReview)
+#                     db.session.add(proposalReview)
+#
+#                 proposalComment = ProposalComment.query.filter_by(proposal_id=proposal.id,
+#                                                                 commenter=user.user_id).first()
+#                 if proposalComment:
+#                     proposalComment.comment = reviewData["comment"]
+#                     ProposalComment.query.filter_by(proposal_id=proposal.id,
+#                                                     commenter=user.user_id).update({'comment' : proposalComment.comment})
+#                 else:
+#                     proposalComment = ProposalComment(proposal.id,
+#                                                      user.user_id,
+#                                                      reviewData["comment"])
+#                     proposal.comments.append(proposalComment)
+#                     db.session.add(proposalComment)
+#
+#                 db.session.commit()
+#                 response = {}
+#                 response["success"] = True
+#                 response["redirect"] = url_for('proposals.index')
+#             else:
+#                 response = {}
+#                 response["success"] = False
+#                 response["message"] = "Failure"
+#             return jsonify(**response)
+#     else:
+#         page = {
+#             "name": "Submit proposal"
+#         }
+#         return render_template("not_loggedin.html", page=page)
+
 
 
 @proposals.route("/check/<user>", methods=["GET"])
@@ -349,6 +537,7 @@ def navlinks():
         loggedOut = False
         user = User.query.filter_by(user_id=session["user_id"]).first()
         numberOfProposals = len(user.proposals)
+        canReview = user.user_info.role == "reviewer";
         if numberOfProposals==1:
             myProposalsText = "My Proposal"
         else:
@@ -359,7 +548,7 @@ def navlinks():
         "2": ("Register", url_for("proposals.register"), loggedOut),
         "3": (myProposalsText, url_for("proposals.show_proposals"), loggedIn and numberOfProposals>0),
         "4": ("Submit Proposal", url_for("proposals.submit_proposal"), loggedIn),
-        "5": ("Review Proposals", url_for("proposals.login"), loggedIn),
+        "5": ("Review Proposals", url_for("proposals.review_proposal"), loggedIn and canReview),
         "6": ("RSS", "/site/rss.xml", True),
         "7": ("Log out", url_for("proposals.logout"), loggedIn)
     }
@@ -377,3 +566,33 @@ def currentuser():
         userinfo["first_name"] = user.user_info.first_name
         userinfo["last_name"] = user.user_info.last_name
     return jsonify(**userinfo)
+
+def findNextElement(list, id):
+    found = False
+    for it in list:
+        if found:
+            return it
+        if it.id == id:
+            found = True
+    return None
+
+def findPreviousElement(list, id):
+    found = False
+    for it in reversed(list):
+        if found:
+            return it
+        if it.id == id:
+            found = True
+    return None
+
+
+def neighborhood(iterable):
+    iterator = iter(iterable)
+    prev_item = None
+    current_item = next(iterator)  # throws StopIteration if empty.
+    for next_item in iterator:
+        yield (prev_item, current_item, next_item)
+        prev_item = current_item
+        current_item = next_item
+    yield (prev_item, current_item, None)
+
