@@ -1,29 +1,26 @@
-'''
+"""
 Test the basic proposal model.
-'''
+"""
 
-import pytest
-
-from common import client
+from common import database
 
 from accuconf.models import User, UserInfo, UserLocation, Proposal, ProposalPresenter, ProposalStatus, NewProposal
 from accuconf.proposals.utils.proposals import QuickProposalType
-# TODO remove this sort of access to the db.
-from accuconf import db
 
 __author__ = 'Balachandran Sivakumar, Russel Winder'
 __copyright__ = '© 2016  Balachandran Sivakumar, Russel Winder'
 __licence__ = 'GPLv3'
 
 
-def test_proposal_basic(client):
+def test_proposal_basic(database):
     u = User("abc@b.c", "password")
     ui = UserInfo("a@b.c",
                   'User',
                   'Name',
                   '+01234567890',
+                  'A member of the human race.',
                   'admin')
-    location = UserLocation(u.user_id, "IND", "KARNATAKA", "560093")
+    location = UserLocation(u.user_id, "IND", "KARNATAKA", "560093", 'Town', 'Address')
     p = Proposal("a@b.c",
                  "TDD with C++",
                  QuickProposalType(),
@@ -39,13 +36,13 @@ def test_proposal_basic(client):
     u.user_info = ui
     u.location = location
     u.proposal = p
-    db.session.add(u)
-    db.session.add(ui)
-    db.session.add(location)
-    db.session.add(p)
-    db.session.add(presenter)
-    db.session.add(state)
-    db.session.commit()
+    database.session.add(u)
+    database.session.add(ui)
+    database.session.add(location)
+    database.session.add(p)
+    database.session.add(presenter)
+    database.session.add(state)
+    database.session.commit()
 
     p = User.query.filter_by(user_id="abc@b.c").first().proposal
     assert p.status.state == NewProposal().state()

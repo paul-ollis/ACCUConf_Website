@@ -6,22 +6,15 @@ class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.String(100), primary_key=True)
     user_pass = db.Column(db.String(512), nullable=False)
-    user_info = db.relationship('UserInfo',
-                                uselist=False,
-                                backref=db.backref('user'))
-    location = db.relationship('UserLocation',
-                               uselist=False)
-    proposals = db.relationship('Proposal',
-                                uselist=True,
-                                backref=db.backref('proposed_by'),
-                                foreign_keys="Proposal.proposer")
+    user_info = db.relationship('UserInfo', uselist=False, backref=db.backref('user'))
+    location = db.relationship('UserLocation', uselist=False)
+    proposals = db.relationship('Proposal', uselist=True, backref=db.backref('proposed_by'), foreign_keys="Proposal.proposer")
 
     def __init__(self, userid, userpass):
         if userid is None or len(userid.strip()) == 0:
             raise AttributeError("Email cannot be empty")
         if userpass is None or len(userpass.strip()) < 8:
-            raise AttributeError("Password should have at least 8 "
-                                 "letters/numbers.")
+            raise AttributeError("Password should have at least 8 letters/numbers.")
         self.user_id = userid
         self.user_pass = userpass
 
@@ -34,13 +27,15 @@ class UserInfo(db.Model):
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(18), nullable=False)
+    bio = db.Column(db.Text(), nullable=False)
     role = db.Column(db.String(12), nullable=False)
 
-    def __init__(self, userid, fname, lname, phone, role):
+    def __init__(self, userid, fname, lname, phone, bio, role):
         self.userid = userid
         self.first_name = fname
         self.last_name = lname
         self.phone = phone
+        self.bio = bio
         self.role = role
 
 
@@ -51,9 +46,13 @@ class UserLocation(db.Model):
     country = db.Column(db.String(5), nullable=False)
     state = db.Column(db.String(10), nullable=False)
     postal_code = db.Column(db.String(40), nullable=False)
+    town_city = db.Column(db.String(30), nullable=False)
+    street_address = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, user_id, country, state, postal_code):
+    def __init__(self, user_id, country, state, postal_code, town_city, street_address):
         self.user_id = user_id
         self.country = country
         self.state = state
         self.postal_code = postal_code
+        self.town_city = town_city
+        self.street_address = street_address

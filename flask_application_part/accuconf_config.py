@@ -32,4 +32,4 @@ class MaintenanceTestConfig(TestConfig):
 
 
 Config = ConfigBase
-#Config = TestConfig
+Config = TestConfig

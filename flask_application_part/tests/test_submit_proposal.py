@@ -1,6 +1,6 @@
-'''
+"""
 Tests for submitting a proposal.
-'''
+"""
 
 import json
 
@@ -26,9 +26,15 @@ def registration_data():
         'pincode': '123456',
         'country': 'India',
         'state': 'TamilNadu',
+        'towncity': 'Chennai',
+        'streetaddress': 'Chepauk',
+        'bio': 'A nice member of the human race.',
         'captcha': '1',
         'question': '12',
     }
+
+
+# TODO How come the following user data are OK without many of the fields
 
 
 @pytest.fixture(scope='function')

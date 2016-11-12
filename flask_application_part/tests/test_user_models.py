@@ -1,10 +1,8 @@
 import pytest
 
-from common import client
+from common import database
 
 from accuconf.models import User, UserInfo
-# TODO remove this sort of access to the db.
-from accuconf import db
 
 __author__ = 'Balachandran Sivakumar, Russel Winder'
 __copyright__ = '© 2016  Balachandran Sivakumar, Russel Winder'
@@ -12,8 +10,11 @@ __licence__ = 'GPLv3'
 
 
 def test_user_basic():
-    user = User('a@b.c', 'password')
-    assert user.user_id == 'a@b.c'
+    email = 'a@b.c'
+    password = 'password'
+    user = User(email, password)
+    assert user.user_id == email
+    assert user.user_pass == password
 
 
 def test_user_null_user():
@@ -52,41 +53,46 @@ def test_user_short_password():
     assert 'Password should have at least 8 letters/numbers.' in str(ex.value)
 
 
+user_data = (
+    'a@b.c',
+    'User',
+    'Name',
+    '+01234567890',
+    ' A human being who has done stuff',
+    'admin',
+)
+
+
 def test_userinfo_basic():
-    ui = UserInfo('a@b.c',
-                  'User',
-                  'Name',
-                  '+01234567890',
-                  'admin')
+    ui = UserInfo(*user_data)
     assert ui is not None
+    assert (
+        ui.userid,
+        ui.first_name,
+        ui.last_name,
+        ui.phone,
+        ui.bio,
+        ui.role
+    ) == user_data
 
 
-def test_basic(client):
+def test_basic(database):
     u = User('a@b.c', 'password')
-    ui = UserInfo('a@b.c',
-                  'User',
-                  'Name',
-                  '+01234567890',
-                  'admin'
-    )
+    ui = UserInfo(*user_data)
     u.user_info = ui
-    db.session.add(u)
-    db.session.add(ui)
-    db.session.commit()
+    database.session.add(u)
+    database.session.add(ui)
+    database.session.commit()
     assert User.query.filter_by(user_id='a@b.c').first() == u
 
 
-def test_userinfo_fkey(client):
+def test_userinfo_fkey(database):
     u = User('a@b.cc', 'password')
-    ui = UserInfo('aa@b.c',
-                  'User',
-                  'Name',
-                  '+01234567890',
-                  'admin')
+    ui = UserInfo(*user_data)
     u.user_info = ui
-    db.session.add(u)
-    db.session.add(ui)
-    db.session.commit()
-    oldU = User.query.filter_by(user_id='a@b.cc').first()
-    oldUI = oldU.user_info
-    assert  oldUI.userid == 'a@b.cc'
+    database.session.add(u)
+    database.session.add(ui)
+    database.session.commit()
+    old_user = User.query.filter_by(user_id='a@b.cc').first()
+    old_user_info = old_user.user_info
+    assert old_user_info.userid == 'a@b.cc'

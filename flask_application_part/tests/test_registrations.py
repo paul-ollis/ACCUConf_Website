@@ -11,9 +11,12 @@ def registrant():
         'firstname': 'User',
         'lastname': 'Name',
         'phone': '+011234567890',
+        'bio': 'A person of some identity.',
         'pincode': '123456',
         'country': 'India',
         'state': 'TamilNadu',
+        'towncity' : 'Chennai',
+        'streetaddress': 'Chepauk',
         'captcha': '1',
         'question': '12',
     }
@@ -38,8 +41,11 @@ def test_password_short(client):
         'pincode': '123456',
         'country': 'India',
         'state': 'TamilNadu',
+        'towncity' : 'Chennai',
+        'streetaddress': 'Chepauk',
+        'bio': 'An indivual of the world.',
         'captcha': '1',
-        'question': '12'
+        'question': '12',
     }, values=('Password did not meet checks',))
 
 
@@ -53,6 +59,9 @@ def test_password_invalid(client):
         'pincode': '123456',
         'country': 'India',
         'state': 'TamilNadu',
+        'towncity' : 'Chennai',
+        'streetaddress': 'Chepauk',
+        'bio': 'An indivual of the world.',
         'captcha': '1',
         'question': '12'
     }, values=('Password did not meet checks',))
@@ -68,6 +77,9 @@ def test_username_invalid(client):
         'pincode': '123456',
         'country': 'India',
         'state': 'TamilNadu',
+        'towncity' : 'Chennai',
+        'streetaddress': 'Chepauk',
+        'bio': 'An indivual of the world.',
         'captcha': '1',
         'question': '12',
     }, values=('Invalid/Duplicate user id',))

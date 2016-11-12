@@ -107,6 +107,9 @@ def register():
         state = request.form["state"]
         phone = request.form["phone"]
         postal_code = request.form["pincode"]
+        town_city = request.form['towncity']
+        street_address = request.form['streetaddress']
+        bio = request.form['bio']
 
         encoded_pass = ""
         if type(user_pass) == str and len(user_pass):
@@ -130,12 +133,15 @@ def register():
                                 first_name,
                                 last_name,
                                 phone,
+                                bio,
                                 Role.user.get("name", "user")
                                 )
             userlocation = UserLocation(newuser.user_id,
                                         country,
                                         state,
-                                        postal_code)
+                                        postal_code,
+                                        town_city,
+                                        street_address)
             newuser.user_info = userinfo
             newuser.location = userlocation
 

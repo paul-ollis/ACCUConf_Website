@@ -10,11 +10,24 @@ path_to_add = str(PurePath(__file__).parent.parent)
 if path_to_add not in sys.path:
     sys.path.insert(0, path_to_add)
 
-from accuconf import app, create_db, drop_db
+from accuconf import app, db
 
 __author__ = 'Russel Winder'
 __copyright__ = '© 2016  Russel Winder'
 __licence__ = 'GPLv3'
+
+
+@pytest.fixture
+def database():
+    """
+    Deliver up the database associated with the application.
+    """
+    app.config['TESTING'] = True
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+    yield db
+    db.drop_all()
 
 
 @pytest.fixture(scope='function')
@@ -24,10 +37,10 @@ def client():
     """
     app.config['TESTING'] = True
     with app.app_context():
-        drop_db()
-        create_db()
+        db.drop_all()
+        db.create_all()
     yield app.test_client()
-    drop_db()
+    db.drop_all()
 
 
 def get_and_check_content(client, url, code=200, values=()):
