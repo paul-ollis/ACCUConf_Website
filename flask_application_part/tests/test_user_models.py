@@ -8,10 +8,11 @@ __author__ = 'Balachandran Sivakumar, Russel Winder'
 __copyright__ = '© 2016  Balachandran Sivakumar, Russel Winder'
 __licence__ = 'GPLv3'
 
+email = 'a@b.c'
+password = 'password'
+
 
 def test_user_basic():
-    email = 'a@b.c'
-    password = 'password'
     user = User(email, password)
     assert user.user_id == email
     assert user.user_pass == password
@@ -19,42 +20,42 @@ def test_user_basic():
 
 def test_user_null_user():
     with pytest.raises(AttributeError) as ex:
-        user = User(None, 'password')
+        User(None, password)
     assert 'Email cannot be empty' in str(ex.value)
 
 
 def test_user_empty_user():
     with pytest.raises(AttributeError) as ex:
-        user = User('', 'password')
+        User('', password)
     assert 'Email cannot be empty' in str(ex.value)
 
 
 def test_user_whitespace_user():
     with pytest.raises(AttributeError) as ex:
-        user = User(' ', 'password')
+        User(' ', password)
     assert 'Email cannot be empty' in str(ex.value)
 
 
 def test_user_null_password():
     with pytest.raises(AttributeError) as ex:
-        user = User('a@b.c', None)
+        User(email, None)
     assert 'Password should have at least 8 letters/numbers.' in str(ex.value)
 
 
 def test_user_whitespace_password():
     with pytest.raises(AttributeError) as ex:
-        user = User('a@b.c', '         ')
+        User(email, '         ')
     assert 'Password should have at least 8 letters/numbers.' in str(ex.value)
 
 
 def test_user_short_password():
     with pytest.raises(AttributeError) as ex:
-        user = User('a@b.c', 'pass')
+        User(email, 'pass')
     assert 'Password should have at least 8 letters/numbers.' in str(ex.value)
 
 
 user_data = (
-    'a@b.c',
+    email,
     'User',
     'Name',
     '+01234567890',
@@ -67,7 +68,7 @@ def test_userinfo_basic():
     ui = UserInfo(*user_data)
     assert ui is not None
     assert (
-        ui.userid,
+        ui.user_id,
         ui.first_name,
         ui.last_name,
         ui.phone,
@@ -77,22 +78,22 @@ def test_userinfo_basic():
 
 
 def test_basic(database):
-    u = User('a@b.c', 'password')
+    u = User(email, password)
     ui = UserInfo(*user_data)
     u.user_info = ui
     database.session.add(u)
     database.session.add(ui)
     database.session.commit()
-    assert User.query.filter_by(user_id='a@b.c').first() == u
+    assert User.query.filter_by(user_id=email).first() == u
 
 
 def test_userinfo_fkey(database):
-    u = User('a@b.cc', 'password')
+    u = User(email, password)
     ui = UserInfo(*user_data)
     u.user_info = ui
     database.session.add(u)
     database.session.add(ui)
     database.session.commit()
-    old_user = User.query.filter_by(user_id='a@b.cc').first()
+    old_user = User.query.filter_by(user_id=email).first()
     old_user_info = old_user.user_info
-    assert old_user_info.userid == 'a@b.cc'
+    assert old_user_info.user_id == email

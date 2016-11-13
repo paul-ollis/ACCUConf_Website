@@ -1,7 +1,7 @@
 from accuconf import db
 
 
-# Represents a user in the system, assumes userid = user.email
+# Represents a user in the system, assumes user_id = user.email
 class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.String(100), primary_key=True)
@@ -23,15 +23,15 @@ class User(db.Model):
 class UserInfo(db.Model):
     __tablename__ = 'userinfo'
     id = db.Column(db.Integer, primary_key=True)
-    userid = db.Column(db.String(100), db.ForeignKey('users.user_id'))
+    user_id = db.Column(db.String(100), db.ForeignKey('users.user_id'))
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(18), nullable=False)
     bio = db.Column(db.Text(), nullable=False)
     role = db.Column(db.String(12), nullable=False)
 
-    def __init__(self, userid, fname, lname, phone, bio, role):
-        self.userid = userid
+    def __init__(self, user_id, fname, lname, phone, bio, role):
+        self.user_id = user_id
         self.first_name = fname
         self.last_name = lname
         self.phone = phone
