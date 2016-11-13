@@ -295,7 +295,7 @@ function uploadProposal() {
         "presenters": presenters
     };
     $.ajax({
-        url: "/proposals/proposal/upload_proposal",
+        url: "/proposals/upload_proposal",
         data: JSON.stringify(proposalData),
         type: "POST",
         method: "POST",
@@ -364,7 +364,7 @@ function uploadProposalOld() {
         "presenters": presenters
     };
     $.ajax({
-        url: "/proposals/proposal/submit",
+        url: "/proposals/submit",
         data: JSON.stringify(proposalData),
         type: "POST",
         method: "POST",
@@ -431,4 +431,32 @@ function showPointer(element) {
 
 function showDefaultPointer(element) {
     element.css("cursor", "default");
+}
+
+
+function uploadReview(button) {
+    var button = button.value;
+    var score = $("#score").val();
+    var comment = $("#comment").val();
+    var reviewData = {
+        "button" : button,
+        "score" : score,
+        "comment" : comment
+    };
+    $.ajax({
+        method: "POST",
+        url: "/proposals/upload_review",
+        data: JSON.stringify(reviewData),
+        contentType: "application/json",
+        success: function(data) {
+            console.log(data);
+            if (data.success) {
+                window.location = data.redirect;
+            } else {
+                $('#alert').text(data.message);
+            }
+        }
+    });
+
+    return true;
 }

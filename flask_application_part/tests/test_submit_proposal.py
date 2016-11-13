@@ -143,7 +143,7 @@ def test_logged_in_user_can_get_submission_page(client, registration_data):
 def test_logged_in_user_can_submit_a_single_presenter_proposal(client, registration_data, proposal_single_presenter):
     test_registered_user_can_login(client, registration_data)
     # TODO Why do we have to send JSON here but just used dictionaries previously?
-    rvd = post_and_check_content(client, '/proposals/proposal/upload_proposal', json.dumps(proposal_single_presenter), 'application/json', values=('success',))
+    rvd = post_and_check_content(client, '/proposals/upload_proposal', json.dumps(proposal_single_presenter), 'application/json', values=('success',))
     response = json.loads(rvd)
     assert response['success']
     proposal = Proposal.query.filter_by(proposer='a@b.c').first()
@@ -161,7 +161,7 @@ def test_logged_in_user_can_submit_a_single_presenter_proposal(client, registrat
 def test_logged_in_user_can_submit_multipresenter_single_lead_proposal(client, registration_data, proposal_multiple_presenters_single_lead):
     test_registered_user_can_login(client, registration_data)
     # TODO Why do we have to send JSON here but just used dictionaries previously?
-    rvd = post_and_check_content(client, '/proposals/proposal/upload_proposal', json.dumps(proposal_multiple_presenters_single_lead), 'application/json', values=('success',))
+    rvd = post_and_check_content(client, '/proposals/upload_proposal', json.dumps(proposal_multiple_presenters_single_lead), 'application/json', values=('success',))
     response = json.loads(rvd)
     assert response['success']
     proposal = Proposal.query.filter_by(proposer='a@b.c').first()
@@ -179,7 +179,7 @@ def test_logged_in_user_can_submit_multipresenter_single_lead_proposal(client, r
 def test_logged_in_user_user_can_submit_multipresenter_multilead_proposal(client, registration_data, proposal_multiple_presenters_and_leads):
     test_registered_user_can_login(client, registration_data)
     # TODO Why do we have to send JSON here but just used dictionaries previously?
-    rvd = post_and_check_content(client, '/proposals/proposal/upload_proposal', json.dumps(proposal_multiple_presenters_and_leads), 'application/json', values=('success',))
+    rvd = post_and_check_content(client, '/proposals/upload_proposal', json.dumps(proposal_multiple_presenters_and_leads), 'application/json', values=('success',))
     response = json.loads(rvd)
     assert response["success"] is False
     assert "message" in response
