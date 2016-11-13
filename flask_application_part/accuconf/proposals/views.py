@@ -295,18 +295,17 @@ def review_proposal():
             "Title": "Review Proposal",
         }
 
-        # TODO Not the review from the other users!
-        allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
-
         proposalToShowNext = None
 
         if session.get("review_button_pressed", False):
             if session["review_button_pressed"] == "next_proposal":
-                proposalToShowNext = findNextElement(allProposals, session["review_id"])
+                allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
             elif session["review_button_pressed"] == "previous_proposal":
-                proposalToShowNext = findPreviousElement(allProposals, session["review_id"])
+                allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id.desc())
+
+            proposalToShowNext = findNextElement(allProposals, session["review_id"])
         else:
-            proposalToShowNext = allProposals.first()
+            proposalToShowNext = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id).first()
 
         if not proposalToShowNext:
             page = {
