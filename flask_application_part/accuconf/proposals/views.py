@@ -196,7 +196,7 @@ def show_proposals():
         return render_template("not_loggedin.html", page=page)
 
 
-@proposals.route("/submit_proposal", methods=["POST"])
+@proposals.route("/submit_proposal", methods=["GET"])
 def submit_proposal():
     if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("maintenance"))
@@ -304,23 +304,40 @@ def review_proposal():
                 proposalToShowNext = findNextElement(allProposals, session["review_id"])
             elif session["review_button_pressed"] == "previous_proposal":
                 proposalToShowNext = findNextElement(allProposalsReverse, session["review_id"])
+            elif session["review_button_pressed"] == "next_nr_proposal":
+                proposalToShowNext = findNextNotReViewedElement(allProposals, session["review_id"], user.user_id)
+            elif session["review_button_pressed"] == "previous_nr_proposal":
+                proposalToShowNext = findNextNotReViewedElement(allProposalsReverse, session["review_id"], user.user_id)
+            elif session["review_button_pressed"] == "save":
+                proposalToShowNext = findElement(allProposals, session["review_id"])
         else:
             proposalToShowNext = allProposals.first()
 
+        session["review_button_pressed"] = ""
+
         if not proposalToShowNext:
             page = {
-                "Title": "All reviews done",
-                "Data": "You have finished reviewing all proposals!",
+                "title": "All reviews done",
+                "data": "You have finished reviewing all proposals!",
             }
             return render_template("review_success.html", page=page)
 
         nextAvailable = False
         previousAvalaible = False
+        nextNotReadAvailable = False
+        previousNotReadAvailable = False
 
         if allProposals.first().id != proposalToShowNext.id:
             previousAvalaible = True
         if allProposalsReverse.first().id != proposalToShowNext.id:
             nextAvailable = True
+
+        nextPotentialNotRead = findNextNotReViewedElement(allProposals, proposalToShowNext.id, user.user_id)
+        if nextPotentialNotRead is not None:
+            nextNotReadAvailable = True
+        previousPotentialNotRead = findNextNotReViewedElement(allProposalsReverse, proposalToShowNext.id, user.user_id)
+        if previousPotentialNotRead is not None:
+            previousNotReadAvailable = True
 
         proposalReview = ProposalReview.query.filter_by(proposal_id=proposalToShowNext.id,
                                                         reviewer=user.user_id).first()
@@ -334,8 +351,10 @@ def review_proposal():
             "presenters": proposalToShowNext.presenters,
             "score": 0,
             "comment": "",
-            "next_enabled" : nextAvailable,
-            "previous_enabled" : previousAvalaible,
+            "next_enabled": nextAvailable,
+            "previous_enabled": previousAvalaible,
+            "next_nr_enabled": nextNotReadAvailable,
+            "previous_nr_enabled": previousNotReadAvailable,
         }
 
         if proposalReview:
@@ -344,7 +363,7 @@ def review_proposal():
             page["proposal"]["comment"] = proposalComment.comment
 
         session['review_id'] = proposalToShowNext.id
-        session["review_button_pressed"] = ""
+
         return render_template("review_proposal.html", page=page)
     else:
         page = {
@@ -513,12 +532,31 @@ def currentuser():
         userinfo["last_name"] = user.user_info.last_name
     return jsonify(**userinfo)
 
+def findElement(list, id):
+    for it in list:
+        if it.id == id:
+            return it
+    return None
+
 # return the next element after id
 def findNextElement(list, id):
     found = False
     for it in list:
         if found:
             return it
+        if it.id == id:
+            found = True
+    return None
+
+def findNextNotReViewedElement(list, id, user_id):
+    found = False
+    for it in list:
+        if found:
+            review = ProposalReview.query.filter_by(proposal_id=it.id,
+                                                    reviewer=user_id).first()
+
+            if review is None or review.score == 0:
+                return it
         if it.id == id:
             found = True
     return None
