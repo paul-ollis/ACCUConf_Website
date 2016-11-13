@@ -247,10 +247,10 @@ def upload_proposal():
             response = {}
             if status:
                 proposal = Proposal(proposalData.get("proposer"),
-                                    proposalData.get("title"),
+                                    proposalData.get("title").rstrip(),
                                     getProposalType(proposalData.get(
                                         "proposalType")),
-                                    proposalData.get("abstract"))
+                                    proposalData.get("abstract").rstrip())
                 user.proposals.append(proposal)
                 db.session.add(proposal)
                 presenters = proposalData.get("presenters")
@@ -344,7 +344,7 @@ def review_proposal():
             page["proposal"]["comment"] = proposalComment.comment
 
         session['review_id'] = proposalToShowNext.id
-
+        session["review_button_pressed"] = ""
         return render_template("review_proposal.html", page=page)
     else:
         page = {
@@ -388,7 +388,7 @@ def upload_review():
                 proposalComment = ProposalComment.query.filter_by(proposal_id=proposal.id,
                                                                   commenter=user.user_id).first()
                 if proposalComment:
-                    proposalComment.comment = reviewData["comment"]
+                    proposalComment.comment = reviewData["comment"].rstrip()
                     ProposalComment.query.filter_by(proposal_id=proposal.id,
                                                     commenter=user.user_id).update(
                                                         {'comment': proposalComment.comment})

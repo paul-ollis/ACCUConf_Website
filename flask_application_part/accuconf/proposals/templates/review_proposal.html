@@ -90,29 +90,29 @@
                             <td class="narrow"> <input type="radio" name="lead" id="lead" value="1"> </td>
                             <td> <input type="text" name="p_email_{{ curr }}"
                                         id="p_email_{{ curr }}"
-                                        placeholder="Email Address">
+                                        placeholder="Email Address"/>
                             </td>
                             <td> <input type="text" name="p_fname_{{ curr }}"
                                         id="p_fname_{{ curr }}"
-                                        placeholder="First Name">
+                                        placeholder="First Name"/>
                             </td>
                             <td> <input type="text" name="p_lname_{{ curr }}"
                                         id="p_lname_{{ curr }}"
-                                        placeholder="Last Name">
+                                        placeholder="Last Name"/>
                             </td>
                             <td> <select class="widetable" name="p_ctry_{{ curr}}"
                                          id="p_ctry_{{ curr }}"
                                          onchange="javascript:loadState('p_ctry_{{ curr }}', 'p_states_{{ curr }}', 'p_state_{{ curr }}', true);"
-                                         onkeyup="this.onchange();" onmouseup="this.onchange();">
+                                         onkeyup="this.onchange();" onmouseup="this.onchange();"/>
                             </td>
                             <td> <input type="text" name="p_state_{{ curr}}"
                                         id="p_state_{{ state }}"
-                                        placeholder="State">
+                                        placeholder="State"/>
                             </td>
                             <td style="display: none;"> <select
                                     class="widetable"
                                     name="p_states_{{ curr }}"
-                                    id="p_states_{{ curr }}">
+                                    id="p_states_{{ curr }}"/>
                             </td>
                             <td> <button class="adder" type="button"
                                          onclick="javascript:addPresenter('presenterstable');">+</button>
@@ -130,7 +130,7 @@
 
             <fieldset class="form-group">
                 <label for="score" >Score</label>
-                <input type="text" name="score" id="score" size="5"
+                <input type="number" min="1" max="10" required name="score" id="score" size="3"
                     value="{{ page.proposal.score }}">
             </fieldset>
 
