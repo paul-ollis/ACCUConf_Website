@@ -296,16 +296,16 @@ def review_proposal():
         }
 
         proposalToShowNext = None
+        allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
+        allProposalsReverse = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id.desc())
 
         if session.get("review_button_pressed", False):
             if session["review_button_pressed"] == "next_proposal":
-                allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
+                proposalToShowNext = findNextElement(allProposals, session["review_id"])
             elif session["review_button_pressed"] == "previous_proposal":
-                allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id.desc())
-
-            proposalToShowNext = findNextElement(allProposals, session["review_id"])
+                proposalToShowNext = findNextElement(allProposalsReverse, session["review_id"])
         else:
-            proposalToShowNext = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id).first()
+            proposalToShowNext = allProposals.first()
 
         if not proposalToShowNext:
             page = {
@@ -313,6 +313,14 @@ def review_proposal():
                 "Data": "You have finished reviewing all proposals!",
             }
             return render_template("review_success.html", page=page)
+
+        nextAvailable = False
+        previousAvalaible = False
+
+        if allProposals.first().id != proposalToShowNext.id:
+            previousAvalaible = True
+        if allProposalsReverse.first().id != proposalToShowNext.id:
+            nextAvailable = True
 
         proposalReview = ProposalReview.query.filter_by(proposal_id=proposalToShowNext.id,
                                                         reviewer=user.user_id).first()
@@ -325,8 +333,11 @@ def review_proposal():
             "proposaltype": getProposalType(proposalToShowNext.session_type).proposalType(),
             "presenters": proposalToShowNext.presenters,
             "score": 0,
-            "comment": ""
+            "comment": "",
+            "next_enabled" : nextAvailable,
+            "previous_enabled" : previousAvalaible,
         }
+
         if proposalReview:
             page["proposal"]["score"] = proposalReview.score
         if proposalComment:
@@ -400,70 +411,6 @@ def upload_review():
             "name": "Submit proposal"
         }
         return render_template("not_loggedin.html", page=page)
-#
-#
-#
-# @proposals.route("/upload_review", methods=["POST"])
-# def upload_review():
-#     if proposals.config.get("MAINTENANCE"):
-#         return redirect(url_for("maintenance"))
-#
-#     if session.get("user_id", False):
-#         user = User.query.filter_by(user_id=session["user_id"]).first()
-#         if not user:
-#             page = {
-#                 "name": "Proposal Submission"
-#             }
-#             return render_template("not_logged.html", page=page)
-#         else:
-#             if session.get("review_id", False):
-#                 proposal = Proposal.query.filter_by(id = session["review_id"]).first()
-#                 # TODO handle proposal not found
-#                 reviewData = request.json
-#                 proposals.logger.info(reviewData)
-#
-#                 proposalReview = ProposalReview.query.filter_by(proposal_id=proposal.id,
-#                                                                 reviewer=user.user_id).first()
-#
-#                 if proposalReview:
-#                     proposalReview.score = reviewData["score"]
-#                     ProposalReview.query.filter_by(proposal_id=proposal.id,
-#                                                 reviewer=user.user_id).update({'score': proposalReview.score})
-#                 else:
-#                     proposalReview = ProposalReview(proposal.id,
-#                                                     user.user_id,
-#                                                     reviewData["score"])
-#                     proposal.reviews.append(proposalReview)
-#                     db.session.add(proposalReview)
-#
-#                 proposalComment = ProposalComment.query.filter_by(proposal_id=proposal.id,
-#                                                                 commenter=user.user_id).first()
-#                 if proposalComment:
-#                     proposalComment.comment = reviewData["comment"]
-#                     ProposalComment.query.filter_by(proposal_id=proposal.id,
-#                                                     commenter=user.user_id).update({'comment' : proposalComment.comment})
-#                 else:
-#                     proposalComment = ProposalComment(proposal.id,
-#                                                      user.user_id,
-#                                                      reviewData["comment"])
-#                     proposal.comments.append(proposalComment)
-#                     db.session.add(proposalComment)
-#
-#                 db.session.commit()
-#                 response = {}
-#                 response["success"] = True
-#                 response["redirect"] = url_for('proposals.index')
-#             else:
-#                 response = {}
-#                 response["success"] = False
-#                 response["message"] = "Failure"
-#             return jsonify(**response)
-#     else:
-#         page = {
-#             "name": "Submit proposal"
-#         }
-#         return render_template("not_loggedin.html", page=page)
-
 
 
 @proposals.route("/check/<user>", methods=["GET"])
@@ -566,6 +513,7 @@ def currentuser():
         userinfo["last_name"] = user.user_info.last_name
     return jsonify(**userinfo)
 
+# return the next element after id
 def findNextElement(list, id):
     found = False
     for it in list:
@@ -574,16 +522,6 @@ def findNextElement(list, id):
         if it.id == id:
             found = True
     return None
-
-def findPreviousElement(list, id):
-    found = False
-    for it in reversed(list):
-        if found:
-            return it
-        if it.id == id:
-            found = True
-    return None
-
 
 def neighborhood(iterable):
     iterator = iter(iterable)
