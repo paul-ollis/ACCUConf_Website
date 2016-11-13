@@ -33,7 +33,6 @@ class Proposal(db.Model):
                             "accuconf.proposals.ProposalType")
         self.text = text
 
-
 class ProposalPresenter(db.Model):
     __tablename__ = "proposal_presenters"
     id = db.Column(db.Integer, primary_key=True)
