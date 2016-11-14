@@ -33,5 +33,5 @@ class MaintenanceTestConfig(TestConfig):
 
 # Config = ProductionConfig
 # Config = MaintenanceProductionConfig
-# Config = TestConfig
-Config = MaintenanceTestConfig
+Config = TestConfig
+# Config = MaintenanceTestConfig
