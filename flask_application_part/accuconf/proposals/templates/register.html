@@ -1,5 +1,5 @@
 {% extends "proposals_base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Register{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -16,7 +16,7 @@
 </div>
 <div class="row">
     <div class="container-fluid">
-        <form class="form-horizontal" id="registrationForm" method="POST" action="{{ url_for('proposals.register')}}">
+        <form class="form-horizontal" id="registrationForm" method="POST" action="{{url_for('proposals.register')}}">
             <div class="form-group">
                 <label for="email" class="control-label col-sm-3">Email</label>
                 <div class="col-sm-offset-1">
@@ -197,7 +197,6 @@
              $('#submit').removeAttr("disabled");
          }
      });
-
  });
 </script>
 {% endblock %}

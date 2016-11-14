@@ -173,7 +173,7 @@ def show_proposals():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
         page = {"subpages": []}
         for proposal in user.proposals:
             subpage = {
@@ -187,7 +187,7 @@ def show_proposals():
             page["subpages"].append(subpage)
         return render_template("view_proposal.html", page=page)
     else:
-        return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/submit_proposal", methods=["GET"])
@@ -197,7 +197,7 @@ def submit_proposal():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
         return render_template("submit_proposal.html", page={
             "title": "Submit a proposal for ACCU Conference",
             "user_name": "%s %s".format(user.user_info.first_name, user.user_info.last_name),
@@ -210,7 +210,7 @@ def submit_proposal():
             }
         })
     else:
-        return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/upload_proposal", methods=["POST"])
@@ -253,7 +253,7 @@ def upload_proposal():
                 response["message"] = message
             return jsonify(**response)
     else:
-        return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/review_proposal", methods=["GET"])
@@ -263,7 +263,7 @@ def review_proposal():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
         page = {"Title": "Review Proposal"}
         proposal_to_show_next = None
         all_proposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
@@ -322,7 +322,7 @@ def review_proposal():
         session['review_id'] = proposal_to_show_next.id
         return render_template("review_proposal.html", page=page)
     else:
-        return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/upload_review", methods=["POST"])
@@ -332,7 +332,7 @@ def upload_review():
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
         if session.get("review_id", False):
             proposal = Proposal.query.filter_by(id=session["review_id"]).first()
             if proposal is not None:
@@ -360,7 +360,7 @@ def upload_review():
                 session['review_button_pressed'] = review_data["button"]
                 return jsonify(success=True, redirect=url_for('proposals.review_proposal'))
     else:
-        return render_template("not_loggedin.html", page={"name": "Submit proposal"})
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/check/<user>", methods=["GET"])

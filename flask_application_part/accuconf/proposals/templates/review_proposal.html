@@ -1,5 +1,5 @@
 {% extends "proposals_base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Review Proposal{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -27,7 +27,6 @@
                        placeholder="Title" disabled="true"
                        value="{{ page.proposal.title }}">
             </fieldset>
-
             <fieldset>
                 <label for="abstract">Abstract</label>
                 <textarea rows="24" cols="80"
@@ -125,21 +124,17 @@
                 <label for="tags">Category</label>
                 <input type="text" name="tags" id="tags" placeholder="Category">
             </fieldset>
-
             <hr/>
-
             <fieldset class="form-group">
                 <label for="score" >Score</label>
                 <input type="number" min="1" max="10" required name="score" id="score" size="3"
                     value="{{ page.proposal.score }}">
             </fieldset>
-
             <fieldset class="form-group">
                 <label for="comment">Comment</label>
                 <textarea rows="5" cols="60" name="comment" id="comment">{{ page.proposal.comment }}
                 </textarea>
             </fieldset>
-
             <fieldset class="formgroup">
                 <button type="submit" class="button"
                         value="previous_proposal" {% if page.proposal.previous_enabled!=True %} disabled="disabled"{% endif %}

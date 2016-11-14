@@ -1,5 +1,5 @@
 {% extends "proposals_base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Login{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -24,19 +24,16 @@
                     <input type="text" name="usermail" id="usermail" placeholder="Email">
                 </div>
             </div>
-
             <div class="control-group">
                 <label for="password" class="col-md-3"> Password</label>
                 <div class="col-md-offset-1">
                     <input type="password" name="password" id="password" placeholder="Password">
                 </div>
             </div>
-
             <div class="control-group">
                 <button type="submit" class="btn btn-primary">Login</button>
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
-
         </form>
     </div>
 </div>
