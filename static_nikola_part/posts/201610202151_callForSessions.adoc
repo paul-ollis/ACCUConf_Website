@@ -4,6 +4,8 @@
 .. type: text
 ////
 
+_Update 2016-11-14T14:38+00:00, altered URLs and dates._
+
 We invite you to propose a session for this leading software development conference.
 
 We have a long tradition of high quality sessions covering many aspects of software development, from
@@ -44,12 +46,12 @@ will be offered a package of fee, accommodation and travel tailored on a case-by
 conference organizers reserve the right to cancel a pre-conference session that is scheduled if insufficient
 people sign up for it.)
 
-To propose a session please first https://conference.accu.org/proposals/register[register] on the
-website. You will then need to https://conference.accu.org/proposals/login[login] to the website.  On
+To propose a session please first https://conference.accu.org/proposals/register[Register] on the
+website. You will then need to https://conference.accu.org/proposals/login[Login] to the website.  On
 successful login the menu will change to reveal the proposal submission and review entries: navigate to the
-https://conference.accu.org/proposals/proposal[My Proposal] page and fill in the proposal form (NB
-navigating to this link before being logged in will likely result in a server error 500). In case that you
-want to do a shared presentation, please add the other Presenters/Co-Presenters. In a joint presenter
+https://conference.accu.org/proposals/submit_proposal[Submit Proposal] page and fill in the proposal form
+(NB navigating to this link before being logged in will likely result in a server error 500). In case that
+you want to do a shared presentation, please add the other Presenters/Co-Presenters. In a joint presenter
 situation, the person completing the proposal will be treated as the proposer and the person to whom
 conference presenter benefits will be offered.
 
@@ -59,7 +61,7 @@ sessions accepted for the conference.
 
 Each person should only put forward one or two proposals.
 
-The Call for Sessions lasts 5 weeks and will close at midnight Friday 2016-11-18.
+The Call for Sessions will close at Friday 2016-12-02T23:58+00:00.
 
 Acceptance/rejection emails should be sent out by Friday 2017-01-13.
 
@@ -69,7 +71,3 @@ The conference has always benefited from the strength of its programme. Please h
 successful event.
 
 Thank you!
-
-'''
-
-2016-10-24T14:20+01:00 Corrected some dates.
