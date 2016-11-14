@@ -18,18 +18,20 @@ class ProductionConfig(ConfigBase):
     pass
 
 
-class TestConfig(ConfigBase):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///"+ str(ConfigBase._here / 'accuconf_test.db')
-    DEBUG = True
-
-
-class MaintenanceConfig(ConfigBase):
+class MaintenanceProductionConfig(ProductionConfig):
     MAINTENANCE = True
+
+
+class TestConfig(ConfigBase):
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + str(ConfigBase._here / 'accuconf_test.db')
+    DEBUG = True
 
 
 class MaintenanceTestConfig(TestConfig):
     MAINTENANCE = True
 
 
-Config = ConfigBase
+# Config = ProductionConfig
+# Config = MaintenanceProductionConfig
 Config = TestConfig
+# Config = MaintenanceTestConfig

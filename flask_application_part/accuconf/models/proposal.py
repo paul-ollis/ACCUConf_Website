@@ -1,5 +1,4 @@
 from accuconf import db
-from accuconf.models.user import User
 from accuconf.proposals.utils.proposals import *
 
 
@@ -10,18 +9,12 @@ class Proposal(db.Model):
     title = db.Column(db.String(150), nullable=False)
     session_type = db.Column(db.String(20), nullable=False)
     text = db.Column(db.Text, nullable=False)
-    presenters = db.relationship('ProposalPresenter',
-                                 uselist=True)
-    status = db.relationship('ProposalStatus',
-                            uselist=False)
-    reviews = db.relationship('ProposalReview',
-                              uselist=True)
-    comments = db.relationship('ProposalComment',
-                               uselist=True)
-    categories = db.relationship('ProposalCategory',
-                                 uselist=True)
-    session_proposer = db.relationship('User',
-                                       foreign_keys='Proposal.proposer')
+    presenters = db.relationship('ProposalPresenter', uselist=True)
+    status = db.relationship('ProposalStatus', uselist=False)
+    reviews = db.relationship('ProposalReview', uselist=True)
+    comments = db.relationship('ProposalComment', uselist=True)
+    categories = db.relationship('ProposalCategory', uselist=True)
+    session_proposer = db.relationship('User', foreign_keys='Proposal.proposer')
 
     def __init__(self, proposer, title, session_type, text):
         self.proposer = proposer
@@ -29,8 +22,7 @@ class Proposal(db.Model):
         if issubclass(type(session_type), ProposalType):
             self.session_type = session_type.proposalType()
         else:
-            raise TypeError("session_type should be of type "
-                            "accuconf.proposals.ProposalType")
+            raise TypeError("session_type should be of type accuconf.proposals.ProposalType")
         self.text = text
 
 class ProposalPresenter(db.Model):
@@ -65,8 +57,7 @@ class ProposalStatus(db.Model):
         if issubclass(type(state), ProposalState):
             self.state = state.state()
         else:
-            raise TypeError("state should be of type "
-                            "accuconf.proposals.ProposalState")
+            raise TypeError("state should be of type accuconf.proposals.ProposalState")
 
 
 class ProposalReview(db.Model):
@@ -106,5 +97,4 @@ class ProposalCategory(db.Model):
         if type(category) == ProposalCategory:
             self.category = category
         else:
-            raise TypeError("category should be of type "
-                            "accuconf.proposals.ProposalCategory")
+            raise TypeError("category should be of type accuconf.proposals.ProposalCategory")

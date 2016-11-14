@@ -1,7 +1,7 @@
 import re
 
 
-def validateEmail(email):
+def validate_email(email):
     emailPattern = re.compile("^([a-zA-Z0-9_.+-])+@(([a-zA-Z0-9-_])+\.)+([a-zA-Z0-9])+$")
     if emailPattern.search(email):
         from accuconf.models import User
@@ -14,7 +14,7 @@ def validateEmail(email):
         return False
 
 
-def validatePassword(passwd):
+def validate_password(passwd):
     if (re.search("\\d", passwd) and re.search("[a-z]", passwd) and
         re.search("[A-Z]", passwd) and len(passwd) >= 8):
         return True
@@ -22,7 +22,7 @@ def validatePassword(passwd):
         return False
 
 
-def validateProposalData(proposalData):
+def validate_proposal_data(proposalData):
     mandatoryKeys = ["title", "abstract", "proposalType", "presenters"]
     for key in mandatoryKeys:
         if key not in proposalData:

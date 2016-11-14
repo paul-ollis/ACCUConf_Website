@@ -10,18 +10,18 @@ class User(db.Model):
     location = db.relationship('UserLocation', uselist=False)
     proposals = db.relationship('Proposal', uselist=True, backref=db.backref('proposed_by'), foreign_keys="Proposal.proposer")
 
-    def __init__(self, userid, userpass):
-        if userid is None or len(userid.strip()) == 0:
+    def __init__(self, user_id, user_pass):
+        if user_id is None or len(user_id.strip()) == 0:
             raise AttributeError("Email cannot be empty")
-        if userpass is None or len(userpass.strip()) < 8:
+        if user_pass is None or len(user_pass.strip()) < 8:
             raise AttributeError("Password should have at least 8 letters/numbers.")
-        self.user_id = userid
-        self.user_pass = userpass
+        self.user_id = user_id
+        self.user_pass = user_pass
 
 
 # Every user has a user info, backref'ed in the User class
 class UserInfo(db.Model):
-    __tablename__ = 'userinfo'
+    __tablename__ = 'user_infos'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(100), db.ForeignKey('users.user_id'))
     first_name = db.Column(db.String(100), nullable=False)
@@ -40,7 +40,7 @@ class UserInfo(db.Model):
 
 
 class UserLocation(db.Model):
-    __tablename__ = 'user_location'
+    __tablename__ = 'user_locations'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(100), db.ForeignKey('users.user_id'))
     country = db.Column(db.String(5), nullable=False)
