@@ -19,7 +19,6 @@ function registerUser() {
                 alert(data.valid);
             }
         });
-        
         return true;
     } else {
         alert ("Invalid");
@@ -66,14 +65,14 @@ function validateRegistrationData() {
     if (!captchaValid(captcha)) {
         return false;
     }
-    
+
     submit.disabled = false;
     return true;
 }
 
 function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-_])+\.)+([a-zA-Z0-9])+$/;
-  console.log("Email is: " + email);  
+  console.log("Email is: " + email);
   return regex.test(email);
 }
 
@@ -246,7 +245,7 @@ function addPresenterOld() {
             presenters_sel.append('<option value="' + presenter + '">' + presenter + '</option>');
         }
     });
-        
+
 }
 
 function addPresenter(tableId) {
@@ -283,7 +282,7 @@ function uploadProposal() {
             "fname" : cells[3].innerText,
             "lname" : cells[4].innerText,
             "country" : cells[5].innerText,
-            "state" : cells[6].innerText,
+            "state" : cells[6].innerText
         };
         presenters.push(presenter);
     });
@@ -317,74 +316,6 @@ function uploadProposal() {
     return true;
 }
 
-function uploadProposalOld() {
-    var proposalTitle = $('#title').val();
-    var abstract = $('#proposal').val();
-    var proposalType = $('#proposaltype').val();
-    var presentersTableBody = $('#presenterstable > tbody > tr');
-    var presenters = [];
-    var idx = 0;
-    $(presentersTableBody).each(function() {
-       var details = [];
-       if (idx === 0) {
-           $(this).find('td').each(function (col, td) {
-               if (col == 0) {
-                   details.push($(td).find(':input').val());
-               } else {
-                   details.push($(td).text());
-               }
-           })
-       } else {
-           $(this).find('td').each(function(col, td) {
-               details.push($(td).find(':input').val());
-           })
-       }
-       idx++;
-        var presenter = {
-            "lead": (details[0].length == 0 || details[0] == "0") ? 1 : 0,
-            "email": details[1],
-            "firstName": details[2],
-            "lastName": details[3],
-            "country": details[4],
-            "state": details[5]
-        };
-       if(validatePresenter(details)) {
-           presenters.push(presenter);
-       } else {
-           alert ("Incorrect data entered for user in row: " + (idx+1));
-           return false;
-       }
-    });
-    var proposer = $('#def_email').text();
-    var proposalData = {
-        "title": proposalTitle,
-        "abstract": abstract,
-        "proposer": proposer,
-        "proposalType": proposalType,
-        "presenters": presenters
-    };
-    $.ajax({
-        url: "/proposals/submit",
-        data: JSON.stringify(proposalData),
-        type: "POST",
-        method: "POST",
-        dataType: "json",
-        contentType: "application/json",
-        success: function(data) {
-            console.log(data);
-            if (data.success) {
-                window.location = data.redirect;
-            } else {
-                $('#alert').text(data.message);
-            }
-        },
-        error: function(data) {
-            console.log("Error in proposal submission: " + data);
-        }
-    });
-    return true;
-}
-
 function validatePresenter(details) {
     return true;
 }
@@ -402,7 +333,6 @@ function addNewPresenter() {
     } else {
         state = state_sel;
     }
-
     var presenters = $("#presenters-body");
     var trCnt = $("#presenters-body tr").length;
     var sno = trCnt + 1;

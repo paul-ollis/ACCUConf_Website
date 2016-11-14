@@ -21,7 +21,6 @@
     </head>
     <body>
         <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
-
         <!--  Banner -->
         <div class="container-fluid banner">
             <a href="/index.html"><img class="img-responsive"
@@ -31,7 +30,6 @@
                                                src="/proposals/assets/images/accu_logo.png" align="right"
                                                alt="ACCU Logo"/></a>
         </div>
-
         <!-- Banner logo -->
         <div class="row">
             <!-- Menubar -->
@@ -67,7 +65,6 @@
                 </div>
                 <!-- End of Menubar -->
             </div> <!-- End of div.col-sm-3 -->
-
             <!-- For single column rendering - In mobiles and tablets -->
             <div class="visible-xs-block">
                 <div class="container-fluid">
@@ -84,7 +81,6 @@
                 </div>
             </div>
             <!-- End For single column rendering  -->
-
             <!-- Main Content -->
             <div class="col-sm-6 col-md-6 col-lg-6">
                 <div id="content" role="main">
@@ -103,7 +99,6 @@
                 </div>
             </div> <!--  End of col-sm-6 -->
             <!-- End of main content -->
-
             <div class="col-sm-3 col-md-3 col-lg-3">
                 <div class="hidden-xs">
                     <div class="row" id="greeter-row">
@@ -167,7 +162,6 @@
         <script type="text/template" id="navlinks-template">
             <li> <a href="<%= href %>"><%= title %></a> </li>
         </script>
-
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#greeter-row").hide();
@@ -186,9 +180,8 @@
                         });
                     }
                 });
-
                 $.ajax({
-                    url: "/proposals/currentuser",
+                    url: "/proposals/current_user",
                     method: "GET",
                     contentType: "application/json",
                     success: function(data) {
@@ -199,9 +192,7 @@
                         }
                     }
                 });
-
             });
         </script>
-
     </body>
 </html>

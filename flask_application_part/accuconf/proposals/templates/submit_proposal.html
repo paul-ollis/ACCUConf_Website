@@ -1,5 +1,5 @@
 {% extends "proposals_base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Submit Proposal{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -16,20 +16,17 @@
 </div>
 <div class="row">
     <div class="container-fluid">
-        <form class="form-horizontal" id="proposalform" method=""
-              action=" {{ url_for('proposals.submit_proposal') }}"
-              onsubmit="return false;">
+        <form class="form-horizontal" id="proposalform" method="POST" action="{{ url_for('proposals.upload_proposal') }}" onsubmit="return false;">
             <div class="form-group">
                 <label for="title" class="control-label col-sm-3">Title</label>
                 <div class="col-sm-8">
-                    <input type="text" name="title" id="title" size = "50" placeholder="Title (minimum 5 characters)">
+                    <input type="text" name="title" id="title" size="50" placeholder="Title (minimum 5 characters)">
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="abstract" class="control-label col-sm-3">Abstract</label>
                 <div class="col-sm-8">
-                    <textarea rows="24" cols="60" name="proposal" id="proposal" placeholder="Proposal abstract (minimum 50 characters)"></textarea>
+                    <textarea rows="24" cols="50" name="proposal" id="proposal" placeholder="Proposal abstract (minimum 50 characters)"></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -133,13 +130,10 @@
                 <input type="text" name="tags" id="tags" placeholder="Category" data-role="tagsinput">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary"
-                        onclick="javascript:uploadProposal();">
-                    Submit</button>
-                <button type="cancel" class="btn btn-default">Reset</button>
+                <button type="submit" class="btn btn-primary" onclick="javascript:uploadProposal();">Submit</button>
+                <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </form>
-
         <div class="modal fade" tabindex="-1" role="dialog" id="add-presenter-modal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -155,21 +149,18 @@
                                     <input type="text" name="add-presenter-email" id="add-presenter-email">
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="add-presenter-fname" class="control-label col-sm-2">First Name</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="add-presenter-fname" id="add-presenter-fname">
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="add-presenter-lname" class="control-label col-sm-2">Last Name</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="add-presenter-lname" id="add-presenter-lname">
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="add-presenter-country" class="control-label col-sm-2">Country</label>
                                 <div class="col-sm-4">
@@ -179,7 +170,6 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="add-presenter-state" class="control-label col-sm-2">State</label>
                                 <div class="col-sm-4">
@@ -188,7 +178,6 @@
                                     </select>
                                 </div>
                             </div>
-
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -198,19 +187,14 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-
-
-
     </div>
 </div>
-
 <div class="notice">
   <p>
     The data collected here will only be available to people organising the conference for the purpose of
     organising the conference.
   </p>
 </div>
-
 <script type="text/template" id="presenters-row-template">
     <tr>
         <td align="center" id="p_seq_<%= sno %>"> <%= sno %> </td>
@@ -225,7 +209,6 @@
         </td>
     </tr>
 </script>
-
 <script type="text/javascript">
  var countryData;
  $(document).ready(function() {

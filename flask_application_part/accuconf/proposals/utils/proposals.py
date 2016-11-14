@@ -1,4 +1,4 @@
-def getProposalType(info):
+def get_proposal_type(info):
     typeMap = {
         "quick": QuickProposalType,
         "interactive": InteractiveProposalType,

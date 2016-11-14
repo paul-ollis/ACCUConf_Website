@@ -1,12 +1,12 @@
 {% extends "proposals_base.html" %}
-{% block title %}Maintenance{% endblock %}
+{% block title %}Not Logged In{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
 {% block content %}
 <div class="row">
     <div class="pagetitle">
-        <h1>Maintenance</h1>
+        <h1>Not Logged In</h1>
     </div>
 </div>
 <div class="row">
@@ -17,9 +17,7 @@
 <div class="row">
     <div class="container-fluid">
         <div class="inconvenience">
-            <p>This site is undergoing maintenance at the moment.</p>
-            <p>Apologies for any inconvenience caused.</p>
-            <p>We will be back online shortly.</p>
+            <p>You need to be logged in to {{ page.name }}.</p>
         </div>
     </div>
 </div>

@@ -1,9 +1,10 @@
 from flask import render_template, jsonify, redirect, url_for, session, request
 from flask import send_from_directory, g
-from accuconf.models import *
+from accuconf import db
+from accuconf.models import MathPuzzle, Proposal, ProposalComment, ProposalPresenter, ProposalReview, User, UserInfo, UserLocation
 from accuconf.proposals.utils.roles import Role
-from accuconf.proposals.utils.proposals import *
-from accuconf.proposals.utils.validator import *
+from accuconf.proposals.utils.proposals import get_proposal_type
+from accuconf.proposals.utils.validator import validate_email, validate_password, validate_proposal_data
 import hashlib
 from random import randint
 from . import proposals
@@ -12,8 +13,8 @@ _proposal_static_path = None
 
 
 @proposals.record
-def init_blueprint(ctxt):
-    app = ctxt.app
+def init_blueprint(context):
+    app = context.app
     proposals.config = app.config
     proposals.logger = app.logger
     global _proposal_static_path
@@ -28,7 +29,7 @@ def init_blueprint(ctxt):
 @proposals.route("/")
 def index():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
 
     # when_where = {}
     # committee = {}
@@ -60,24 +61,24 @@ def index():
 
 @proposals.route("/maintenance")
 def maintenance():
-    return render_template("maintenance.html")
+    return render_template("maintenance.html", page={})
 
 
 @proposals.route("/login", methods = ['GET', 'POST'])
 def login():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
     if request.method == "POST":
-        userid = request.form['usermail']
-        passwd = request.form['password']
-        user = User.query.filter_by(user_id=userid).first()
+        user_id = request.form['usermail']
+        password = request.form['password']
+        user = User.query.filter_by(user_id=user_id).first()
         if not user:
             return redirect(url_for('index'))
-        password_hash = hashlib.sha256(passwd.encode("utf-8")).hexdigest()
+        password_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
         if user.user_pass == password_hash:
             session['user_id'] = user.user_id
             proposals.logger.info("Auth successful")
-            g.user = userid
+            g.user = user_id
             return redirect(url_for("nikola.index"))
         else:
             proposals.logger.info("Auth failed")
@@ -96,7 +97,7 @@ def logout():
 @proposals.route("/register", methods=["GET", "POST"])
 def register():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
     if request.method == "POST":
         # Process registration data
         user_email = request.form["email"]
@@ -107,41 +108,43 @@ def register():
         state = request.form["state"]
         phone = request.form["phone"]
         postal_code = request.form["pincode"]
-
+        town_city = request.form['towncity']
+        street_address = request.form['streetaddress']
+        bio = request.form['bio']
         encoded_pass = ""
         if type(user_pass) == str and len(user_pass):
             encoded_pass = hashlib.sha256(user_pass.encode('utf-8')).hexdigest()
-
         page = {}
-        if not validateEmail(user_email):
+        if not validate_email(user_email):
             page["title"] = "Registration failed"
             page["data"] = "Registration failed: Invalid/Duplicate user id."
             page["data"] += "Please register again"
             return render_template("registration_failure.html", page=page)
-
-        elif not validatePassword(user_pass):
+        elif not validate_password(user_pass):
             page["title"] = "Registration failed"
             page["data"] = "Registration failed: Password did not meet checks."
             page["data"] += "Please register again"
             return render_template("registration_failure.html", page=page)
         else:
-            newuser = User(user_email, encoded_pass)
-            userinfo = UserInfo(newuser.user_id,
+            new_user = User(user_email, encoded_pass)
+            user_info = UserInfo(new_user.user_id,
                                 first_name,
                                 last_name,
                                 phone,
+                                bio,
                                 Role.user.get("name", "user")
                                 )
-            userlocation = UserLocation(newuser.user_id,
+            user_location = UserLocation(new_user.user_id,
                                         country,
                                         state,
-                                        postal_code)
-            newuser.user_info = userinfo
-            newuser.location = userlocation
-
-            db.session.add(newuser)
-            db.session.add(userinfo)
-            db.session.add(userlocation)
+                                        postal_code,
+                                        town_city,
+                                        street_address)
+            new_user.user_info = user_info
+            new_user.location = user_location
+            db.session.add(new_user)
+            db.session.add(user_info)
+            db.session.add(user_location)
             db.session.commit()
             page["title"] = "Registration successful"
             page["data"] = "You have successfully registered for submitting "
@@ -155,115 +158,92 @@ def register():
         question = MathPuzzle(sum)
         db.session.add(question)
         db.session.commit()
-        register = {
+        return render_template("register.html", page={
             "title": "Register",
             "data": "Register here for submitting proposals to ACCU Conference",
             "question": question.id,
             "puzzle": "%d + %d" % (num_a, num_b)
-        }
-        return render_template("register.html", page=register)
+        })
 
 
 @proposals.route("/show_proposals", methods=["GET"])
 def show_proposals():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            page = {
-                "name": "Submit proposal"
-            }
-            return render_template("not_loggedin.html", page=page)
-
-        page = {
-            "subpages": [],
-        }
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
+        page = {"subpages": []}
         for proposal in user.proposals:
-            subpage = {}
-            subpage["proposal"] = {
-                "title": proposal.title,
-                "abstract": proposal.text,
-                "proposaltype": getProposalType(proposal.session_type).proposalType(),
-                "presenters": proposal.presenters
+            subpage = {
+                "proposal": {
+                    "title": proposal.title,
+                    "abstract": proposal.text,
+                    "proposaltype": get_proposal_type(proposal.session_type).proposalType(),
+                    "presenters": proposal.presenters
+                }
             }
             page["subpages"].append(subpage)
         return render_template("view_proposal.html", page=page)
     else:
-        page = {
-            "name": "Submit proposal"
-        }
-        return render_template("not_loggedin.html", page=page)
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/submit_proposal", methods=["GET"])
 def submit_proposal():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            page = {
-                "name": "Submit proposal"
-            }
-            return render_template("not_loggedin.html", page=page)
-
-        page = {
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
+        return render_template("submit_proposal.html", page={
             "title": "Submit a proposal for ACCU Conference",
-            "user_name": "%s %s" % (user.user_info.first_name,
-                                    user.user_info.last_name),
-        }
-        page["proposer"] = {
-            "email": user.user_id,
-            "first_name": user.user_info.first_name,
-            "last_name": user.user_info.last_name,
-            "country": user.location.country,
-            "state": user.location.state
-        }
-        return render_template("submit_proposal.html", page=page)
+            "user_name": "%s %s".format(user.user_info.first_name, user.user_info.last_name),
+            "proposer": {
+                "email": user.user_id,
+                "first_name": user.user_info.first_name,
+                "last_name": user.user_info.last_name,
+                "country": user.location.country,
+                "state": user.location.state
+            }
+        })
     else:
-        page = {
-            "name": "Submit proposal"
-        }
-        return render_template("not_loggedin.html", page=page)
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/upload_proposal", methods=["POST"])
 def upload_proposal():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
-
+        return redirect(url_for("proposals.maintenance"))
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            page = {
-                "name": "Proposal Submission"
-            }
-            return render_template("not_logged.html", page=page)
+            return render_template("not_logged.html", page={"name": "Proposal Submission"})
         else:
-            proposalData = request.json
-            proposals.logger.info(proposalData)
-            status, message = validateProposalData(proposalData)
+            proposal_data = request.json
+            proposals.logger.info(proposal_data)
+            status, message = validate_proposal_data(proposal_data)
             response = {}
             if status:
-                proposal = Proposal(proposalData.get("proposer"),
-                                    proposalData.get("title").rstrip(),
-                                    getProposalType(proposalData.get(
-                                        "proposalType")),
-                                    proposalData.get("abstract").rstrip())
+                proposal = Proposal(proposal_data.get("proposer"),
+                                    proposal_data.get("title").rstrip(),
+                                    get_proposal_type(proposal_data.get("proposalType")),
+                                    proposal_data.get("abstract").rstrip())
                 user.proposals.append(proposal)
                 db.session.add(proposal)
-                presenters = proposalData.get("presenters")
+                presenters = proposal_data.get("presenters")
                 for presenter in presenters:
-                    proposalPresenter = ProposalPresenter(proposal.id,
-                                                          presenter["email"],
-                                                          presenter["lead"],
-                                                          presenter["fname"],
-                                                          presenter["lname"],
-                                                          presenter["country"],
-                                                          presenter["state"])
-                    proposal.presenters.append(proposalPresenter)
-                    db.session.add(proposalPresenter)
+                    proposal_presenter = ProposalPresenter(proposal.id,
+                                                           presenter["email"],
+                                                           presenter["lead"],
+                                                           presenter["fname"],
+                                                           presenter["lname"],
+                                                           presenter["country"],
+                                                           presenter["state"])
+                    proposal.presenters.append(proposal_presenter)
+                    db.session.add(proposal_presenter)
                 db.session.commit()
                 response["success"] = True
                 response["message"] = "Thank you very much!\nYou have successfully submitted a proposal for the next ACCU conference!\nYou can see it now under \"My Proposal\"."
@@ -273,169 +253,120 @@ def upload_proposal():
                 response["message"] = message
             return jsonify(**response)
     else:
-        page = {
-            "name": "Submit proposal"
-        }
-        return render_template("not_loggedin.html", page=page)
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/review_proposal", methods=["GET"])
 def review_proposal():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            page = {
-                "name": "Submit proposal"
-            }
-            return render_template("not_loggedin.html", page=page)
-
-        page = {
-            "Title": "Review Proposal",
-        }
-
-        proposalToShowNext = None
-        allProposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
-        allProposalsReverse = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id.desc())
-
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
+        page = {"Title": "Review Proposal"}
+        proposal_to_show_next = None
+        all_proposals = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id)
+        all_proposals_reverse = Proposal.query.filter(Proposal.proposer != session["user_id"]).order_by(Proposal.id.desc())
         if session.get("review_button_pressed", False):
             if session["review_button_pressed"] == "next_proposal":
-                proposalToShowNext = findNextElement(allProposals, session["review_id"])
+                proposal_to_show_next = find_next_element(all_proposals, session["review_id"])
             elif session["review_button_pressed"] == "previous_proposal":
-                proposalToShowNext = findNextElement(allProposalsReverse, session["review_id"])
+                proposal_to_show_next = find_next_element(all_proposals_reverse, session["review_id"])
             elif session["review_button_pressed"] == "next_nr_proposal":
-                proposalToShowNext = findNextNotReViewedElement(allProposals, session["review_id"], user.user_id)
+                proposal_to_show_next = find_next_not_reviewed_element(all_proposals, session["review_id"], user.user_id)
             elif session["review_button_pressed"] == "previous_nr_proposal":
-                proposalToShowNext = findNextNotReViewedElement(allProposalsReverse, session["review_id"], user.user_id)
+                proposal_to_show_next = find_next_not_reviewed_element(all_proposals_reverse, session["review_id"], user.user_id)
             elif session["review_button_pressed"] == "save":
-                proposalToShowNext = findElement(allProposals, session["review_id"])
+                proposal_to_show_next = find_element(all_proposals, session["review_id"])
         else:
-            proposalToShowNext = allProposals.first()
-
+            proposal_to_show_next = all_proposals.first()
         session["review_button_pressed"] = ""
-
-        if not proposalToShowNext:
-            page = {
+        if not proposal_to_show_next:
+            return render_template("review_success.html", page={
                 "title": "All reviews done",
                 "data": "You have finished reviewing all proposals!",
-            }
-            return render_template("review_success.html", page=page)
-
-        nextAvailable = False
-        previousAvalaible = False
-        nextNotReadAvailable = False
-        previousNotReadAvailable = False
-
-        if allProposals.first().id != proposalToShowNext.id:
-            previousAvalaible = True
-        if allProposalsReverse.first().id != proposalToShowNext.id:
-            nextAvailable = True
-
-        nextPotentialNotRead = findNextNotReViewedElement(allProposals, proposalToShowNext.id, user.user_id)
-        if nextPotentialNotRead is not None:
-            nextNotReadAvailable = True
-        previousPotentialNotRead = findNextNotReViewedElement(allProposalsReverse, proposalToShowNext.id, user.user_id)
-        if previousPotentialNotRead is not None:
-            previousNotReadAvailable = True
-
-        proposalReview = ProposalReview.query.filter_by(proposal_id=proposalToShowNext.id,
-                                                        reviewer=user.user_id).first()
-        proposalComment = ProposalComment.query.filter_by(proposal_id=proposalToShowNext.id,
-                                                          commenter=user.user_id).first()
-
+            })
+        next_available = False
+        previous_available = False
+        next_not_read_available = False
+        previous_not_read_available = False
+        if all_proposals.first().id != proposal_to_show_next.id:
+            previous_available = True
+        if all_proposals_reverse.first().id != proposal_to_show_next.id:
+            next_available = True
+        next_potential_not_read = find_next_not_reviewed_element(all_proposals, proposal_to_show_next.id, user.user_id)
+        if next_potential_not_read is not None:
+            next_not_read_available = True
+        previous_potential_not_read = find_next_not_reviewed_element(all_proposals_reverse, proposal_to_show_next.id, user.user_id)
+        if previous_potential_not_read is not None:
+            previous_not_read_available = True
+        proposal_review = ProposalReview.query.filter_by(proposal_id=proposal_to_show_next.id, reviewer=user.user_id).first()
+        proposal_comment = ProposalComment.query.filter_by(proposal_id=proposal_to_show_next.id, commenter=user.user_id).first()
         page["proposal"] = {
-            "title": proposalToShowNext.title,
-            "abstract": proposalToShowNext.text,
-            "proposaltype": getProposalType(proposalToShowNext.session_type).proposalType(),
-            "presenters": proposalToShowNext.presenters,
+            "title": proposal_to_show_next.title,
+            "abstract": proposal_to_show_next.text,
+            "proposaltype": get_proposal_type(proposal_to_show_next.session_type).proposalType(),
+            "presenters": proposal_to_show_next.presenters,
             "score": 0,
             "comment": "",
-            "next_enabled": nextAvailable,
-            "previous_enabled": previousAvalaible,
-            "next_nr_enabled": nextNotReadAvailable,
-            "previous_nr_enabled": previousNotReadAvailable,
+            "next_enabled": next_available,
+            "previous_enabled": previous_available,
+            "next_nr_enabled": next_not_read_available,
+            "previous_nr_enabled": previous_not_read_available,
         }
-
-        if proposalReview:
-            page["proposal"]["score"] = proposalReview.score
-        if proposalComment:
-            page["proposal"]["comment"] = proposalComment.comment
-
-        session['review_id'] = proposalToShowNext.id
-
+        if proposal_review:
+            page["proposal"]["score"] = proposal_review.score
+        if proposal_comment:
+            page["proposal"]["comment"] = proposal_comment.comment
+        session['review_id'] = proposal_to_show_next.id
         return render_template("review_proposal.html", page=page)
     else:
-        page = {
-            "name": "Submit proposal"
-        }
-        return render_template("not_loggedin.html", page=page)
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/upload_review", methods=["POST"])
 def upload_review():
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
         if not user:
-            page = {
-                "name": "Submit proposal"
-            }
-            return render_template("not_loggedin.html", page=page)
-
+            return render_template("not_logged_in.html", page={"name": "Submit proposal"})
         if session.get("review_id", False):
             proposal = Proposal.query.filter_by(id=session["review_id"]).first()
-            if proposal != None:
-                reviewData = request.json
-                proposals.logger.info(reviewData)
-
-                proposalReview = ProposalReview.query.filter_by(proposal_id=proposal.id,
-                                                                reviewer=user.user_id).first()
-
-                if proposalReview:
-                    proposalReview.score = reviewData["score"]
-                    ProposalReview.query.filter_by(proposal_id=proposal.id,
-                                                   reviewer=user.user_id).update({'score': proposalReview.score})
+            if proposal is not None:
+                review_data = request.json
+                proposals.logger.info(review_data)
+                proposal_review = ProposalReview.query.filter_by(proposal_id=proposal.id, reviewer=user.user_id).first()
+                if proposal_review:
+                    proposal_review.score = review_data["score"]
+                    ProposalReview.query.filter_by(proposal_id=proposal.id, reviewer=user.user_id).update({'score': proposal_review.score})
                 else:
-                    proposalReview = ProposalReview(proposal.id,
-                                                    user.user_id,
-                                                    reviewData["score"])
-                    proposal.reviews.append(proposalReview)
-                    db.session.add(proposalReview)
-
-                proposalComment = ProposalComment.query.filter_by(proposal_id=proposal.id,
-                                                                  commenter=user.user_id).first()
-                if proposalComment:
-                    proposalComment.comment = reviewData["comment"].rstrip()
-                    ProposalComment.query.filter_by(proposal_id=proposal.id,
-                                                    commenter=user.user_id).update(
-                                                        {'comment': proposalComment.comment})
+                    proposal_review = ProposalReview(proposal.id, user.user_id, review_data["score"])
+                    proposal.reviews.append(proposal_review)
+                    db.session.add(proposal_review)
+                proposal_comment = ProposalComment.query.filter_by(proposal_id=proposal.id, commenter=user.user_id).first()
+                if proposal_comment:
+                    proposal_comment.comment = review_data["comment"].rstrip()
+                    ProposalComment.query.filter_by(
+                        proposal_id=proposal.id,
+                        commenter=user.user_id).update({'comment': proposal_comment.comment})
                 else:
-                    proposalComment = ProposalComment(proposal.id,
-                                                      user.user_id,
-                                                      reviewData["comment"])
-                    proposal.comments.append(proposalComment)
-                    db.session.add(proposalComment)
-
+                    proposal_comment = ProposalComment(proposal.id, user.user_id, review_data["comment"])
+                    proposal.comments.append(proposal_comment)
+                    db.session.add(proposal_comment)
                 db.session.commit()
-                session['review_button_pressed'] = reviewData["button"]
-
-                response = {}
-                response["success"] = True
-                response["redirect"] = url_for('proposals.review_proposal')
-                return jsonify(**response)
+                session['review_button_pressed'] = review_data["button"]
+                return jsonify(success=True, redirect=url_for('proposals.review_proposal'))
     else:
-        page = {
-            "name": "Submit proposal"
-        }
-        return render_template("not_loggedin.html", page=page)
+        return render_template("not_logged_in.html", page={"name": "Submit proposal"})
 
 
 @proposals.route("/check/<user>", methods=["GET"])
 def check_duplicate(user):
     if proposals.config.get("MAINTENANCE"):
-        return redirect(url_for("maintenance"))
+        return redirect(url_for("proposals.maintenance"))
     u = User.query.filter_by(user_id=user).first()
     result = {}
     if u:
@@ -447,23 +378,22 @@ def check_duplicate(user):
 
 @proposals.route("/captcha/validate", methods=["POST"])
 def validate_captcha():
-    captchaInfo = request.json
-    qid= captchaInfo.get("question_id")
-    ans = captchaInfo.get("answer")
+    captcha_info = request.json
+    qid= captcha_info.get("question_id")
+    ans = captcha_info.get("answer")
     q = MathPuzzle.query.filter_by(id=qid).first()
     result = {"valid": False}
     if q:
         if q.answer == ans:
             result["valid"] = True
-
     return jsonify(**result)
 
 
 @proposals.route("/captcha/new", methods=["POST"])
 def generate_captcha():
-    captchaInfo = request.json
+    captcha_info = request.json
     result = {"valid": True}
-    qid = captchaInfo.get("question_id")
+    qid = captcha_info.get("question_id")
     if not qid:
         result["valid"] = False
     else:
@@ -471,14 +401,12 @@ def generate_captcha():
         if question:
             num_a = randint(10, 99)
             num_b = randint(10, 99)
-            sum = num_a + num_b
-            question.answer = sum
+            question.answer = num_a + num_b
             db.session.commit()
             result["valid"] = True
             result["question"] = "%d + %d" % (num_a, num_b)
         else:
             result["valid"] = False
-
     return jsonify(**result)
 
 
@@ -493,73 +421,73 @@ def asset(path):
 
 @proposals.route('/navlinks', methods=["GET"])
 def navlinks():
-    loggedIn = False
-    loggedOut = True
-    numberOfProposals = 0
-    myProposalsText = ""
+    logged_in = False
+    logged_out = True
+    number_of_proposals = 0
+    my_proposals_text = ""
     if session.get("user_id", False):
-        loggedIn = True
-        loggedOut = False
+        logged_in = True
+        logged_out = False
         user = User.query.filter_by(user_id=session["user_id"]).first()
-        numberOfProposals = len(user.proposals)
-        canReview = user.user_info.role == "reviewer";
-        if numberOfProposals==1:
-            myProposalsText = "My Proposal"
-        else:
-            myProposalsText = "My Proposals"
+        number_of_proposals = len(user.proposals)
+        can_review = user.user_info.role == "reviewer"
+        my_proposals_text = "My Proposal" if number_of_proposals == 1 else "My Proposals"
     links = {
         "0": ("Home", url_for("nikola.index"), True),
-        "1": ("Login", url_for("proposals.login"), loggedOut),
-        "2": ("Register", url_for("proposals.register"), loggedOut),
-        "3": (myProposalsText, url_for("proposals.show_proposals"), loggedIn and numberOfProposals>0),
-        "4": ("Submit Proposal", url_for("proposals.submit_proposal"), loggedIn),
-        "5": ("Review Proposals", url_for("proposals.review_proposal"), loggedIn and canReview),
+        "1": ("Login", url_for("proposals.login"), logged_out),
+        "2": ("Register", url_for("proposals.register"), logged_out),
+        "3": (my_proposals_text, url_for("proposals.show_proposals"), logged_in and number_of_proposals>0),
+        "4": ("Submit Proposal", url_for("proposals.submit_proposal"), logged_in),
+        "5": ("Review Proposals", url_for("proposals.review_proposal"), logged_in and can_review),
         "6": ("RSS", "/site/rss.xml", True),
-        "7": ("Log out", url_for("proposals.logout"), loggedIn)
+        "7": ("Log out", url_for("proposals.logout"), logged_in)
     }
-
     return jsonify(**links)
 
 
-@proposals.route('/currentuser', methods=["GET"])
-def currentuser():
-    userinfo = {}
-    userinfo["user_id"] = ""
+@proposals.route('/current_user', methods=["GET"])
+def current_user():
+    user_info = {"user_id": ""}
     if session.get("user_id", False):
         user = User.query.filter_by(user_id=session["user_id"]).first()
-        userinfo["user_id"] = user.user_id
-        userinfo["first_name"] = user.user_info.first_name
-        userinfo["last_name"] = user.user_info.last_name
-    return jsonify(**userinfo)
+        if user:
+            user_info["user_id"] = user.user_id
+            user_info["first_name"] = user.user_info.first_name
+            user_info["last_name"] = user.user_info.last_name
+    return jsonify(**user_info)
 
-def findElement(list, id):
-    for it in list:
-        if it.id == id:
+
+def find_element(data, identifier):
+    for it in data:
+        if it.id == identifier:
             return it
     return None
 
-# return the next element after id
-def findNextElement(list, id):
+
+def find_next_element(data, identifier):
+    """
+    Return the next element after identifier.
+    """
     found = False
-    for it in list:
+    for it in data:
         if found:
             return it
-        if it.id == id:
+        if it.id == identifier:
             found = True
     return None
 
-def findNextNotReViewedElement(list, id, user_id):
-    found = False
-    for it in list:
-        if found:
-            review = ProposalReview.query.filter_by(proposal_id=it.id,
-                                                    reviewer=user_id).first()
 
+def find_next_not_reviewed_element(data, identifier, user_id):
+    found = False
+    for it in data:
+        if found:
+            review = ProposalReview.query.filter_by(proposal_id=it.id, reviewer=user_id).first()
             if review is None or review.score == 0:
                 return it
-        if it.id == id:
+        if it.id == identifier:
             found = True
     return None
+
 
 def neighborhood(iterable):
     iterator = iter(iterable)

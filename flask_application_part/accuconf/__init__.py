@@ -6,10 +6,11 @@ app = Flask(__name__)
 Bootstrap(app)
 db = SQLAlchemy(app)
 
+# NB Must have the db attribute in this package prior to importing the following.
+
 import accuconf_config
 from .nikola import nikola, views
 from .proposals import proposals, views
-
 
 app.config.from_object(accuconf_config.Config)
 app.secret_key = app.config['SECRET_KEY']

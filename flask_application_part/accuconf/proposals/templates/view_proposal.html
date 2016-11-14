@@ -1,5 +1,5 @@
 {% extends "proposals_base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}View Proposal{% endblock %}
 {% block head %}
   {{ super() }}
 {% endblock %}
@@ -28,7 +28,6 @@
                        placeholder="Title" disabled="true"
                        value="{{ subpage.proposal.title }}">
             </fieldset>
-
             <fieldset>
                 <label for="abstract">Abstract</label>
                 <textarea rows="24" cols="80"
