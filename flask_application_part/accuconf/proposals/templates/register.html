@@ -20,7 +20,9 @@
             <div class="form-group">
                 <label for="email" class="control-label col-sm-3">Email</label>
                 <div class="col-sm-offset-1">
-                    <input id="email" name="email" placeholder="Email" onkeyup="javascript:checkDuplicate();" aria-describedby="emailhelp">
+                    <input id="email" name="email" placeholder="Email" value="{{ page.email }}"
+                            {% if page.mode =='edit_mode' %} disabled="True"{% endif %}
+                           onkeyup="javascript:checkDuplicate();" aria-describedby="emailhelp">
                     <span class="help-block" id="emailhelp"></span>
                 </div>
             </div>
@@ -41,21 +43,24 @@
             <div class="form-group">
                 <label for="firstname" class="control-label col-sm-3">First Name</label>
                 <div class="col-sm-offset-1">
-                    <input id="firstname" name="firstname" type="text" placeholder="First Name" aria-describedby="firstnamealert">
+                    <input id="firstname" name="firstname" type="text" value="{{ page.first_name }}"
+                           placeholder="First Name" aria-describedby="firstnamealert">
                     <span class="help-block" id="firstnamealert"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="lastname" class="control-label col-sm-3">Last Name</label>
                 <div class="col-sm-offset-1">
-                    <input id="lastname" name="lastname" type="text" placeholder="Last Name" aria-describedby="lastnamealert">
+                    <input id="lastname" name="lastname" type="text" value="{{ page.last_name }}"
+                           placeholder="Last Name" aria-describedby="lastnamealert">
                     <span class="help-block" id="lastnamealert"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="phone" class="control-label col-sm-3">Phone number with ISD code</label>
                 <div class="col-sm-offset-1">
-                    <input id="phone" name="phone" placeholder="+44 20 1234 5678" aria-describedby="phonealert">
+                    <input id="phone" name="phone" value="{{ page.phone }}"
+                           placeholder="+44 20 1234 5678" aria-describedby="phonealert">
                     <span class="help-block" id="phonealert"></span>
                 </div>
             </div>
@@ -70,7 +75,7 @@
             <div class="form-group">
                 <label for="state" class="control-label col-sm-3">State/Province</label>
                 <div class="col-sm-offset-1">
-                    <input type="text" id="state" name="state" placeholder="State/Province">
+                    <input type="text" id="state" name="state" value="{{ page.state }}" placeholder="State/Province">
                     <select id="states" name="states" style="display:none;" onchange="javascript:updateState();" onkeyup="this.onchange();" onmouseup="this.onchange();" aria-describedby="statealert">
                     </select>
                     <span class="help-block" id="statealert"></span>
@@ -79,41 +84,45 @@
             <div class="form-group">
                 <label for="pincode" class="control-label col-sm-3">Postal/Pin/Zip Code</label>
                 <div class="col-sm-offset-1">
-                    <input type="text" id="pincode" name="pincode" placeholder="Postal/Pin/Zip code">
+                    <input type="text" id="pincode" name="pincode" value="{{ page.postal_code }}" placeholder="Postal/Pin/Zip code">
                     <span class="help-block" id="picodealert"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="towncity" class="control-label col-sm-3">Town/City</label>
                 <div class="col-sm-offset-1">
-                    <input type="text" id="towncity" name="towncity" placeholder="Town/City">
+                    <input type="text" id="towncity" name="towncity" value="{{ page.town_city }}" placeholder="Town/City">
                     <span class="help-block" id="towncityalert"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="streetaddress" class="control-label col-sm-3">Street Address</label>
                 <div class="col-sm-offset-1">
-                    <input type="text" id="streetaddress" name="streetaddress" placeholder="Street Address">
+                    <input type="text" id="streetaddress" name="streetaddress" value="{{ page.street_address }}" placeholder="Street Address">
                     <span class="help-block" id="streetaddressalert"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="bio" class="control-label col-sm-3">Short bio</label>
                 <div class="col-sm-8">
-                    <textarea rows="24" cols="40" name="bio" id="bio" placeholder="Short biography"></textarea>
+                    <textarea rows="24" cols="40" name="bio" id="bio" placeholder="Short biography">{{ page.bio }}</textarea>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="captcha" class="control-label col-sm-3">Solve this puzzle</label>
-                <label for="captcha" class="puzzle" class="col-sm-3"> {{ page.puzzle }} </label>
-                <div class="col-sm-offset-1">
-                    <input type="hidden" id="captcha" name="captcha" value="{{ page.question }}">
-                    <input type="text" id="puzzle" name="puzzle" placeholder="Solve" class="puzzle">
-                    <span class="form-alert pull-right" id="captchaalert"></span>
+            {% if page.mode !='edit_mode' %}
+                <div class="form-group">
+                    <label for="captcha" class="control-label col-sm-3">Solve this puzzle</label>
+                    <label for="captcha" class="puzzle" class="col-sm-3"> {{ page.puzzle }} </label>
+                    <div class="col-sm-offset-1">
+                        <input type="hidden" id="captcha" name="captcha" value="{{ page.question }}">
+                        <input type="text" id="puzzle" name="puzzle" placeholder="Solve" class="puzzle">
+                        <span class="form-alert pull-right" id="captchaalert"></span>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="form-group">
-                <button type="submit" id="submit"  class="btn btn-primary" onsubmit="javascript:registerUser();">Register</button>
+                <button type="submit" id="submit"  class="btn btn-primary"
+                        {% if page.mode =='edit_mode' %} onsubmit="javascript:acceptChanges();" {% else %}
+                        onsubmit="javascript:registerUser();" {% endif %}>{{ page.submit_button }}</button>
                 <button type="reset" class="btn btn-default">Reset</button>
             </div>
         </form>
@@ -149,6 +158,10 @@
              $.each(data, function(name, data) {
                  country_sel.append('<option value="' + data.alpha3 + '">' + data.a_name + '</option>');
              });
+
+             $('#country')[0].value = "{{ page.country }}";
+             loadState('country', 'states', 'state');
+             $('#states')[0].value = "{{ page.state }}";
          },
          dataType: "json"
      });
@@ -198,5 +211,14 @@
          }
      });
  });
+{% if page.mode =='edit_mode' %}
+function loadingCountry() {
+    console.log("I was here");
+    var val1 = getCountry({{ page.country }});
+    console.log(val1);
+
+    document.getElementById("country").innerHTML = val1;
+}
+{% endif %}
 </script>
 {% endblock %}

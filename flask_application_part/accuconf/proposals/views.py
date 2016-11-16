@@ -98,10 +98,24 @@ def logout():
 def register():
     if proposals.config.get("MAINTENANCE"):
         return redirect(url_for("proposals.maintenance"))
+
+    edit_mode = False
+    user = None
+    if session.get("user_id", False):
+        user = User.query.filter_by(user_id=session["user_id"]).first()
+        if user is not None:
+            edit_mode = True
+
     if request.method == "POST":
         # Process registration data
-        user_email = request.form["email"]
-        user_pass = request.form["user_pass"]
+        if not edit_mode: # it is not allowed to change the email address at the moment, because this is used as key
+            user_email = request.form["email"]
+
+        # In case that no user pass was provided, we don't update the field
+        user_pass = None
+        if len(request.form["user_pass"].strip()) > 0:
+            user_pass = request.form["user_pass"]
+
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
         country = request.form["country"]
@@ -111,60 +125,115 @@ def register():
         town_city = request.form['towncity']
         street_address = request.form['streetaddress']
         bio = request.form['bio']
-        encoded_pass = ""
+
+        encoded_pass = None
         if type(user_pass) == str and len(user_pass):
             encoded_pass = hashlib.sha256(user_pass.encode('utf-8')).hexdigest()
+
         page = {}
-        if not validate_email(user_email):
-            page["title"] = "Registration failed"
-            page["data"] = "Registration failed: Invalid/Duplicate user id."
-            page["data"] += "Please register again"
-            return render_template("registration_failure.html", page=page)
-        elif not validate_password(user_pass):
-            page["title"] = "Registration failed"
-            page["data"] = "Registration failed: Password did not meet checks."
-            page["data"] += "Please register again"
-            return render_template("registration_failure.html", page=page)
+        if edit_mode:
+            user.user_info.first_name = first_name
+            user.user_info.last_name = last_name
+            if encoded_pass:
+                user.user_pass = encoded_pass
+            user.user_info.phone = phone
+            user.user_info.bio = bio
+
+            user.location.country = country
+            user.location.state = state
+            user.location.postal_code = postal_code
+            user.location.town_city = town_city
+            user.location.street_address = street_address
+
+            if encoded_pass:
+                User.query.filter_by(user_id=user.user_id).update({ 'user_pass': encoded_pass })
+
+            UserInfo.query.filter_by(user_id=user.user_id).update(
+                {
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'phone': phone,
+                    'bio': bio
+                })
+            UserLocation.query.filter_by(
+                user_id=user.user_id).update(
+                {
+                    'country': country,
+                    'state': state,
+                    'postal_code': postal_code,
+                    'town_city': town_city,
+                    'street_address': street_address
+                })
+            page["title"] = "Account update successful"
+            page["data"] = "Your account details were successful updated."
+
         else:
-            new_user = User(user_email, encoded_pass)
-            user_info = UserInfo(new_user.user_id,
-                                first_name,
-                                last_name,
-                                phone,
-                                bio,
-                                Role.user.get("name", "user")
-                                )
-            user_location = UserLocation(new_user.user_id,
-                                        country,
-                                        state,
-                                        postal_code,
-                                        town_city,
-                                        street_address)
-            new_user.user_info = user_info
-            new_user.location = user_location
-            db.session.add(new_user)
-            db.session.add(user_info)
-            db.session.add(user_location)
-            db.session.commit()
+            if not validate_email(user_email):
+                page["title"] = "Registration failed"
+                page["data"] = "Registration failed: Invalid/Duplicate user id."
+                page["data"] += "Please register again"
+                return render_template("registration_failure.html", page=page)
+            elif not validate_password(user_pass):
+                page["title"] = "Registration failed"
+                page["data"] = "Registration failed: Password did not meet checks."
+                page["data"] += "Please register again"
+                return render_template("registration_failure.html", page=page)
+            else:
+                new_user = User(user_email, encoded_pass)
+                user_info = UserInfo(new_user.user_id,
+                                    first_name,
+                                    last_name,
+                                    phone,
+                                    bio,
+                                    Role.user.get("name", "user")
+                                    )
+                user_location = UserLocation(new_user.user_id,
+                                            country,
+                                            state,
+                                            postal_code,
+                                            town_city,
+                                            street_address)
+                new_user.user_info = user_info
+                new_user.location = user_location
+                db.session.add(new_user)
+                db.session.add(user_info)
+                db.session.add(user_location)
             page["title"] = "Registration successful"
             page["data"] = "You have successfully registered for submitting "
             page["data"] += "proposals for the ACCU Conf. Please login and "
             page["data"] += "start preparing your proposal for the conference."
-            return render_template("registration_success.html", page=page)
+
+        db.session.commit()
+        return render_template("registration_success.html", page=page)
     elif request.method == "GET":
+        page = {}
+        page["mode"] = "edit_mode" if edit_mode else "register"
+
+        page["email"] = user.user_id if edit_mode else ""
+        page["first_name"] = user.user_info.first_name if edit_mode else ""
+        page["last_name"] = user.user_info.last_name if edit_mode else ""
+        page["phone"] = user.user_info.phone if edit_mode else ""
+        page["bio"] = user.user_info.bio if edit_mode else ""
+
+        page["country"] = user.location.country if edit_mode else "GBR" # UK shall be the default
+        page["state"] = user.location.state if edit_mode else "GB-ENG"
+        page["postal_code"] = user.location.postal_code if edit_mode else ""
+        page["town_city"] = user.location.town_city if edit_mode else ""
+        page["street_address"] = user.location.street_address if edit_mode else ""
+
         num_a = randint(10, 99)
         num_b = randint(10, 99)
         sum = num_a + num_b
         question = MathPuzzle(sum)
         db.session.add(question)
         db.session.commit()
-        return render_template("register.html", page={
-            "title": "Register",
-            "data": "Register here for submitting proposals to ACCU Conference",
-            "question": question.id,
-            "puzzle": "%d + %d" % (num_a, num_b)
-        })
 
+        page["title"] = "Account Information" if edit_mode else "Register"
+        page["data"] = "Here you can edit your account information" if edit_mode else "Register here for submitting proposals to ACCU Conference"
+        page["question"] = question.id
+        page["puzzle"] = "%d + %d" % (num_a, num_b)
+        page["submit_button"] = "Save" if edit_mode else "Register"
+        return render_template("register.html", page=page)
 
 @proposals.route("/show_proposals", methods=["GET"])
 def show_proposals():
@@ -436,11 +505,12 @@ def navlinks():
         "0": ("Home", url_for("nikola.index"), True),
         "1": ("Login", url_for("proposals.login"), logged_out),
         "2": ("Register", url_for("proposals.register"), logged_out),
-        "3": (my_proposals_text, url_for("proposals.show_proposals"), logged_in and number_of_proposals>0),
-        "4": ("Submit Proposal", url_for("proposals.submit_proposal"), logged_in),
-        "5": ("Review Proposals", url_for("proposals.review_proposal"), logged_in and can_review),
-        "6": ("RSS", "/site/rss.xml", True),
-        "7": ("Log out", url_for("proposals.logout"), logged_in)
+        "3": ("Account", url_for("proposals.register"), logged_in),
+        "4": (my_proposals_text, url_for("proposals.show_proposals"), logged_in and number_of_proposals>0),
+        "5": ("Submit Proposal", url_for("proposals.submit_proposal"), logged_in),
+        "6": ("Review Proposals", url_for("proposals.review_proposal"), logged_in and can_review),
+        "7": ("RSS", "/site/rss.xml", True),
+        "8": ("Log out", url_for("proposals.logout"), logged_in)
     }
     return jsonify(**links)
 
