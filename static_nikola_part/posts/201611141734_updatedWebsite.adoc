@@ -1,0 +1,15 @@
+////
+.. title: Updated Website
+.. date: 2016-11-14T17:34+00:00
+.. type: text
+////
+
+After some stress and a lot of work, we think we may, just may, have sorted the major problems with the
+session proposal submission system. This is not to say the system is pretty, but it should be
+functional: people should be able to register, then login, then submit, and even amend their proposals.
+
+I am hoping that next year, this will all be a lot smoother. And prettier.
+
+If there are any further problems please feel free to submit an issue
+https://github.com/ACCUConf/ACCUConf_Website/issues[here] and/or email mailto:conference@accu.org[the
+conference chair].

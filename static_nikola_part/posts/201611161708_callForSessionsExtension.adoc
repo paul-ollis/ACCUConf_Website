@@ -1,0 +1,14 @@
+////
+.. title: Call for Sessions extension
+.. date: 2016-11-16T17:08+00:00
+.. type: text
+////
+
+Now that the conference website is up and running, we are pleased to confirm
+that the deadline for session proposals has been extended until
+2016-12-02T23:58+00:00. That's a few minutes before the midnight (UTC and
+Europe/London) that ends Friday 2nd December 2016.
+
+The full details are in
+https://conference.accu.org/site/posts/201610202151_callforsessions.html[Call
+for Sessions] which has been updated to reflect the new submission deadline.
