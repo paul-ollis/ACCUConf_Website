@@ -21,7 +21,7 @@ BLOG_AUTHOR = "ACCU"  # (translatable)
 BLOG_TITLE = "ACCU Conference"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link. Don't forget the protocol (http/https)!
-SITE_URL = "https://conference.accu.org/"
+SITE_URL = "https://conference.accu.org/site/"
 # This is the URL where Nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "https://conference.accu.org/"
