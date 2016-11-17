@@ -28,11 +28,16 @@
                        value="{{ page.proposal.title }}">
             </fieldset>
             <fieldset>
-                <label for="abstract">Abstract</label>
+                <label for="abstract" class="control-label col-sm-3">Abstract</label>
                 <textarea rows="24" cols="80"
                           name="proposal" id="proposal"
-                          placeholder="Proposal abstract" disabled="true">{{ page.proposal.abstract}}
-                </textarea>
+                          placeholder="Proposal abstract" disabled="true">{{ page.proposal.abstract}}</textarea>
+            </fieldset>
+            <fieldset>
+                <label for="bio" class="control-label col-sm-3">Short bio</label>
+                <textarea rows="10" cols="80"
+                          name="bio" id="bio"
+                          placeholder="Short biography" disabled="true">{{ page.proposal.bio }}</textarea>
             </fieldset>
             <fieldset>
                 <label for="proposaltype">Proposal Type</label>
