@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from typing import List
 
-from sqlalchemy import create_engine, MetaData, Table, or_
+from sqlalchemy import create_engine, MetaData, Table, and_, or_, select
 
 
 def set_user_as_reviewer(db_path: Path, emails_path: Path) -> None:
@@ -22,9 +22,15 @@ def set_user_as_reviewer(db_path: Path, emails_path: Path) -> None:
     if table_name not in tables:
         print('Database file, {}, does not contain a {} table.'.format(db_path, table_name))
         sys.exit(2)
-    table = Table(table_name, MetaData(), autoload=True, autoload_with=engine)
+    user_infos = Table(table_name, MetaData(), autoload=True, autoload_with=engine)
     emails = open(str(emails_path.absolute())).read().split()
-    engine.execute(table.update().where(or_(table.c.user_id == email for email in emails)).where(table.c.role == 'user').values(role='reviewer'))
+    search_clause = and_(or_(user_infos.c.user_id == email for email in emails), user_infos.c.role == 'user')
+    for_amendment = tuple(engine.execute(select([user_infos.c.user_id]).where(search_clause)))
+    if for_amendment:
+        print('Amending the following records:')
+        for name in for_amendment:
+            print('\t' + name[0])
+        engine.execute(user_infos.update().where(search_clause).values(role='reviewer'))
 
 
 def main(args: List[str]) -> None:
