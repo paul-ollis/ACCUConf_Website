@@ -7,12 +7,11 @@ This is the script to set the value of the role so as to enable registered users
 import sys
 
 from pathlib import Path
-from typing import List
 
 from sqlalchemy import create_engine, MetaData, Table, and_, or_, select
 
 
-def set_user_as_reviewer(db_path: Path, emails_path: Path) -> None:
+def set_user_as_reviewer(db_path, emails_path):
     """
     Find all the records for people in the email list who are marked as 'user' and mark them as 'reviewer'.
     """
@@ -33,7 +32,7 @@ def set_user_as_reviewer(db_path: Path, emails_path: Path) -> None:
         engine.execute(user_infos.update().where(search_clause).values(role='reviewer'))
 
 
-def main(args: List[str]) -> None:
+def main(args):
     if len(args) != 2:
         name = Path(__file__).name
         print('Usage: {} <db-to-update> <file-of-reviewer-emails>'.format(name))
