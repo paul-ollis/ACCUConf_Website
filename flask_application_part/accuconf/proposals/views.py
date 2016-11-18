@@ -372,9 +372,14 @@ def review_proposal():
             previous_not_read_available = True
         proposal_review = ProposalReview.query.filter_by(proposal_id=proposal_to_show_next.id, reviewer=user.user_id).first()
         proposal_comment = ProposalComment.query.filter_by(proposal_id=proposal_to_show_next.id, commenter=user.user_id).first()
+
+        speakers_info = UserInfo.query.filter_by(user_id=proposal_to_show_next.proposer).first()
+        speakers_bio = speakers_info.bio if speakers_info is not None else ""
+
         page["proposal"] = {
             "title": proposal_to_show_next.title,
             "abstract": proposal_to_show_next.text,
+            "bio": speakers_bio,
             "proposaltype": get_proposal_type(proposal_to_show_next.session_type).proposalType(),
             "presenters": proposal_to_show_next.presenters,
             "score": 0,
