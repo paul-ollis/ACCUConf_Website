@@ -11,7 +11,6 @@ the query run on the database to provide the list of contacts to send to. The
 items in the list should be tuples (email, first-name, last-name).
 """
 
-
 import importlib
 import sys
 
