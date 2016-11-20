@@ -1,8 +1,12 @@
 ////
-.. title: Website Problems
+.. title: Website Problems [Now Fixed]
 .. date: 2016-11-06T08:16+00:00
 .. type: text
 ////
+
+_Updated 2016-11-19: The website problems have been fixed, so we are staying with Plan A. The deadline for
+submissions is 2016-12-02 – see link:201610202151_callforsessions.html[Call for Sessions] for details of
+submitting a session proposal._
 
 As anyone who has tried to submit a proposal for ACCU 2017 has discovered, there are some serious problems
 with the Flask application. Failure to acknowledge a submission is one, not being able to submit more
