@@ -22,22 +22,22 @@
                action=" {{ url_for('proposals.review_proposal') }}"
                onsubmit="return false;">
             <fieldset>
-                <label for="title">Title</label>
-                <input type="text" name="title" id="title" size = "50"
+                <label for="title" class="control-label col-sm-3">Title</label>
+                <input type="text" name="title" id="title" size="60"
                        placeholder="Title" disabled="true"
                        value="{{ page.proposal.title }}">
             </fieldset>
             <fieldset>
                 <label for="abstract" class="control-label col-sm-3">Abstract</label>
-                <textarea rows="24" cols="80"
+                <textarea rows="24" cols="60"
                           name="proposal" id="proposal"
                           placeholder="Proposal abstract" disabled="true">{{ page.proposal.abstract}}</textarea>
             </fieldset>
             <fieldset>
                 <label for="bio" class="control-label col-sm-3">Short bio</label>
-                <textarea rows="10" cols="80"
+                <textarea rows="10" cols="60"
                           name="bio" id="bio"
-                          placeholder="Short biography" disabled="true">{{ page.proposal.bio }}</textarea>
+                          disabled="true">{{ page.proposal.bio }}</textarea>
             </fieldset>
             <fieldset>
                 <label for="proposaltype">Proposal Type</label>
@@ -136,7 +136,7 @@
                     value="{{ page.proposal.score }}">
             </fieldset>
             <fieldset class="form-group">
-                <label for="comment">Comment</label>
+                <label for="comment" class="control-label col-sm-3">Comment</label>
                 <textarea rows="5" cols="60" name="comment" id="comment">{{ page.proposal.comment }}
                 </textarea>
             </fieldset>
