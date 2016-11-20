@@ -23,20 +23,20 @@
               action=""
               onsubmit="return false;">
             <fieldset>
-                <label for="title">Title</label>
-                <input type="text" name="title" id="title"
+                <label for="title" class="control-label col-sm-3">Title</label>
+                <input type="text" name="title" id="title" size="60"
                        placeholder="Title" disabled="true"
                        value="{{ subpage.proposal.title }}">
             </fieldset>
             <fieldset>
-                <label for="abstract">Abstract</label>
-                <textarea rows="24" cols="80"
+                <label for="abstract" class="control-label col-sm-3">Abstract</label>
+                <textarea rows="24" cols="60"
                           name="proposal" id="proposal"
                           placeholder="Proposal abstract" disabled="true">{{ subpage.proposal.abstract}}
                 </textarea>
             </fieldset>
             <fieldset>
-                <label for="proposaltype">Proposal Type</label>
+                <label for="proposaltype" class="control-label col-sm-3">Proposal Type</label>
                 <select name="proposaltype" id="proposaltype" disabled="disabled">
                     <option value="quick"{% if subpage.proposal.proposaltype=='quick' %} selected="selected"{% endif %}>15 minute sessions</option>
                     <option value="interactive"{% if subpage.proposal.proposaltype=='interactive' %} selected="selected"{% endif %}> 90 minute Interactive session</option>
