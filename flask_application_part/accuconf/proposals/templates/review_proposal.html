@@ -141,19 +141,35 @@
                 </textarea>
             </fieldset>
             <fieldset class="formgroup">
-                <button type="submit" class="button"
-                        value="previous_proposal" {% if page.proposal.previous_enabled!=True %} disabled="disabled"{% endif %}
+                <button type="submit" value="previous_proposal"
+                        {% if page.proposal.previous_enabled!=True %}
+                            disabled="disabled" class="btn btn-default"
+                        {%  else %}
+                            class="btn btn-primary"
+                        {% endif %}
                         onclick="javascript:uploadReview(this);">Submit and go to<br/>previous proposal</button>
-                <button type="submit" class="button"
-                        value="previous_nr_proposal" {% if page.proposal.previous_nr_enabled!=True %} disabled="disabled"{% endif %}
+                <button type="submit" value="previous_nr_proposal"
+                        {% if page.proposal.previous_nr_enabled!=True %}
+                            disabled="disabled" class="btn btn-default"
+                        {%  else %}
+                            class="btn btn-primary"
+                        {% endif %}
                         onclick="javascript:uploadReview(this);">Submit and go to<br/>previous not read proposal</button>
-                <button type="submit" class="button" value="save"
+                <button type="submit" value="save" class="btn btn-primary"
                         onclick="javascript:uploadReview(this);">Submit<br/>review</button>
-                <button type="submit" class="button primary-button"
-                        value="next_nr_proposal" {% if page.proposal.next_nr_enabled!=True %} disabled="disabled"{% endif %}
+                <button type="submit" value="next_nr_proposal"
+                        {% if page.proposal.next_nr_enabled!=True %}
+                            disabled="disabled" class="btn btn-default"
+                        {%  else %}
+                            class="btn btn-primary"
+                        {% endif %}
                         onclick="javascript:uploadReview(this);">Submit and go to<br/>next not read proposal</button>
-                <button type="submit" class="button"
-                        value="next_proposal" {% if page.proposal.next_enabled!=True %} disabled="disabled"{% endif %}
+                <button type="submit" value="next_proposal"
+                        {% if page.proposal.next_enabled!=True %}
+                            disabled="disabled" class="btn btn-default"
+                        {%  else %}
+                            class="btn btn-primary"
+                        {% endif %}
                         onclick="javascript:uploadReview(this);">Submit and go to<br/>next proposal</button>
             </fieldset>
         </form>
