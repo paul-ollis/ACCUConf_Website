@@ -17,7 +17,8 @@ def init_blueprint(ctxt):
         message = 'NIKOLA_STATIC_PATH not set properly.'
         nikola.logger.info(message)
         raise ValueError(message)
-    assert _nikola_static_path.is_dir()
+    assert _nikola_static_path.is_dir(), "%s is not a directory" % (
+            _nikola_static_path,)
 
 
 @nikola.route('/')
