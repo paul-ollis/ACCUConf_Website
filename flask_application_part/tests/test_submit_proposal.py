@@ -20,6 +20,7 @@ def registration_data():
     return {
         'email': 'a@b.c',
         'user_pass': 'Password1',
+        'cpassword': 'Password1',
         'firstname': 'User',
         'lastname': 'Name',
         'phone': '+011234567890',
