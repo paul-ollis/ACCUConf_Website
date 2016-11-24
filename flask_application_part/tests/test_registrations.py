@@ -8,6 +8,7 @@ def registrant():
     return {
         'email': 'a@b.c',
         'user_pass': 'Password1',
+        'cpassword': 'Password1',
         'firstname': 'User',
         'lastname': 'Name',
         'phone': '+011234567890',
@@ -35,6 +36,7 @@ def test_password_short(client):
     post_and_check_content(client, '/proposals/register', {
         'email': 'test@std.dom',
         'user_pass': 'Pass1',
+        'cpassword': 'Pass1',
         'firstname': 'User2',
         'lastname': 'Name2',
         'phone': '+011234567890',
@@ -53,6 +55,7 @@ def test_password_invalid(client):
     post_and_check_content(client, '/proposals/register', {
         'email': 'test@std.dom',
         'user_pass': 'password',
+        'cpassword': 'password',
         'firstname': 'User2',
         'lastname': 'Name2',
         'phone': '+011234567890',
@@ -71,6 +74,7 @@ def test_username_invalid(client):
     post_and_check_content(client, '/proposals/register', {
         'email': 'testing.test.dom',
         'user_pass': 'passworD13',
+        'cpassword': 'passworD13',
         'firstname': 'User2',
         'lastname': 'Name2',
         'phone': '+011234567890',
