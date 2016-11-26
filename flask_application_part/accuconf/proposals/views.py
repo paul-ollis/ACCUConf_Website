@@ -1,3 +1,4 @@
+from sqlalchemy.orm import exc
 from flask import render_template, jsonify, redirect, url_for, session, request
 from flask import send_from_directory, g
 from datetime import datetime
@@ -108,6 +109,10 @@ def register():
             edit_mode = True
 
     if request.method == "POST":
+        print("PAO post", db.session)
+        print("Hello", '\n'.join(dir(db.session)))
+        import sys
+        sys.stdout.flush()
         # Process registration data
         if not edit_mode: # it is not allowed to change the email address at the moment, because this is used as key
             user_email = request.form["email"]
@@ -128,6 +133,13 @@ def register():
         town_city = request.form['towncity']
         street_address = request.form['streetaddress']
         bio = request.form['bio']
+        #question = request.form['question']
+        solution = request.form['puzzle']
+        try:
+            matchingPuzzle = db.session.query(MathPuzzle).filter(
+                    MathPuzzle.answer == solution).one()
+        except exc.NoResultFound:
+            matchingPuzzle=None
 
         encoded_pass = None
         if type(user_pass) == str and len(user_pass):
@@ -171,26 +183,31 @@ def register():
             page["data"] = "Your account details were successful updated."
 
         else:
+            if matchingPuzzle is None:
+                page["title"] = "Registration failed - real people preferred"
+                page["data"] = "Sorry, you failed the addition test."
+                page["data"] += " Please register again"
+                return render_template("registration_failure.html", page=page)
             if not validate_email(user_email):
                 page["title"] = "Registration failed"
                 page["data"] = "Registration failed: Invalid/Duplicate user id."
-                page["data"] += "Please register again"
+                page["data"] += " Please register again"
                 return render_template("registration_failure.html", page=page)
             elif not validate_password(user_pass):
                 page["title"] = "Registration failed"
                 page["data"] = "Registration failed: Password did not meet checks."
-                page["data"] += "Please register again"
+                page["data"] += " Please register again"
                 return render_template("registration_failure.html", page=page)
 
             if not validate_email(user_email):
                 page["title"] = "Registration failed"
                 page["data"] = "Registration failed: Invalid/Duplicate user id."
-                page["data"] += "Please register again"
+                page["data"] += " Please register again"
                 return render_template("registration_failure.html", page=page)
             elif not validate_password(user_pass):
                 page["title"] = "Registration failed"
                 page["data"] = "Registration failed: Password did not meet checks."
-                page["data"] += "Please register again"
+                page["data"] += " Please register again"
                 return render_template("registration_failure.html", page=page)
 
             errors = []
