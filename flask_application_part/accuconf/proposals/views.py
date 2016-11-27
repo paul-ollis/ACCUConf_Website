@@ -1,5 +1,6 @@
 from flask import render_template, jsonify, redirect, url_for, session, request
 from flask import send_from_directory, g
+from datetime import datetime
 from accuconf import db
 from accuconf.models import MathPuzzle, Proposal, ProposalComment, ProposalPresenter, ProposalReview, User, UserInfo, UserLocation
 from accuconf.proposals.utils.roles import Role
@@ -10,7 +11,7 @@ from random import randint
 from . import proposals
 
 _proposal_static_path = None
-
+_end_of_call_for_session = datetime(2016,12,2,23,58,00)
 
 @proposals.record
 def init_blueprint(context):
@@ -499,6 +500,7 @@ def navlinks():
     logged_out = True
     number_of_proposals = 0
     my_proposals_text = ""
+    call_for_session_is_over = _end_of_call_for_session < datetime.now()
     if session.get("user_id", False):
         logged_in = True
         logged_out = False
@@ -512,7 +514,7 @@ def navlinks():
         "2": ("Register", url_for("proposals.register"), logged_out),
         "3": ("Account", url_for("proposals.register"), logged_in),
         "4": (my_proposals_text, url_for("proposals.show_proposals"), logged_in and number_of_proposals>0),
-        "5": ("Submit Proposal", url_for("proposals.submit_proposal"), logged_in),
+        "5": ("Submit Proposal", url_for("proposals.submit_proposal"), logged_in and not call_for_session_is_over),
         "6": ("Review Proposals", url_for("proposals.review_proposal"), logged_in and can_review),
         "7": ("RSS", "/site/rss.xml", True),
         "8": ("Log out", url_for("proposals.logout"), logged_in)
