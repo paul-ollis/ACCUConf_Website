@@ -1,0 +1,9 @@
+////
+.. title: Herb Sutter at ACCU 2017
+.. date: 2016-11-29T15:25+00:00
+.. type: text
+////
+
+Whilst there is more than one Herb Sutter, there is only one who is a long standing friend of the ACCU
+conference, and not only knows quite a lot about the C++ language, also knows a lot about how it
+evolves. This unique Herb Sutter will be giving one of the keynote presentations at ACCU 2017.
