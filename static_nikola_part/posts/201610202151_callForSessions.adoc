@@ -20,7 +20,7 @@ Conference sessions are one of:
 
 - 15 minute session: This format is ideal for presenting a small piece of technical material without the
   pressure of creating a complete 90 minute session around it.
-- 90 minute interactive session: Typically these sessions are based around a presentation but have lot's of
+- 90 minute session: Typically these sessions are based around a presentation but have lot's of
   audience interaction either during the session or as a 30+ minute question/answer/discussion period after
   a 50(-ish) minute presentation.
 - 90 minute workshop: These sessions are for attenders to do things, based around, for example, problem
