@@ -26,10 +26,12 @@ def enable_fkey(dbcon, con_rec):
     cursor.close()
 
 
+# TODO Is this used?
 def drop_db():
     db.drop_all()
 
 
+# TODO Is this used?
 def create_db():
     db.create_all()
 
