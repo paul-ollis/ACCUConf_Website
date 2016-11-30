@@ -1,7 +1,4 @@
-
-# This must be imported here even though it may not be explicitly used in this file.
-import click
-
+import re
 import sys
 
 from pathlib import Path
@@ -9,6 +6,9 @@ from pathlib import Path
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
+
+# This must be imported here even though it may not be explicitly used in this file.
+import click
 
 file_directory = Path(__file__).absolute().parent
 sys.path.insert(0, str(file_directory.parent))
@@ -66,3 +66,64 @@ def create_proposal_sheets():
         ]))
         elements.append(table)
     document.build(elements)
+
+
+@app.cli.command()
+def create_proposals_document():
+    """Create an Asciidoc document of all the proposals in the various sections."""
+    file_path = str(file_directory.parent / 'proposals.adoc')
+    total_proposals = len(Proposal.query.all())
+    proposals_processed = 0
+    with open(file_path, 'w') as proposals_file:
+        proposals_file.write('= ACCUConf Proposals\n\n')
+
+        def cleanup_text(text):
+            text = text.replace('C++', '{cpp}')
+            text = text.replace('====', '')
+            text = re.sub('------*', '', text)
+            return text
+
+        def write_proposal(p):
+            proposals_file.write('<<<\n\n=== {}\n\n'.format(p.title))
+            proposals_file.write(', '.join('{} {}'.format(pp.first_name, pp.last_name) for pp in p.presenters) + '\n\n')
+            proposals_file.write(cleanup_text(p.text.strip()) + '\n\n')
+            proposals_file.write("'''\n\n*{}*\n\n".format(', '.join(str(review.score) for review in p.reviews)))
+            for comment in p.comments:
+                c = comment.comment.strip()
+                if c:
+                    proposals_file.write("'''\n\n_{}_\n\n".format(comment.comment.strip()))
+            nonlocal proposals_processed
+            proposals_processed += 1
+
+        proposals_file.write('== Full Day Workshops\n\n')
+        for p in Proposal.query.filter_by(session_type='6 hour workshop'):
+            write_proposal(p)
+        for p in Proposal.query.filter_by(session_type='fulldayworkshop'):
+            write_proposal(p)
+
+        proposals_file.write('<<<\n\n== 90 minute presentations\n\n')
+        for p in Proposal.query.filter_by(session_type='90 minutes, Interactive'):
+            write_proposal(p)
+        for p in Proposal.query.filter_by(session_type='interactive'):
+            write_proposal(p)
+
+        proposals_file.write('<<<\n\n== 90 minute workshops\n\n')
+        for p in Proposal.query.filter_by(session_type='90 minutes, Mini Workshop'):
+            write_proposal(p)
+        for p in Proposal.query.filter_by(session_type='miniworkshop'):
+            write_proposal(p)
+
+        proposals_file.write('<<<\n\n== 180 minute workshops\n\n')
+        for p in Proposal.query.filter_by(session_type='180 minutes, Workshop'):
+            write_proposal(p)
+        for p in Proposal.query.filter_by(session_type='workshop'):
+            write_proposal(p)
+
+        proposals_file.write('<<<\n\n== 15 minute presentations\n\n')
+        for p in Proposal.query.filter_by(session_type='quick'):
+            write_proposal(p)
+
+    if total_proposals != proposals_processed:
+        print('###\n### Did not process all proposals, {} expected, dealt with {}.'.format(total_proposals, proposals_processed))
+    else:
+        print('Processed {} proposals.'.format(total_proposals))
