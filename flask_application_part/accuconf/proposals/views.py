@@ -116,8 +116,10 @@ def register():
         if len(request.form["user_pass"].strip()) > 0:
             user_pass = request.form["user_pass"]
 
+        cpassword = request.form["cpassword"]
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
+        town_and_city = request.form["towncity"]
         country = request.form["country"]
         state = request.form["state"]
         phone = request.form["phone"]
@@ -178,6 +180,41 @@ def register():
                 page["data"] = "Registration failed: Password did not meet checks."
                 page["data"] += "Please register again"
                 return render_template("registration_failure.html", page=page)
+
+            if not validate_email(user_email):
+                page["title"] = "Registration failed"
+                page["data"] = "Registration failed: Invalid/Duplicate user id."
+                page["data"] += "Please register again"
+                return render_template("registration_failure.html", page=page)
+            elif not validate_password(user_pass):
+                page["title"] = "Registration failed"
+                page["data"] = "Registration failed: Password did not meet checks."
+                page["data"] += "Please register again"
+                return render_template("registration_failure.html", page=page)
+
+            errors = []
+            for field, field_name in (
+                    (bio, 'biography'),
+                    (user_email, 'email'),
+                    (user_pass, 'password'),
+                    (cpassword, 'password confirmation'),
+                    (first_name, 'first name'),
+                    (last_name, 'last name'),
+                    (town_and_city, 'town and city'),
+                    (phone, 'phone number'),
+                    (postal_code, 'pin code'),
+                    (street_address, 'street address'),):
+                if not field.strip():
+                    errors.append("The %s field was not filled in." % field_name)
+
+            if errors:
+                errors.append('')
+                errors.append("Please register again")
+                page = {}
+                page["title"] = "Registration failed"
+                page["data"] = ' '.join(errors)
+                return render_template("registration_failure.html", page=page)
+
             else:
                 new_user = User(user_email, encoded_pass)
                 user_info = UserInfo(new_user.user_id,
