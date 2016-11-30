@@ -175,9 +175,6 @@ def register():
             page["data"] = "Your account details were successful updated."
 
         else:
-            import sys
-            print(">>>", (puzzle.answer, solution))
-            sys.stdout.flush()
             if str(puzzle.answer) != solution.strip():
                 page["title"] = "Registration failed - real people preferred"
                 page["data"] = "Sorry, you failed the addition test."
