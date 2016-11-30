@@ -109,10 +109,6 @@ def register():
             edit_mode = True
 
     if request.method == "POST":
-        print("PAO post", db.session)
-        print("Hello", '\n'.join(dir(db.session)))
-        import sys
-        sys.stdout.flush()
         # Process registration data
         if not edit_mode: # it is not allowed to change the email address at the moment, because this is used as key
             user_email = request.form["email"]
@@ -133,13 +129,10 @@ def register():
         town_city = request.form['towncity']
         street_address = request.form['streetaddress']
         bio = request.form['bio']
-        #question = request.form['question']
+        question_id = request.form['captcha']
         solution = request.form['puzzle']
-        try:
-            matchingPuzzle = db.session.query(MathPuzzle).filter(
-                    MathPuzzle.answer == solution).one()
-        except exc.NoResultFound:
-            matchingPuzzle=None
+        matchingPuzzle=None
+        puzzle = MathPuzzle.query.filter_by(id=question_id).first()
 
         encoded_pass = None
         if type(user_pass) == str and len(user_pass):
@@ -183,7 +176,10 @@ def register():
             page["data"] = "Your account details were successful updated."
 
         else:
-            if matchingPuzzle is None:
+            import sys
+            print(">>>", (puzzle.answer, solution))
+            sys.stdout.flush()
+            if str(puzzle.answer) != solution.strip():
                 page["title"] = "Registration failed - real people preferred"
                 page["data"] = "Sorry, you failed the addition test."
                 page["data"] += " Please register again"
